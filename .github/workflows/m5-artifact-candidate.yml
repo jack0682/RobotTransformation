@@ -1,0 +1,242 @@
+# Install as .github/workflows/m5-artifact-candidate.yml after review.
+# This workflow does not publish a release, create a tag, or receive a signing key.
+name: M5 artifact candidate
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+permissions:
+  contents: read
+concurrency:
+  group: m5-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CI: 'true'
+  GIT_OPTIONAL_LOCKS: '0'
+  GIT_NO_REPLACE_OBJECTS: '1'
+  PYTHONDONTWRITEBYTECODE: '1'
+  CARGO_BUILD_JOBS: '1'
+  RUSTUP_TOOLCHAIN: '1.98.1'
+
+jobs:
+  produce:
+    name: Candidate artifacts (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - name: Install producer tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake libprotobuf-dev protobuf-compiler libgrpc++-dev protobuf-compiler-grpc nlohmann-json3-dev libssl-dev python3-venv patchelf pkg-config
+          rustup toolchain install 1.98.1 --profile minimal
+      - name: Fixture checks only before production
+        working-directory: source/tools/release/m5
+        run: |
+          python3 -B -m unittest -v test_m5_artifacts.py test_publication.py test_sdk_builder.py test_local_sim_candidate.py test_m5_policy.py
+          (cd full_run && python3 -B -m unittest -v test_full_run.py test_leak_audit.py test_historical_bundle.py)
+          (cd historical && python3 -B -m unittest -v test_historical_runtime_probe.py)
+      - name: Materialize exact published historical runtime consumer without executing it
+        run: |
+          python3 -B source/tools/release/m5/prepare_historical_bundle.py --work "$RUNNER_TEMP/m5-historical-work" --output "$RUNNER_TEMP/m5-historical-bundle" --execute-fresh-linux-ci
+          python3 -B source/tools/release/m5/historical/test_historical_archive_positive.py --client "$RUNNER_TEMP/m5-historical-bundle/client" --lock "$RUNNER_TEMP/m5-historical-bundle/HISTORICAL_CONSUMER_LOCK.json"
+      - name: Build exact distribution and sealed witnesses
+        env:
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          M5_ARCH: ${{ matrix.arch }}
+        run: |
+          python3 -B source/tools/release/m5/build_distribution_candidate.py --repo source --expected-head "$CANDIDATE_SHA" --architecture "$M5_ARCH" --cache-namespace "m5-${GITHUB_RUN_ID}-${M5_ARCH}" --work "$RUNNER_TEMP/m5-dist-work" --output "$RUNNER_TEMP/m5-distribution" --execute-fresh-linux-ci
+      - name: Build SDK against installed candidate S image
+        env:
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          M5_ARCH: ${{ matrix.arch }}
+        run: |
+          solutions_image=$(python3 -c 'import json,os,pathlib; print(json.loads((pathlib.Path(os.environ["RUNNER_TEMP"])/"m5-distribution/manifest.json").read_text())["images"]["solutions"])')
+          python3 -B source/tools/release/m5/build_sdk_artifacts.py --repo source --expected-head "$CANDIDATE_SHA" --solutions-image "$solutions_image" --historical-bundle "$RUNNER_TEMP/m5-historical-bundle" --architecture "$M5_ARCH" --work "$RUNNER_TEMP/m5-sdk-work" --output "$RUNNER_TEMP/m5-sdk" --execute
+      - name: Build and independently exercise LOCAL_SIM
+        env:
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          M5_ARCH: ${{ matrix.arch }}
+        run: |
+          python3 -B source/tools/release/m5/local_sim_candidate.py --repo source --expected-head "$CANDIDATE_SHA" --architecture "$M5_ARCH" --work "$RUNNER_TEMP/m5-local-work" --output "$RUNNER_TEMP/m5-local-sim" --execute-fresh-linux-ci
+      - name: Export source-free consumer tools and exact handoff
+        env:
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python3 -B source/tools/release/m5/package_handoff.py --tools source/tools/release/m5 --sdk "$RUNNER_TEMP/m5-sdk" --distribution "$RUNNER_TEMP/m5-distribution" --local-sim "$RUNNER_TEMP/m5-local-sim" --candidate "$CANDIDATE_SHA" --output "$RUNNER_TEMP/m5-handoff"
+      - name: Audit private values before publishing producer artifacts or diagnostics
+        if: always()
+        run: |
+          python3 -B source/tools/release/m5/publish_ci_evidence.py --mode producer --runner-temp "$RUNNER_TEMP" --output "$RUNNER_TEMP/m5-producer-public"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: m5-sdk-${{ matrix.arch }}
+          path: ${{ runner.temp }}/m5-producer-public/evidence/artifacts/sdk/**
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: m5-distribution-${{ matrix.arch }}
+          path: ${{ runner.temp }}/m5-producer-public/evidence/artifacts/distribution/**
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: m5-local-sim-${{ matrix.arch }}
+          path: ${{ runner.temp }}/m5-producer-public/evidence/artifacts/local-sim/**
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: m5-handoff-${{ matrix.arch }}
+          path: ${{ runner.temp }}/m5-producer-public/evidence/artifacts/handoff/**
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: m5-producer-diagnostics-${{ matrix.arch }}
+          path: |
+            ${{ runner.temp }}/m5-producer-public/LEAK_AUDIT.json
+            ${{ runner.temp }}/m5-producer-public/evidence/PUBLICATION_SCOPE.json
+            ${{ runner.temp }}/m5-producer-public/evidence/diagnostics/**
+          if-no-files-found: warn
+          retention-days: 30
+
+  sdk_consumer:
+    name: No-checkout SDK consumer (${{ matrix.arch }})
+    needs: produce
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 40
+    steps:
+      # Intentionally no checkout action or RX source access in this job.
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: m5-sdk-${{ matrix.arch }}
+          path: sdk
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: m5-handoff-${{ matrix.arch }}
+          path: handoff
+      - name: Install public toolchain prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake libprotobuf-dev protobuf-compiler libgrpc++-dev protobuf-compiler-grpc nlohmann-json3-dev libssl-dev python3-venv
+          rustup toolchain install 1.98.1 --profile minimal
+      - name: Verify and consume delivered SDK only
+        run: |
+          python3 -B handoff/package_handoff.py --verify-tools handoff
+          expected=$(python3 -c 'import json; print(json.load(open("handoff/control.json"))["sdk_checksums_sha256"])')
+          python3 -B handoff/consume_sdk_artifacts.py --artifacts sdk --expected-checksums-sha256 "$expected" --work "$RUNNER_TEMP/m5-sdk-consumer" --execute-fresh-linux-ci
+      - name: Audit and select publishable SDK evidence
+        if: always()
+        run: |
+          python3 -B handoff/publish_ci_evidence.py --mode sdk --runner-temp "$RUNNER_TEMP" --output "$RUNNER_TEMP/m5-sdk-public"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: m5-sdk-consumer-${{ matrix.arch }}
+          path: ${{ runner.temp }}/m5-sdk-public/**
+          if-no-files-found: warn
+          retention-days: 30
+
+  runtime_consumer:
+    name: Installed distribution and external Run (${{ matrix.arch }})
+    needs: produce
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    steps:
+      # No checkout; only provisioner artifacts. Author source isolation is
+      # independently checked on every installed author-container invocation.
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: m5-sdk-${{ matrix.arch }}
+          path: sdk
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: m5-distribution-${{ matrix.arch }}
+          path: distribution
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: m5-handoff-${{ matrix.arch }}
+          path: handoff
+      - name: Install provisioner prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends openssl
+      - name: Consume exact binaries and perform fresh simulation cases
+        run: |
+          python3 -B handoff/package_handoff.py --verify-tools handoff
+          sdk_pin=$(python3 -c 'import json; print(json.load(open("handoff/control.json"))["sdk_checksums_sha256"])')
+          dist_pin=$(python3 -c 'import json; print(json.load(open("handoff/control.json"))["distribution_checksums_sha256"])')
+          python3 -B handoff/consume_runtime_artifacts.py --distribution distribution --sdk sdk --distribution-checksums-sha256 "$dist_pin" --sdk-checksums-sha256 "$sdk_pin" --work "$RUNNER_TEMP/m5-runtime-consumer" --execute-fresh-linux-ci
+      - name: Audit generated keys tokens and passwords before evidence publication
+        if: always()
+        run: |
+          python3 -B handoff/publish_ci_evidence.py --mode runtime --runner-temp "$RUNNER_TEMP" --output "$RUNNER_TEMP/m5-runtime-public"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: m5-runtime-consumer-${{ matrix.arch }}
+          # No raw log/private tree upload, including on a failed run.
+          path: ${{ runner.temp }}/m5-runtime-public/**
+          if-no-files-found: warn
+          retention-days: 30
+
+  simulation_candidate:
+    name: ${{ github.event_name == 'pull_request' && 'M5' || 'Branch M5' }}
+    if: ${{ always() }}
+    needs: [produce, sdk_consumer, runtime_consumer]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Refuse failed skipped or cancelled checks
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          python3 - <<'PY'
+          import json,os
+          needs=json.loads(os.environ['NEEDS'])
+          expected={'produce','sdk_consumer','runtime_consumer'}
+          if set(needs)!=expected or any(v['result']!='success' for v in needs.values()):
+              raise SystemExit('M5 simulation candidate checks incomplete')
+          print('SIMULATION_CANDIDATE_CHECKS_PASSED; historical compatibility is limited to published runtime-v1 drafts; exact-artifact publisher signature and owner acceptance remain separate.')
+          PY

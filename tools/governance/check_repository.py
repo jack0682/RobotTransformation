@@ -269,6 +269,8 @@ def check_full_ci_stage(root, files):
             elif name in actual_root and path.suffix == ".md":
                 errors.extend(name + ": " + e for e in links(root, path))
         except (ValueError, OSError) as exc: errors.append(f"{name}: {exc}")
+    from check_m5_workflow import check as check_m5
+    errors.extend(check_m5(root))
     workflow = (root / ".github/workflows/ci.yml").read_text()
     errors.extend(job_env_runner_errors(workflow))
     if "pull_request_target" in workflow or re.search(r"(?m)^\s*(?:-\s*)?[\"']?continue-on-error[\"']?\s*:", workflow):

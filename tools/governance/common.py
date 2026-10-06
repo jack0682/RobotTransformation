@@ -10,7 +10,8 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[2]
 REPOSITORY = "jack0682/RobotTransformation"
 WORKFLOW = ".github/workflows/ci.yml"
-CHECK_PROVIDERS = {"CI": 15368, "DCO": 1861}
+CHECK_WORKFLOWS = {"CI": WORKFLOW, "M5": ".github/workflows/m5-artifact-candidate.yml"}
+CHECK_PROVIDERS = {"CI": 15368, "DCO": 1861, "M5": 15368}
 PROTECTED = {"refs/heads/main", "refs/heads/develop"}
 WORK_PREFIXES = ("feature", "fix", "docs", "chore", "codex")
 PRIVILEGED_PREFIXES = ("release", "hotfix")

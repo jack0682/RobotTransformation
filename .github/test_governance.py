@@ -251,23 +251,51 @@ class CommitPolicyTests(Files):
 class MergeGateTests(unittest.TestCase):
     def setUp(self):
         self.pr = pr()
-        self.checks = {"total_count": 2, "check_runs": [
+        self.checks = {"total_count": len(common.CHECK_PROVIDERS), "check_runs": [
             {"id": i, "name": name, "head_sha": HEAD, "status": "completed", "conclusion": "success",
-             "app": {"id": app}, "details_url": f"https://github.com/{REPO}/actions/runs/123/job/{i}"}
+             "app": {"id": app}, "details_url": f"https://github.com/{REPO}/actions/runs/{123 if name != 'M5' else 456}/job/{i}"}
             for i, (name, app) in enumerate(common.CHECK_PROVIDERS.items(), 1)]}
         self.workflow = {"event": "pull_request", "head_sha": HEAD, "path": common.WORKFLOW,
                          "status": "completed", "conclusion": "success", "repository": {"full_name": REPO},
                          "pull_requests": [{"number": 7, "head": {"sha": HEAD}, "base": {"sha": BASE, "ref": "develop"}}]}
+        self.m5_workflow = copy.deepcopy(self.workflow)
+        self.m5_workflow["path"] = common.CHECK_WORKFLOWS["M5"]
 
     def checks_api(self, method, path, payload=None):
         self.assertEqual(method, "GET")
-        return self.checks if "check-runs?" in path else self.workflow
+        if "check-runs?" in path: return self.checks
+        if path.endswith("/456"): return self.m5_workflow
+        return self.workflow
 
     def check(self):
         with patch.object(merge_pr, "api", side_effect=self.checks_api):
             merge_pr.require_checks(7, HEAD, self.pr["base"])
 
     def test_current_required_checks_pass(self): self.check()
+
+    def test_m5_cannot_reuse_ci_wrong_event_provider_head_or_base(self):
+        for field,value in (("path",common.WORKFLOW),("event","push"),("head_sha",BASE),("conclusion","skipped"),("pull_requests",[])):
+            original=copy.deepcopy(self.m5_workflow);self.m5_workflow[field]=value
+            with self.subTest(field=field),self.assertRaises(ValueError):self.check()
+            self.m5_workflow=original
+        original=copy.deepcopy(self.m5_workflow)
+        self.m5_workflow["pull_requests"][0]["base"]["sha"]=MERGED
+        with self.assertRaises(ValueError):self.check()
+        self.m5_workflow=original
+        item=next(c for c in self.checks["check_runs"] if c["name"]=="M5")
+        for field,value in (("app",{"id":99}),("head_sha",BASE),("status","queued"),("conclusion","failure")):
+            old=item[field];item[field]=value
+            with self.subTest(field=field),self.assertRaises(ValueError):self.check()
+            item[field]=old
+
+    def test_m5_missing_and_newer_failure_cannot_be_hidden(self):
+        original=copy.deepcopy(self.checks)
+        self.checks["check_runs"]=[c for c in self.checks["check_runs"] if c["name"]!="M5"]
+        with self.assertRaises(ValueError):self.check()
+        self.checks=original
+        item=next(c for c in self.checks["check_runs"] if c["name"]=="M5")
+        self.checks["check_runs"].append({**item,"id":999,"conclusion":"failure"});self.checks["total_count"]+=1
+        with self.assertRaises(ValueError):self.check()
 
     def test_wrong_provider_or_stale_check_head_is_refused(self):
         for field, value in (("app", {"id": 99}), ("head_sha", BASE), ("status", "queued"), ("conclusion", "cancelled")):

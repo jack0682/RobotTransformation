@@ -6,7 +6,7 @@ import argparse
 import re
 import sys
 
-from common import (CHECK_PROVIDERS, REPOSITORY, WORKFLOW, api, branch_error,
+from common import (CHECK_PROVIDERS, CHECK_WORKFLOWS, REPOSITORY, WORKFLOW, api, branch_error,
                     require_checkout, require_remote_identity, valid_oid)
 from check_commit_policy import has_signoff
 from configure_github import configure
@@ -25,14 +25,14 @@ def require_checks(number, head, base):
         if (latest.get("head_sha") != head or latest.get("status") != "completed"
                 or latest.get("conclusion") != "success"):
             raise ValueError(f"{name} from app {application} must succeed for the exact head")
-        if name == "CI":
+        if name in CHECK_WORKFLOWS:
             match = re.fullmatch(r"https://github\.com/" + re.escape(REPOSITORY)
                                  + r"/actions/runs/(\d+)/job/\d+", latest.get("details_url", ""))
             if not match:
-                raise ValueError("CI must identify this repository's GitHub Actions run")
+                raise ValueError(f"{name} must identify this repository's GitHub Actions run")
             workflow = api("GET", f"repos/{REPOSITORY}/actions/runs/{match[1]}")
             if (workflow.get("event") != "pull_request" or workflow.get("head_sha") != head
-                    or workflow.get("path") != WORKFLOW
+                    or workflow.get("path") != CHECK_WORKFLOWS[name]
                     or workflow.get("status") != "completed" or workflow.get("conclusion") != "success"
                     or workflow.get("repository", {}).get("full_name") != REPOSITORY
                     or not any(pr.get("number") == number
@@ -40,7 +40,7 @@ def require_checks(number, head, base):
                                and pr.get("base", {}).get("sha") == base["sha"]
                                and pr.get("base", {}).get("ref") == base["ref"]
                                for pr in workflow.get("pull_requests", []))):
-                raise ValueError("CI must be a successful completed run for this PR, exact head and workflow")
+                raise ValueError(f"{name} must be a successful completed run for this PR, exact head, current base and selected workflow")
 
 
 def require_ready_pr(pr):

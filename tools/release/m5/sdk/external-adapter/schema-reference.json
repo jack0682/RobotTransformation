@@ -1,0 +1,29 @@
+{
+  "schema": "rx.external-sdk-interface-index.v1",
+  "normative": false,
+  "scope": "Read-only discovery index of existing installed authoring and Host-owned native shapes; no new validator or authority contract",
+  "protocol": "rx.external-process-channel.v1",
+  "assembly": "rx.external-process-assembly.v1",
+  "profile": "rx.external-process-profile.v1",
+  "program": "rx.external-process-program.v1",
+  "registry": "rx.external-adapter-registry.v1",
+  "native_facts": [
+    "rx.external-native-request.v1",
+    "rx.external-native-entry.v1",
+    "rx.external-native-fact.v1",
+    "rx.external-native-completion.v1",
+    "rx.external-native-snapshot.v1"
+  ],
+  "adapter_methods": {
+    "execute": "execute(envelope, correlation) -> exactly {status_schema, status}; finite native action only",
+    "observe": "observe(sources) -> exactly the declared source keys with actual acquired_at, uncertainty, quality and origin-age facts; passive",
+    "custody": "custody() -> exactly boolean no_pending_commands/control_available/support_stable/safe_to_drop; passive"
+  },
+  "source_paths": [
+    "rx-solutions/deployment/external-adapters/rx_external_adapter.py",
+    "rx-solutions/runtime/rx-host/src/external_process/profile.rs",
+    "rx-solutions/runtime/rx-host/src/external_process/mod.rs",
+    "rx-solutions/runtime/rx-device-package/src/bin/rx-device-package.rs"
+  ],
+  "source_revision": "Use enclosing SDK manifest.source.commit and component tree; this index never uses a mutable latest contract"
+}

@@ -1,0 +1,120 @@
+{
+  "schema": "rx.migration.historical-runtime-client-lock.v1",
+  "classification": "PUBLISHED_INSTALLED_RUNTIME_CLIENT",
+  "runtime_compatibility_status": "NOT_RUN",
+  "scope": "Old installed Python runtime facade against current P registered-terminal public API; not rxclpy/rxclcpp SDK, Execution v2, physical or whole-product compatibility",
+  "release": {
+    "repository": "jack0682/rx-solutions",
+    "tag": "v0.4.0-rc.1",
+    "asset_id": 599932204,
+    "asset_name": "rx-linux-dev-v0.4.0-rc.1-linux-amd64.tar.gz",
+    "url": "https://github.com/jack0682/rx-solutions/releases/download/v0.4.0-rc.1/rx-linux-dev-v0.4.0-rc.1-linux-amd64.tar.gz",
+    "sha256": "f9c237a3a79c5912f8243d948e26f9cda8748fdeda440838bd2d391b342ed8c5",
+    "bytes": 93780538
+  },
+  "image_archive": {
+    "member": "rx-linux-dev/runtime-images.tar.gz",
+    "sha256": "94f97e7a9a9f2c0a522e47f3815ef0052a98d7b64a5e92747c824ad3d6024580"
+  },
+  "image": {
+    "config_digest": "sha256:eed03c5feeccb4ad10d7d5ed979290999f8480d1b14d4c78afb4c71372edefe1",
+    "architecture": "amd64",
+    "os": "linux",
+    "client_layer": "blobs/sha256/62e7aca781e61dc19e510ad03093e68993b5e6c47eeaab0eb5cf52f530fad886",
+    "published_oci_index_digest": "sha256:2ac1196819972b88aee7ed6f6cefba0d366eae96c4d3f095e120f6701ff98e89",
+    "child_oci_manifest_digest": "sha256:8fad2a6684d9b59a3dbac49ea8ec347db288e1ad8365c995707fea79a31a6df9"
+  },
+  "source": {
+    "repository": "jack0682/rx-solutions",
+    "commit": "9ba4a3c345c9f5beb27cb7f324ea5659f0afb8e0"
+  },
+  "files": [
+    {
+      "name": "image_identity.py",
+      "bytes": 2614,
+      "sha256": "d6b8ba9a3a0ba0dfdb4c5c1d5f8338eb8b3958259c4fc9c9f43a30b20bf8ad75",
+      "source_commit": "9ba4a3c345c9f5beb27cb7f324ea5659f0afb8e0",
+      "source_path": "deployment/local-skills/image_identity.py",
+      "archive_source_member": "rx-linux-dev/sources/solutions/deployment/local-skills/image_identity.py",
+      "image_member": "opt/rx/client/image_identity.py",
+      "all_three_identical": true
+    },
+    {
+      "name": "python_environment.py",
+      "bytes": 6835,
+      "sha256": "b1fb5f488dcfd34453f3143ef3d543393d33ff411a80c17ff636a8b75bdf4006",
+      "source_commit": "9ba4a3c345c9f5beb27cb7f324ea5659f0afb8e0",
+      "source_path": "deployment/local-skills/python_environment.py",
+      "archive_source_member": "rx-linux-dev/sources/solutions/deployment/local-skills/python_environment.py",
+      "image_member": "opt/rx/client/python_environment.py",
+      "all_three_identical": true
+    },
+    {
+      "name": "runtime_client.py",
+      "bytes": 19947,
+      "sha256": "161514ed9afac8699dabafd5bdf24659c451d1dce4223df6fa0d2597af33616f",
+      "source_commit": "9ba4a3c345c9f5beb27cb7f324ea5659f0afb8e0",
+      "source_path": "deployment/local-skills/runtime_client.py",
+      "archive_source_member": "rx-linux-dev/sources/solutions/deployment/local-skills/runtime_client.py",
+      "image_member": "opt/rx/client/runtime_client.py",
+      "all_three_identical": true
+    },
+    {
+      "name": "rx",
+      "bytes": 18933,
+      "sha256": "5f7b565cab21e3b6258dafd1d295bab8f426d1d2b43983603e4e44a7aeb77bf0",
+      "source_commit": "9ba4a3c345c9f5beb27cb7f324ea5659f0afb8e0",
+      "source_path": "deployment/local-skills/rx",
+      "archive_source_member": "rx-linux-dev/sources/solutions/deployment/local-skills/rx",
+      "image_member": "opt/rx/client/rx",
+      "all_three_identical": true
+    }
+  ],
+  "runtime_local_imports": [
+    "image_identity.py",
+    "runtime_client.py"
+  ],
+  "optional_skill_prepare_imports": [
+    "python_environment.py"
+  ],
+  "materialized_bytecode_execution": "NOT_PERFORMED",
+  "required_scope": [
+    "runtime skills catalog schema and installation identity",
+    "runtime steps current candidate cell scope",
+    "runtime compose returns exact DRAFT_READY_FOR_COMPILER with execution_authorized false",
+    "runtime compose-recover retains original UUID/draft/source/binding revisions",
+    "invalid/unavailable step rejected with no admitted draft and no execution"
+  ],
+  "exclude_from_this_oracle": [
+    "runtime run/recover v1 execution semantics",
+    "runtime result/inspect of v2-only runs",
+    "SDK wire/ABI compatibility",
+    "author SDK external adapter compilation",
+    "CP2 acceptance",
+    "physical operation"
+  ],
+  "isolation": {
+    "destination": "/author/historical-client",
+    "file_set": "exactly four original names; preserve bytes; read-only mount",
+    "working_directory": "fresh independent consumer directory",
+    "interpreter_argv": [
+      "python3",
+      "-E",
+      "-s",
+      "-B",
+      "/author/historical-client/rx",
+      "runtime",
+      "--connection",
+      "/author/connection.json",
+      "--state-dir",
+      "/author/historical-state"
+    ],
+    "forbid": [
+      "current deployment/local-skills on PYTHONPATH",
+      "editing old client to accept new API",
+      "relabeling current SDK as historical",
+      "same old request UUID after uncertain original result replaced by fresh UUID"
+    ]
+  },
+  "signature_verification": "Not re-performed by this static inventory; consume the preserved release signature verification receipt separately"
+}
