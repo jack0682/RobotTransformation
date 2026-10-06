@@ -1,0 +1,24 @@
+[package]
+license.workspace = true
+name = "rx-service-status"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+rx-domain = {path="../../sdk/crates/rx-domain"}
+rx-ports = {path="../../sdk/crates/rx-ports"}
+serde = {version="1",features=["derive"]}
+sha2 = "0.10"
+thiserror = "2"
+uuid = {version="1",features=["v4"]}
+
+[target.'cfg(unix)'.dependencies]
+rustix = {version="1",features=["time","fs"]}
+
+[dev-dependencies]
+serde_json = "1"
+tempfile = "3"
+
+[lints]
+workspace = true

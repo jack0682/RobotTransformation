@@ -1,0 +1,72 @@
+[package]
+license.workspace = true
+name = "rx-executor"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+rx-service-status = {path="../rx-service-status"}
+rx-ports = {path="../../sdk/crates/rx-ports"}
+rx-storage = {path="../../sdk/crates/rx-storage"}
+rx-domain = {path="../../sdk/crates/rx-domain"}
+rx-process-contract = {path="../../sdk/crates/rx-process-contract"}
+rx-protocol = {path="../../sdk/crates/rx-protocol"}
+rusqlite = {version="0.40.2",features=["bundled","backup"]}
+tempfile = "3"
+serde = {version="1",features=["derive"]}
+serde_json = "1"
+sha2 = "0.10"
+tonic = {version="0.14",features=["tls-ring"]}
+tokio = {version="1",features=["rt-multi-thread","macros","time","process","io-util","fs","signal","sync"]}
+uuid = {version="1",features=["v4"]}
+thiserror = "2"
+
+[lints]
+workspace = true
+
+[target.'cfg(unix)'.dependencies]
+rustix = {version="1",features=["time","fs"]}
+
+[features]
+test-harness = []
+
+[dependencies.rx-process]
+path = "../rx-process"
+
+[[bin]]
+name = "rx-executor-read-fixture"
+path = "tests/support/read_fixture.rs"
+required-features = ["test-harness"]
+
+[[bin]]
+name = "rx-executor-decision-fixture"
+path = "tests/support/decision_fixture.rs"
+required-features = ["test-harness"]
+
+[dev-dependencies]
+tempfile = "3"
+
+[[bin]]
+name = "rx-executor-service"
+path = "src/bin/service.rs"
+
+[[bin]]
+name = "rx-executor-service-fixture"
+path = "tests/support/service_fixture.rs"
+required-features = ["test-harness"]
+
+[[bin]]
+name = "rx-executor-worker-fixture"
+path = "tests/support/worker_fixture.rs"
+required-features = ["test-harness"]
+
+[[bin]]
+name = "rx-executor-cell-service-fixture"
+path = "tests/support/cell_service_fixture.rs"
+required-features = ["test-harness"]
+
+[[bin]]
+name = "rx-executor-v2-registered-fixture"
+path = "tests/support/execution_v2_registered.rs"
+required-features = ["test-harness"]

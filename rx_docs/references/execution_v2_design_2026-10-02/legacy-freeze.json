@@ -1,0 +1,59 @@
+{
+  "schema": "rx.execution-v2.legacy-freeze.v1",
+  "status": "FROZEN_INJECTION_RECORDED_UI_FAIL_ISOLATION_APPROVED",
+  "baseline": "existing installed Linux v0.4.0-rc.1 images, currently stopped; not rebuilt",
+  "installation": {
+    "schema": "rx.dev-installation.v1",
+    "bundle_sha256": "5f28646e5a827a2a0f6c4339705557fba5caade42a038f13aae3fb201e159606",
+    "images": {
+      "platform": "sha256:41bb01bfd483a424fdd28790e6bec7b6c0c15e911ca68f9ca00f23a83158e710",
+      "solutions": "sha256:2ac1196819972b88aee7ed6f6cefba0d366eae96c4d3f095e120f6701ff98e89"
+    },
+    "architecture": "amd64",
+    "physical_execution": "NOT_SUPPORTED"
+  },
+  "sources": {
+    "platform": "b95c7153dbd1246c95a849b4713467605b31ae17",
+    "solutions": "9ba4a3c345c9f5beb27cb7f324ea5659f0afb8e0"
+  },
+  "files": {
+    "operator/assets/index-WmV_6c6c.js": {
+      "sha256": "d19584f7a14c3c79cc731431126c1beb964cb3bacdaba39f52ebe305b43a6bdc",
+      "size_bytes": 490053
+    },
+    "operator/assets/index-z7WyhjN_.css": {
+      "sha256": "fbc8f869b68fdcc624f0903f6de0860a9f4e5b3f5e5824dfcacb88375b0bd129",
+      "size_bytes": 188281
+    },
+    "operator/index.html": {
+      "sha256": "e63af4947fdc3ea6d12bacf91a18b08340fa4e32e675a1ae27ce923b53fc07d5",
+      "size_bytes": 456
+    },
+    "operator/operator-bundle.json": {
+      "sha256": "37ce55aa9f6bef0246c83237e18e6504c2ebf237aec8084800ed1ff79f269e40",
+      "size_bytes": 90996
+    },
+    "rx-bt-engine": {
+      "sha256": "235d10d432f47fc1811cc03a9c57ddff74eef3ec0da177bfa003017b436e5b3e",
+      "size_bytes": 2103296
+    },
+    "rx-executor-service": {
+      "sha256": "1e6dffcb7b5a071fc35b119181a3ce1f6c01300a7efe714681b3daab4f34df87",
+      "size_bytes": 16386512
+    },
+    "rx-hostd": {
+      "sha256": "b5e428fcb8c7c8b5de32dc3d2b24887ed320a97d0aa411d28b0b1124dc9d1b7d",
+      "size_bytes": 20582080
+    },
+    "rx-platformd": {
+      "sha256": "c48eb63e7be1dd613682bb83ddb6e8220ecf9ee432caea72a57e190e21ebff35",
+      "size_bytes": 46581968
+    }
+  },
+  "ui": {
+    "tree_sha256": "2563af9bc8145e27c0e7ef96d616a17f1f0067a8fcbff31aa35b02220b393070",
+    "files": 568,
+    "size_bytes": 7378746,
+    "inventory_algorithm": "SHA256 of compact sorted-key JSON map of frozen-root-relative paths including the operator/ prefix to {sha256,size_bytes}; UTF-8"
+  }
+}

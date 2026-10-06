@@ -461,6 +461,7 @@ class InstallerTests(Files):
 
 
 class BootstrapContentTests(Files):
+    """Keep the original G0 contract tested independently of the current M2 scope."""
     def setUp(self):
         super().setUp()
         self.root = self.directory / "scaffold"; self.root.mkdir()
@@ -468,9 +469,15 @@ class BootstrapContentTests(Files):
             source = ROOT / name
             target = self.root / name; target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
+        (self.root / ".github/validation-scope.json").write_text(json.dumps(repository.SCOPE))
+        (self.root / "README.md").write_text("G0 fixture; no product source.\n")
+        workflow = (self.root / ".github/workflows/ci.yml")
+        workflow.write_text(workflow.read_text().replace(
+            "needs: [repository, commit_policy, import_fidelity, sdk_parity, static_identity]",
+            "needs: [repository, commit_policy]").replace("SOURCE_IMPORTED_UNVALIDATED", "BOOTSTRAP_ONLY"))
 
     def check(self):
-        return repository.check(self.root, [p for p in self.root.rglob("*") if p.is_file() or p.is_symlink()])
+        return repository.check_bootstrap(self.root, [p for p in self.root.rglob("*") if p.is_file() or p.is_symlink()])
 
     def test_current_scaffold_has_bootstrap_only_scope(self):
         self.assertEqual(self.check(), [])

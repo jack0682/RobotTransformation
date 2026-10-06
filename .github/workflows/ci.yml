@@ -26,17 +26,20 @@ env:
 
 jobs:
   repository:
-    name: Bootstrap repository and GitFlow
+    name: Root governance and import-stage fixtures
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
           fetch-depth: 0
-      - name: Exercise governance refusal cases
-        run: python3 -B .github/test_governance.py
-      - name: Validate source-free scaffold
+      - name: Retain G0 governance and add M2 refusal cases
+        run: |
+          python3 -B .github/test_governance.py
+          python3 -B .github/test_import.py
+      - name: Validate declared root and imported file inventory
         run: python3 -B tools/governance/check_repository.py
       - name: Validate PR route
         if: github.event_name == 'pull_request'
@@ -49,6 +52,7 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
           fetch-depth: 0
       - name: Audit every ancestor of the contribution head
@@ -57,17 +61,54 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 -B tools/governance/check_commit_policy.py --head "$HEAD_SHA" --github-repository "$GITHUB_REPOSITORY"
 
+  import_fidelity:
+    name: Frozen source bytes, modes, Git objects and provenance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Check worktree, index and exact candidate source closure
+        run: python3 -B tools/migration/check_import.py --git
+
+  sdk_parity:
+    name: Same-candidate SDK producer parity
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Check SDK self inventory and producer export
+        run: python3 -B rx-platform/tools/check_host_sdk.py rx-solutions/sdk
+
+  static_identity:
+    name: Frozen source identity recipes and binding closure
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Compare named static identities against the pinned baseline
+        run: python3 -B tools/migration/source_identities.py compare --baseline-report provenance/import/M2-source-identities.json --target . --output "$RUNNER_TEMP/m2-source-identities.json"
+
   ci:
     name: ${{ github.event_name == 'pull_request' && 'CI' || 'Branch CI' }}
     if: ${{ always() }}
-    needs: [repository, commit_policy]
+    needs: [repository, commit_policy, import_fidelity, sdk_parity, static_identity]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
-      - name: Require every BOOTSTRAP_ONLY validation job
+      - name: Require every SOURCE_IMPORTED_UNVALIDATED stage check
         env:
           NEEDS: ${{ toJSON(needs) }}
         run: python3 -B tools/governance/check_ci.py

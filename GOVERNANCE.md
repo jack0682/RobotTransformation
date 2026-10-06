@@ -76,13 +76,21 @@ The bootstrap fixture suite uses isolated files and mocked GitHub/GPG results; i
 
 Later import and CI phases must preserve or strengthen existing product gates, including contract/binding hashes, SDK producer parity, invariant traceability, Engine boundaries, installed clients, and scoped runtime tests. Every scope transition needs its own checks and evidence. Wiki commits and project-status changes do not satisfy source PR checks or maintainer acceptance.
 
-## Required next scope transition: M2
+## M2 scope: source imported, product unvalidated
 
-G0 deliberately rejects product roots and keeps `BOOTSTRAP_ONLY`. The source-import PR must implement an explicit **SOURCE_IMPORTED_UNVALIDATED** stage together with its checks; merely deleting the bootstrap allowlist or changing the scope string is not acceptable.
+The retained G0 checker still rejects product roots under `BOOTSTRAP_ONLY`, and its original regression fixtures remain active. The explicit **SOURCE_IMPORTED_UNVALIDATED** branch accepts only the independently pinned 1,718-file import plus the named root governance and provenance files. It does not broadly allow arbitrary files under product prefixes.
 
-The M2 change must add a frozen source tuple and per-file repository/commit/path/blob/mode provenance, raw-import fidelity checks, static source-identity comparison, and same-commit SDK parity. The required aggregate must include those import/static jobs in addition to repository and full-head commit-policy checks, with negative controls for missing/extra files, mode or byte changes, stale SDK, and altered identity inputs. The source-import result must continue to state that product builds, runtime conformance, and acceptance are NOT_RUN until actually exercised.
+The M2 manifest records a frozen source tuple and per-file repository/commit/path/blob/mode provenance. The offline import checker pins its canonical payload SHA-256 to `c154b96c9bfb63d70d837dfefc2c41cc37e586bf26c754a9f6291e2e538be5fc`, independently recalculates actual file SHA-256 and Git blob/tree IDs, and refuses additions, missing files, mode changes, aliases, symlinks, or altered payloads. With `--git`, both the source and provenance manifest must also match the index and candidate HEAD.
 
-M3 then adds the full union of product checks under its separately reviewed validation scope. This sequence makes the M2 import PR reviewable before M3 without treating G0 or static import validation as product success. The current G0 does not implement either later stage.
+All five required jobs use the exact PR head or push SHA: `repository`, `commit_policy`, `import_fidelity`, `sdk_parity`, and `static_identity`. The aggregate rejects missing, failed, cancelled, skipped, or unlisted jobs. Static identity comparison consumes a hash-pinned baseline; unsupported required recipe evaluation is a failure. Explicit unmeasured compiled-binary and physical scope stays UNKNOWN/NOT_RUN. The unestablished workflow-execution/v2 consumed wire hash is a named limitation, not an invented digest.
+
+The root content checker validates root English policy and root-document links. It verifies frozen import membership but does not normalize imported documents or claim their historical evidence links are resolved. The required import-fidelity job establishes their exact bytes; M4 owns link reconciliation. Product builds, runtime conformance, and acceptance remain NOT_RUN until actually exercised.
+
+## Required next scope transition: M3
+
+M3 adds the full union of prior product checks under a separately reviewed validation scope. It must record the exact accepted M2 import commit, verify that commit's imported blobs/modes and provenance against this unchanged frozen manifest, and separately validate the current candidate's legitimate source changes. The historical import baseline must not be recomputed from later source. Do not leave the M2 requirement that the current product tree equal the original snapshot permanently enabled, and do not simply remove it without the historical-commit audit and replacement current-source gates.
+
+The M3 change must introduce a new explicit scope, preserve all governance/refusal checks, audit the M2 import commit's ancestry and provenance, and require the full contract/binding/SDK/invariant/Engine/client/package/runtime gate union for the current candidate. M2 itself does not run or claim those product checks. Frozen CP2 runtime state remains separate throughout.
 
 ## Recorded bootstrap checkpoint — 2026-10-07
 

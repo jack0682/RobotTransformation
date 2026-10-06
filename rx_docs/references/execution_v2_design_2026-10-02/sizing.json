@@ -1,0 +1,14 @@
+{
+  "scope": "Exact index representation size; v1 payload extrapolation, not a dense resolve run",
+  "dense_slots": 2400,
+  "models": 2,
+  "nodes": 8,
+  "concrete_parameter_artifacts": 38400,
+  "literal_parameter_ref_array_bytes": 5284801,
+  "v1_parameter_payload_extrapolated_bytes": 48499200,
+  "v1_report_payload_extrapolated_bytes": 929577600,
+  "report_index_bytes": 362633,
+  "max_report_index_bytes": 1450373,
+  "unique_definition_digests_in_ab_receipts": 82,
+  "timing": "NOT_MEASURED; v2 resolver/qualification integration not implemented"
+}

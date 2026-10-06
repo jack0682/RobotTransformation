@@ -1,0 +1,237 @@
+{
+  "repository": "jack0682/rx_docs",
+  "signing_fingerprint": "7527E36F9EB3667236B5B0919C9FE74DE196CD5A",
+  "created_at": "2026-09-13T23:43:12.824797+00:00",
+  "backup_sha256": "3b5978524a70320d0fee9c6a34b535ca817c2a3f3bfa8bc3b166314c7d236784",
+  "commits": {
+    "9b7ef7f1358f171dadfab3f9f0dac5c007f306f1": {
+      "new": "570a437a22f9166b8eaafacf8b32e5686a4f17dd",
+      "tree": "bb6509a9a11ce8e58e8ca1bfd5bd0bafc4e03699",
+      "parents": [],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "63e397cdc36a570b795feeab8f538d1a6b8f6d17": {
+      "new": "7fb659361c260dfb1649017261aaea49c87b10b6",
+      "tree": "9ffee4a9bf89c86ca8ccf171b93ae28867be8c9f",
+      "parents": [
+        "9b7ef7f1358f171dadfab3f9f0dac5c007f306f1"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "a3ad26cff53ddc62dcb3198b34bdd6a405ae27a0": {
+      "new": "2cff019b04e2aaa7cdc0cd5ec8bc6f80c1bd6333",
+      "tree": "5f87741d9ab97a8704e8b183600da3c88d0d1fda",
+      "parents": [
+        "63e397cdc36a570b795feeab8f538d1a6b8f6d17"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "39e3de9543a10f433c433ff17d8b7738b7bf124f": {
+      "new": "334933289f0e6db86c9e466b9033820a0279703c",
+      "tree": "a652b2314c94b1facc9761762f9385d9e2b734e9",
+      "parents": [
+        "a3ad26cff53ddc62dcb3198b34bdd6a405ae27a0"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "b4914547da84806af2c778dfe839d327a88d49df": {
+      "new": "a323c288de98d4df29ec2d7b1eafc85eec91a51d",
+      "tree": "03e11cc8e216c0e6a4c83593155a4c6dc39a322e",
+      "parents": [
+        "39e3de9543a10f433c433ff17d8b7738b7bf124f"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "ad8cd80ee3ee7d55a892093f6b59facc1bfae343": {
+      "new": "cc2e431bb85504e432ce70fb05207618f301523d",
+      "tree": "093aead5057324a59aef75bf318b287dea9b511f",
+      "parents": [
+        "b4914547da84806af2c778dfe839d327a88d49df"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "fc5ba9ab3d7f23248df35bb80fe0f7de73cc8efb": {
+      "new": "5e39b990c7decb698753c4a4f74df831276a299e",
+      "tree": "1db3569836c274399a51f3381bde7061fddef36d",
+      "parents": [
+        "ad8cd80ee3ee7d55a892093f6b59facc1bfae343"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "e316542d8e9567050c03446a3bedecffaaae821d": {
+      "new": "de66df180390c9841fe6f16f489527c1a5c12b34",
+      "tree": "2c3a645f91f41884c4377d97201e521c8d89cfe8",
+      "parents": [
+        "fc5ba9ab3d7f23248df35bb80fe0f7de73cc8efb"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "de096ade48423bfcfd7aa45a67bee9d0f6a3485b": {
+      "new": "a956ea2ddf829aac2440212ad2c25c89be8ac502",
+      "tree": "ff93ba2c609409511e98147ab38cc19fe1ce68d0",
+      "parents": [
+        "e316542d8e9567050c03446a3bedecffaaae821d"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "707c85f8c037f84b334b1625d36c12b53e58eb7d": {
+      "new": "cd0157f7fd81efc70b61515379549ef431b568dd",
+      "tree": "ad9683a5124b91981a944f59e1577b4034546957",
+      "parents": [
+        "de096ade48423bfcfd7aa45a67bee9d0f6a3485b"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "7c193755dd1878a30eab0a5496451faf27a71840": {
+      "new": "d088ae7c2d49d748e4153c561ea5c4cbe6ac21b6",
+      "tree": "a127eb2d7c69555e67610cf2c2cdcb55400de20a",
+      "parents": [
+        "707c85f8c037f84b334b1625d36c12b53e58eb7d"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "6111a7d1dcf33052f38c3e67c6585aec2b44df3c": {
+      "new": "f99db6f4f37e2eb49e7079b778c9d31782ad3bbf",
+      "tree": "e6b56ab49428d5ce7f08c9ab5f1207a3a9b50e53",
+      "parents": [
+        "7c193755dd1878a30eab0a5496451faf27a71840"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "9e14e98c359782effc44317b97ebe38cf3545ad1": {
+      "new": "9825fe11a7fc84d2d7968318e73943df49f6ba9d",
+      "tree": "f9146a569e82e6778cb027f586549cfeab99a327",
+      "parents": [
+        "6111a7d1dcf33052f38c3e67c6585aec2b44df3c"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "5aa5f6a60e60ee865cf6dc74fbe10c08fe16cf1a": {
+      "new": "1a69a2ba05eff712567ce82e6958fa79d84f9b67",
+      "tree": "928237a27fb91236dc7e7ff62b0706fbd4c2f813",
+      "parents": [
+        "9e14e98c359782effc44317b97ebe38cf3545ad1"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "75340a78ce2677fa6745bee006b0a1709dd40c22": {
+      "new": "08bc6bc09f7b52e2b0d6e0dbd3f302f167fd8549",
+      "tree": "ae174ea40ed564d7ddfcd47286d222d9f6a224eb",
+      "parents": [
+        "5aa5f6a60e60ee865cf6dc74fbe10c08fe16cf1a"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "457cca44bb71f0f1d203b99c3555cd184077e913": {
+      "new": "8446d34485ec99f63eca3ebcd6b7be75167c8ca0",
+      "tree": "a478defaf0655b59e486c1373ff6df5b03097073",
+      "parents": [
+        "75340a78ce2677fa6745bee006b0a1709dd40c22"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "0ca6f54f1b5a2bead2ecb19b0b5430deee1b7f29": {
+      "new": "1aeec0e88aeb5ff54c70f7b69a680a67e41a12b4",
+      "tree": "a478defaf0655b59e486c1373ff6df5b03097073",
+      "parents": [
+        "75340a78ce2677fa6745bee006b0a1709dd40c22",
+        "457cca44bb71f0f1d203b99c3555cd184077e913"
+      ],
+      "author": "jack0682 <131640493+jack0682@users.noreply.github.com>"
+    },
+    "8cde1a08f743f968e11107013fdd69bb24764fd2": {
+      "new": "57f11a364f468ea0f028eb52c66d77a539d93ebe",
+      "tree": "a478defaf0655b59e486c1373ff6df5b03097073",
+      "parents": [
+        "75340a78ce2677fa6745bee006b0a1709dd40c22",
+        "0ca6f54f1b5a2bead2ecb19b0b5430deee1b7f29"
+      ],
+      "author": "jack0682 <131640493+jack0682@users.noreply.github.com>"
+    },
+    "d5566ceb96c194d5566364f4709ea13355ec9c01": {
+      "new": "841c5e12f90b2e46ebc2f659a1b64599c47ae298",
+      "tree": "a478defaf0655b59e486c1373ff6df5b03097073",
+      "parents": [
+        "0ca6f54f1b5a2bead2ecb19b0b5430deee1b7f29",
+        "8cde1a08f743f968e11107013fdd69bb24764fd2"
+      ],
+      "author": "jack0682 <131640493+jack0682@users.noreply.github.com>"
+    },
+    "0815406e1678c700ee0bc8479ef0df39671483be": {
+      "new": "f517284511038e24881352406290ec1d301db9af",
+      "tree": "08eaf762c2774b4cc028d021ff0fe06a8567b69d",
+      "parents": [
+        "d5566ceb96c194d5566364f4709ea13355ec9c01"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "c4a6d3edd023fc78b690266b11205847b133339d": {
+      "new": "cb83e842fde56072963e58762d8f2606684485a9",
+      "tree": "08eaf762c2774b4cc028d021ff0fe06a8567b69d",
+      "parents": [
+        "d5566ceb96c194d5566364f4709ea13355ec9c01",
+        "0815406e1678c700ee0bc8479ef0df39671483be"
+      ],
+      "author": "jack0682 <131640493+jack0682@users.noreply.github.com>"
+    },
+    "ce875c1be5ac556432e110b7d33e4eac21af51e3": {
+      "new": "4c3d13e21e3aa932b4836c315128b45e8587608e",
+      "tree": "545b34c2133524148782ebc160fc1da2eaf42359",
+      "parents": [
+        "c4a6d3edd023fc78b690266b11205847b133339d"
+      ],
+      "author": "Jaehong Oh <jaehongoh1554@gmail.com>"
+    },
+    "d3fd8e1910fbc92359c97114221c38badccdc2b6": {
+      "new": "29c6ee2271cc5a585f6d64bc8037862a9c5867d7",
+      "tree": "545b34c2133524148782ebc160fc1da2eaf42359",
+      "parents": [
+        "8cde1a08f743f968e11107013fdd69bb24764fd2",
+        "ce875c1be5ac556432e110b7d33e4eac21af51e3"
+      ],
+      "author": "jack0682 <131640493+jack0682@users.noreply.github.com>"
+    },
+    "fb44baca67b1c6bff6895e379d2a6d5102447eb4": {
+      "new": "e839b29a6427086e7789e0471c51546b48a74e4c",
+      "tree": "545b34c2133524148782ebc160fc1da2eaf42359",
+      "parents": [
+        "c4a6d3edd023fc78b690266b11205847b133339d",
+        "d3fd8e1910fbc92359c97114221c38badccdc2b6"
+      ],
+      "author": "jack0682 <131640493+jack0682@users.noreply.github.com>"
+    }
+  },
+  "refs": {
+    "refs/heads/develop": {
+      "old": "fb44baca67b1c6bff6895e379d2a6d5102447eb4",
+      "new": "e839b29a6427086e7789e0471c51546b48a74e4c",
+      "tree": "545b34c2133524148782ebc160fc1da2eaf42359"
+    },
+    "refs/heads/main": {
+      "old": "d3fd8e1910fbc92359c97114221c38badccdc2b6",
+      "new": "29c6ee2271cc5a585f6d64bc8037862a9c5867d7",
+      "tree": "545b34c2133524148782ebc160fc1da2eaf42359"
+    },
+    "refs/tags/archive/initial-draft-2026-09-14": {
+      "old": "901d05577931caff2541f84cdd2f16eb20294d34",
+      "new": "a349a14d83773177052b7c2f3e7e52e4ef66b160",
+      "old_target": "6111a7d1dcf33052f38c3e67c6585aec2b44df3c",
+      "new_target": "f99db6f4f37e2eb49e7079b778c9d31782ad3bbf",
+      "tree": "e6b56ab49428d5ce7f08c9ab5f1207a3a9b50e53"
+    },
+    "refs/tags/codex/initial-draft": {
+      "old": "f6c5a9656538f3585d01d5e8e8c75b442ca5d2ff",
+      "new": "ca2a9a91525d82e9bc1d73bbc77da87f130daccc",
+      "old_target": "6111a7d1dcf33052f38c3e67c6585aec2b44df3c",
+      "new_target": "f99db6f4f37e2eb49e7079b778c9d31782ad3bbf",
+      "tree": "e6b56ab49428d5ce7f08c9ab5f1207a3a9b50e53"
+    },
+    "refs/tags/draft-v0.1": {
+      "old": "011ab83da13592d6a9b39bb551f9e3f80ff852ae",
+      "new": "627406d6a6a2f9e3d3e8649552488a5aa84ca987",
+      "old_target": "6111a7d1dcf33052f38c3e67c6585aec2b44df3c",
+      "new_target": "f99db6f4f37e2eb49e7079b778c9d31782ad3bbf",
+      "tree": "e6b56ab49428d5ce7f08c9ab5f1207a3a9b50e53"
+    }
+  }
+}
