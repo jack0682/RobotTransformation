@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop, 'codex/**', 'feature/**', 'fix/**', 'docs/**', 'chore/**', 'release/**', 'hotfix/**']
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-${{ github.ref == 'refs/heads/main' && github.run_id || 'latest' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  GIT_OPTIONAL_LOCKS: '0'
+  GIT_NO_REPLACE_OBJECTS: '1'
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  repository:
+    name: Bootstrap repository and GitFlow
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Exercise governance refusal cases
+        run: python3 -B .github/test_governance.py
+      - name: Validate source-free scaffold
+        run: python3 -B tools/governance/check_repository.py
+      - name: Validate PR route
+        if: github.event_name == 'pull_request'
+        run: python3 -B tools/governance/check_repository.py --event "$GITHUB_EVENT_PATH"
+
+  commit_policy:
+    name: Full-head author DCO and OpenPGP
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Audit every ancestor of the contribution head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 -B tools/governance/check_commit_policy.py --head "$HEAD_SHA" --github-repository "$GITHUB_REPOSITORY"
+
+  ci:
+    name: ${{ github.event_name == 'pull_request' && 'CI' || 'Branch CI' }}
+    if: ${{ always() }}
+    needs: [repository, commit_policy]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Require every BOOTSTRAP_ONLY validation job
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: python3 -B tools/governance/check_ci.py

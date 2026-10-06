@@ -1,0 +1,11 @@
+{
+  "schema": "rx.validation-scope.v1",
+  "scope": "BOOTSTRAP_ONLY",
+  "product_source_imported": false,
+  "product_validation": "NOT_RUN",
+  "historical_dco_exceptions": 0,
+  "required_jobs": [
+    "repository",
+    "commit_policy"
+  ]
+}

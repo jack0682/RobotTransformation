@@ -1,0 +1,28 @@
+RobotTransformation / RX
+Copyright 2026 RX contributors
+
+This project is licensed under the Apache License, Version 2.0.
+See LICENSE for the complete terms.
+
+Legacy project notices retained for the planned source snapshot import:
+  RX — rx-platform
+  RX — rx-solutions
+  RX — rx_docs
+  Copyright 2026 RX contributors
+
+Third-party components retain their respective copyrights and licenses.
+Existing third-party notices and license files remain applicable.
+
+The rx-solutions notice identifies this third-party component:
+  DYNAMIXEL SDK 4.1.0 protocol 2 source subset
+  Copyright ROBOTIS CO., LTD. Licensed under Apache License 2.0.
+  Unmodified upstream content and provenance in the original repository:
+  native/dynamixel/vendor/source.json.
+  The helper links no OS serial PortHandler implementation.
+
+Original notice:
+https://github.com/jack0682/rx-solutions/blob/0fed87b5f7e4bee0925613af9db4d515769a61ea/NOTICE
+
+G0 contains governance only; native product source is not included yet.
+This notice preserves attribution and does not claim that source import or
+product validation has completed.

@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+export GIT_OPTIONAL_LOCKS=0 GIT_NO_REPLACE_OBJECTS=1
+rx_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+exec python3 "$rx_root/tools/governance/check_commit_policy.py" --check-config
