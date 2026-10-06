@@ -191,6 +191,23 @@ def root_inventory(root):
     return set(value["files"])
 
 
+def job_env_runner_errors(workflow):
+    """Reject runner references at job.env in the repository's block-style workflow.
+
+    GitHub allows runner in step.env/with/run, but not jobs.<job_id>.env.
+    This focused regression guard is not a complete GitHub expression validator.
+    """
+    errors = []
+    body = workflow.partition("jobs:\n")[2]
+    for match in re.finditer(r"(?ms)^  ([A-Za-z_][A-Za-z0-9_-]*):\n(.*?)(?=^  [A-Za-z_][A-Za-z0-9_-]*:|\Z)", body):
+        job, block = match.groups()
+        for env in re.finditer(r"(?ms)^    [\"']?env[\"']?:\s*\n(.*?)(?=^    \S|\Z)", block):
+            for expression in re.findall(r"\$\{\{(.*?)\}\}", env.group(1), re.DOTALL):
+                if re.search(r"\brunner\s*(?:\.|\[)", expression):
+                    errors.append("runner context is unavailable in jobs." + job + ".env; use step.env")
+    return errors
+
+
 def check_full_ci_stage(root, files):
     errors = []
     try:
@@ -225,6 +242,7 @@ def check_full_ci_stage(root, files):
             if name in actual_root and path.suffix == ".md": errors.extend(name + ": " + e for e in links(root, path))
         except (ValueError, OSError) as exc: errors.append(f"{name}: {exc}")
     workflow = (root / ".github/workflows/ci.yml").read_text()
+    errors.extend(job_env_runner_errors(workflow))
     if "pull_request_target" in workflow or re.search(r"(?m)^\s*(?:-\s*)?[\"']?continue-on-error[\"']?\s*:", workflow):
         errors.append("Privileged trigger or tolerated child failure is forbidden")
     for action in re.findall(r"(?m)^\s*- uses:\s*(\S+)", workflow):

@@ -36,6 +36,23 @@ class FullGateTests(unittest.TestCase):
         with self.assertRaises(ValueError): check_ci.check(old, check_ci.FULL_SCOPE)
         with self.assertRaises(ValueError): check_ci.stage({**check_ci.FULL_SCOPE, 'product_validation': 'ACCEPTED'})
 
+    def test_runner_context_is_step_only_not_job_env(self):
+        workflow = (ROOT / '.github/workflows/ci.yml').read_text()
+        self.assertEqual(check_repository.job_env_runner_errors(workflow), [])
+        for job, component in [('platform_rust', 'rx-platform'), ('solutions_rust', 'rx-solutions')]:
+            step = '        env:\n          CARGO_TARGET_DIR: ${{ runner.temp }}/' + component + '-target\n'
+            self.assertIn(step, workflow)
+            invalid = workflow.replace(step, '', 1)
+            invalid = invalid.replace('  ' + job + ':\n', '  ' + job + ':\n    env:\n      CARGO_TARGET_DIR: ${{ runner.temp }}/' + component + '-target\n', 1)
+            with self.subTest(job=job):
+                errors = check_repository.job_env_runner_errors(invalid)
+                self.assertEqual(len(errors), 1)
+                self.assertIn('jobs.' + job + '.env', errors[0])
+        bracket = "jobs:\n  fixture:\n    env:\n      TARGET: ${{ runner['temp'] }}\n    steps:\n      - run: true\n"
+        self.assertEqual(len(check_repository.job_env_runner_errors(bracket)), 1)
+        valid = "jobs:\n  fixture:\n    steps:\n      - run: true\n        env:\n          TARGET: ${{ runner.temp }}\n"
+        self.assertEqual(check_repository.job_env_runner_errors(valid), [])
+
     def test_original_real_gpg_and_skills_architectures_remain(self):
         workflow = (ROOT / '.github/workflows/ci.yml').read_text()
         self.assertEqual(workflow.count('python3 -B .github/test_commit_policy.py'), 2)

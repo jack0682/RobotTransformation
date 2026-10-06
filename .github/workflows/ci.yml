@@ -203,8 +203,6 @@ jobs:
     defaults:
       run:
         working-directory: source/rx-platform
-    env:
-      CARGO_TARGET_DIR: ${{ runner.temp }}/rx-platform-target
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -224,6 +222,8 @@ jobs:
             ${{ runner.temp }}/rx-platform-target
           key: ${{ runner.os }}-${{ runner.arch }}-rx-platform-${{ hashFiles('source/rx-platform/Cargo.lock', 'source/rx-platform/rust-toolchain.toml', 'source/rx-solutions/sdk/source-lock.json') }}
       - name: Format lint and test the complete original workspace
+        env:
+          CARGO_TARGET_DIR: ${{ runner.temp }}/rx-platform-target
         run: |
           cargo fmt --all -- --check
           cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
@@ -236,8 +236,6 @@ jobs:
     defaults:
       run:
         working-directory: source/rx-solutions
-    env:
-      CARGO_TARGET_DIR: ${{ runner.temp }}/rx-solutions-target
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -257,6 +255,8 @@ jobs:
             ${{ runner.temp }}/rx-solutions-target
           key: ${{ runner.os }}-${{ runner.arch }}-rx-solutions-${{ hashFiles('source/rx-solutions/Cargo.lock', 'source/rx-solutions/rust-toolchain.toml', 'source/rx-solutions/sdk/source-lock.json') }}
       - name: Format lint and test the complete original workspace
+        env:
+          CARGO_TARGET_DIR: ${{ runner.temp }}/rx-solutions-target
         run: |
           cargo fmt --all -- --check
           cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
