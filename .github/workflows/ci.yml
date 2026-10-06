@@ -18,97 +18,455 @@ concurrency:
 defaults:
   run:
     shell: bash
+    working-directory: source
 
 env:
   GIT_OPTIONAL_LOCKS: '0'
   GIT_NO_REPLACE_OBJECTS: '1'
   PYTHONDONTWRITEBYTECODE: '1'
+  RX_CI_DECLARATION: CI_SCOPE_DECLARED_NOT_YET_RUN
+  CARGO_BUILD_JOBS: '2'
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: '1'
 
 jobs:
   repository:
-    name: Root governance and import-stage fixtures
+    name: Root governance and stage regression fixtures
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
           persist-credentials: false
           fetch-depth: 0
-      - name: Retain G0 governance and add M2 refusal cases
+      - name: Run retained and current governance fixtures
         run: |
           python3 -B .github/test_governance.py
           python3 -B .github/test_import.py
-      - name: Validate declared root and imported file inventory
-        run: python3 -B tools/governance/check_repository.py
+          python3 -B .github/test_full_ci.py
+          python3 -B .github/test_root_signing.py
+          python3 -B tools/governance/test_legacy_admin_guards.py
+          python3 -B tools/governance/check_repository.py
       - name: Validate PR route
         if: github.event_name == 'pull_request'
-        run: python3 -B tools/governance/check_repository.py --event "$GITHUB_EVENT_PATH"
+        run: |
+          python3 -B tools/governance/check_repository.py --event "$GITHUB_EVENT_PATH"
 
   commit_policy:
     name: Full-head author DCO and OpenPGP
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
           persist-credentials: false
           fetch-depth: 0
-      - name: Audit every ancestor of the contribution head
+      - name: Audit the exact contribution head
         env:
           GH_TOKEN: ${{ github.token }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: python3 -B tools/governance/check_commit_policy.py --head "$HEAD_SHA" --github-repository "$GITHUB_REPOSITORY"
+        run: |
+          python3 -B tools/governance/check_commit_policy.py --head "$HEAD_SHA" --github-repository "$GITHUB_REPOSITORY"
 
   import_fidelity:
-    name: Frozen source bytes, modes, Git objects and provenance
+    name: Immutable M2 ancestor and proof objects
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
           persist-credentials: false
-      - name: Check worktree, index and exact candidate source closure
-        run: python3 -B tools/migration/check_import.py --git
+          fetch-depth: 0
+      - name: Audit original import without freezing current product files
+        run: |
+          python3 -B tools/migration/check_origin.py
 
   sdk_parity:
     name: Same-candidate SDK producer parity
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
           persist-credentials: false
-      - name: Check SDK self inventory and producer export
-        run: python3 -B rx-platform/tools/check_host_sdk.py rx-solutions/sdk
+      - name: Check self inventory and fresh export
+        run: |
+          python3 -B rx-platform/tools/check_host_sdk.py rx-solutions/sdk
 
   static_identity:
-    name: Frozen source identity recipes and binding closure
+    name: Unchanged named source identity closure
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
           persist-credentials: false
-      - name: Compare named static identities against the pinned baseline
-        run: python3 -B tools/migration/source_identities.py compare --baseline-report provenance/import/M2-source-identities.json --target . --output "$RUNNER_TEMP/m2-source-identities.json"
+      - name: Compare required source recipes against frozen proof
+        run: |
+          python3 -B tools/migration/source_identities.py compare --baseline-report provenance/import/M2-source-identities.json --target . --output "$RUNNER_TEMP/m3-static-identities.json"
+
+  platform_repository:
+    name: Platform repository and contract checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: source/rx-platform
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Run original repository and real Git-GPG fixtures
+        run: |
+          python3 -B .github/test_repository.py
+          python3 -B .github/test_commit_policy.py
+      - name: Run content and semantic integrity gates
+        run: |
+          python3 -B tools/check_repository.py
+          python3 -B tools/check_invariant_traceability.py
+          python3 -B tools/check_engine_boundaries.py
+          python3 -B tools/check_contract_baselines.py
+          python3 -B tools/test_export_host_sdk.py
+          for checker in tools/update_*_binding.py; do
+            python3 -B "$checker" --check
+          done
+
+  solutions_repository:
+    name: Solutions repository and boundary checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: source/rx-solutions
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Run original repository and real Git-GPG fixtures
+        run: |
+          python3 -B .github/test_repository.py
+          python3 -B .github/test_commit_policy.py
+      - name: Run request recovery and installer boundaries
+        run: |
+          python3 -B tools/test_runtime_skill_client.py
+          python3 -B tools/test_definition_client.py
+          python3 -B tools/test_workflow_client.py
+          python3 -B tools/test_execution_client.py
+          python3 -B tools/test_api_transport.py
+          python3 -B tools/test_linux_dev_bundle.py
+          python3 -B tools/test_python_environment.py
+          python3 -B tools/test_python_host_runner.py
+          python3 -B tools/test_external_adapter.py
+          python3 -B apps/operator/tests/test_with_servers.py
+      - name: Run content invariant and native provenance gates
+        run: |
+          python3 -B tools/check_repository.py
+          python3 -B tools/check_invariant_traceability.py
+          python3 -B tools/check_device_catalog_sources.py
+          python3 -B tools/test_native_inventory.py
+
+  document_integrity:
+    name: Current copied-document integrity and links
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - name: Check JSON normative hashes links and embedded tables
+        run: |
+          python3 -B .github/test_documents.py
+          python3 -B tools/docs/check_documents.py --run-tables
+
+  platform_rust:
+    name: rx-platform full Rust workspace
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: source/rx-platform
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - name: Install the pinned Rust toolchain
+        run: |
+          toolchain=$(python3 -c 'import tomllib; print(tomllib.load(open("rust-toolchain.toml", "rb"))["toolchain"]["channel"])')
+          rustup toolchain install "$toolchain" --profile minimal --component rustfmt --component clippy
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            ${{ runner.temp }}/rx-platform-target
+          key: ${{ runner.os }}-${{ runner.arch }}-rx-platform-${{ hashFiles('source/rx-platform/Cargo.lock', 'source/rx-platform/rust-toolchain.toml', 'source/rx-solutions/sdk/source-lock.json') }}
+      - name: Format lint and test the complete original workspace
+        env:
+          CARGO_TARGET_DIR: ${{ runner.temp }}/rx-platform-target
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+          cargo test --workspace --all-features --locked
+
+  solutions_rust:
+    name: rx-solutions full Rust workspace
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: source/rx-solutions
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - name: Install the pinned Rust toolchain
+        run: |
+          toolchain=$(python3 -c 'import tomllib; print(tomllib.load(open("rust-toolchain.toml", "rb"))["toolchain"]["channel"])')
+          rustup toolchain install "$toolchain" --profile minimal --component rustfmt --component clippy
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            ${{ runner.temp }}/rx-solutions-target
+          key: ${{ runner.os }}-${{ runner.arch }}-rx-solutions-${{ hashFiles('source/rx-solutions/Cargo.lock', 'source/rx-solutions/rust-toolchain.toml', 'source/rx-solutions/sdk/source-lock.json') }}
+      - name: Format lint and test the complete original workspace
+        env:
+          CARGO_TARGET_DIR: ${{ runner.temp }}/rx-solutions-target
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+          cargo test --workspace --all-features --locked
+
+  clients:
+    name: Installed Python and C++ clients
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: source/rx-platform
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - name: Install pinned client build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake libprotobuf-dev protobuf-compiler libgrpc++-dev protobuf-compiler-grpc nlohmann-json3-dev python3-venv
+          python3 -m venv "$RUNNER_TEMP/rx-client-env"
+          "$RUNNER_TEMP/rx-client-env/bin/pip" install grpcio==1.84.0 protobuf==7.36.2 setuptools==84.0.0 wheel==0.48.0 build==1.6.1
+      - name: Reject incomplete bundles and install both client consumers
+        run: |
+          python3 -B tools/test_prepare_clients.py
+          "$RUNNER_TEMP/rx-client-env/bin/python" -B tools/test_client_packages.py --work "$RUNNER_TEMP/rx-client-check"
+
+  operator:
+    name: Operator application
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: source/rx-solutions/apps/operator
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: source/rx-solutions/apps/operator/package-lock.json
+      - name: Run all original operator checks
+        run: |
+          npm ci
+          npm run format:check
+          npm test
+          npm run test:bundle
+          npm run build
+
+  dynamixel:
+    name: Pinned DYNAMIXEL helper boundaries
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: source/rx-solutions
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - name: Build protocol-only helper and exercise direct-caller refusals
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends nlohmann-json3-dev
+          cmake -S native/dynamixel -B "$RUNNER_TEMP/rx-dynamixel-build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$RUNNER_TEMP/rx-dynamixel-build" -j2
+          python3 -B tools/test_dynamixel_helper.py --helper "$RUNNER_TEMP/rx-dynamixel-build/rx-dynamixel-ping"
+
+  skills:
+    name: Installed skills same candidate P (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: source/rx-solutions
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - name: Build and exercise installed local-simulation release
+        run: |
+          python3 -B tools/test_skill_image_identity.py
+          python3 -B tools/build_skill_release.py --platform "$GITHUB_WORKSPACE/source/rx-platform" --architecture '${{ matrix.arch }}' --build-jobs 2 --cache-namespace 'candidate-${{ matrix.arch }}' --output "$RUNNER_TEMP/skill-bundle"
+          python3 -B tools/test_skill_install.py --bundle "$RUNNER_TEMP/skill-bundle/bundle" --evidence "$RUNNER_TEMP/skill-acceptance"
+          cp "$RUNNER_TEMP/skill-acceptance/result.json" "$RUNNER_TEMP/skill-bundle/acceptance-${{ matrix.arch }}.json"
+          cp "$RUNNER_TEMP/skill-bundle/bundle/release.json" "$RUNNER_TEMP/skill-bundle/release-${{ matrix.arch }}.json"
+          cp deployment/local-skills/install.sh "$RUNNER_TEMP/skill-bundle/install.sh"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: skills-${{ matrix.arch }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/skill-bundle/*.tar.gz
+            ${{ runner.temp }}/skill-bundle/*.sha256
+            ${{ runner.temp }}/skill-bundle/*.json
+            ${{ runner.temp }}/skill-bundle/install.sh
+
+  skills_compatibility:
+    name: Installed skills old pinned P (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: source/rx-solutions
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: jack0682/rx-platform
+          ref: e08fd1a45e2782d10f222d00ef1962a675463609
+          path: compat-platform
+          persist-credentials: false
+      - name: Verify the original compatibility source pin
+        run: |
+          python3 -c 'import json; v=json.load(open("deployment/local-skills/platform-source.json")); assert v["repository"] == "jack0682/rx-platform" and v["commit"] == "e08fd1a45e2782d10f222d00ef1962a675463609"'
+      - name: Build and exercise installed local-simulation release
+        run: |
+          python3 -B tools/test_skill_image_identity.py
+          python3 -B tools/build_skill_release.py --platform "$GITHUB_WORKSPACE/compat-platform" --architecture '${{ matrix.arch }}' --build-jobs 2 --cache-namespace 'compat-${{ matrix.arch }}' --output "$RUNNER_TEMP/skill-bundle"
+          python3 -B tools/test_skill_install.py --bundle "$RUNNER_TEMP/skill-bundle/bundle" --evidence "$RUNNER_TEMP/skill-acceptance"
+          cp "$RUNNER_TEMP/skill-acceptance/result.json" "$RUNNER_TEMP/skill-bundle/acceptance-${{ matrix.arch }}.json"
+          cp "$RUNNER_TEMP/skill-bundle/bundle/release.json" "$RUNNER_TEMP/skill-bundle/release-${{ matrix.arch }}.json"
+          cp deployment/local-skills/install.sh "$RUNNER_TEMP/skill-bundle/install.sh"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: skills_compatibility-${{ matrix.arch }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/skill-bundle/*.tar.gz
+            ${{ runner.temp }}/skill-bundle/*.sha256
+            ${{ runner.temp }}/skill-bundle/*.json
+            ${{ runner.temp }}/skill-bundle/install.sh
+
+  compiled_identity:
+    name: Actual public identity observations in isolated source copies
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - name: Install pinned Rust toolchain
+        run: |
+          toolchain=$(python3 -c 'import tomllib; print(tomllib.load(open("rx-platform/rust-toolchain.toml", "rb"))["toolchain"]["channel"])')
+          rustup toolchain install "$toolchain" --profile minimal
+      - name: Build existing packages and compare public identity calls
+        env:
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --execute
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: compiled-source-identities
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/m3-identities/*.json
+            ${{ runner.temp }}/m3-identities/logs/**
 
   ci:
     name: ${{ github.event_name == 'pull_request' && 'CI' || 'Branch CI' }}
     if: ${{ always() }}
-    needs: [repository, commit_policy, import_fidelity, sdk_parity, static_identity]
+    needs: [repository, commit_policy, import_fidelity, sdk_parity, static_identity, platform_repository, solutions_repository, document_integrity, platform_rust, solutions_rust, clients, operator, dynamixel, skills, skills_compatibility, compiled_identity]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
           persist-credentials: false
-      - name: Require every SOURCE_IMPORTED_UNVALIDATED stage check
+      - name: Require every declared M3 validation job
         env:
           NEEDS: ${{ toJSON(needs) }}
-        run: python3 -B tools/governance/check_ci.py
+        run: |
+          python3 -B tools/governance/check_ci.py

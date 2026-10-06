@@ -3,13 +3,61 @@
 import argparse
 import json
 from pathlib import Path
+import subprocess
+import os
 import re
 import sys
 
 from check_commit_policy import has_signoff, run
 
 
+def require_standalone_repository():
+    """Refuse legacy administration from an imported subtree or redirected Git context.
+
+    Kept self-contained so the standalone hook-installation fixture needs no
+    new support files. Pure helper imports remain available for unit tests;
+    every real API/Git boundary and command-line entry checks this guard.
+    """
+    expected = "jack0682/rx-platform"
+    context_variables = {
+        "GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE",
+        "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+        "GIT_CONFIG", "GIT_CONFIG_COUNT", "GIT_CONFIG_PARAMETERS",
+        "GIT_CEILING_DIRECTORIES", "GIT_DISCOVERY_ACROSS_FILESYSTEM",
+        "GIT_NAMESPACE", "GIT_SUPER_PREFIX",
+    }
+    if any(name in context_variables or name.startswith(("GIT_CONFIG_KEY_", "GIT_CONFIG_VALUE_"))
+           for name in os.environ):
+        raise ValueError("Legacy administration refuses a redirected Git context; use root tools/governance")
+    root = Path(__file__).resolve().parents[1]
+    marker = root / ".git"
+    if (marker.is_symlink() or not (marker.is_dir() or marker.is_file())
+            or any((parent / ".git").exists() for parent in root.parents)):
+        raise ValueError("Legacy administration requires a standalone repository; use root tools/governance")
+    environment = dict(os.environ, GIT_OPTIONAL_LOCKS="0")
+    top = subprocess.run(["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+                         env=environment, text=True, capture_output=True)
+    if top.returncode or Path(top.stdout.strip()).resolve() != root:
+        raise ValueError("Legacy administration requires its own Git root; use root tools/governance")
+    identity = json.loads((root / "repository-settings.json").read_text())["repository"]
+    if identity != expected:
+        raise ValueError("Legacy repository identity does not match this component; use root tools/governance")
+    origin = subprocess.run(["git", "-C", str(root), "config", "--local", "--get", "remote.origin.url"],
+                            env=environment, text=True, capture_output=True)
+    if origin.returncode not in (0, 1):
+        raise ValueError("Cannot verify the standalone repository origin")
+    if origin.returncode == 0:
+        remote = origin.stdout.strip().rstrip("/").removesuffix(".git")
+        remote = remote.replace("git@github.com:", "https://github.com/", 1)
+        remote = remote.replace("ssh://git@github.com/", "https://github.com/", 1)
+        if remote.casefold() != ("https://github.com/" + expected).casefold():
+            raise ValueError("Standalone origin does not match this component; use root tools/governance")
+    # Subsequent legacy Git reads inherit the same optional-lock discipline.
+    os.environ["GIT_OPTIONAL_LOCKS"] = "0"
+
+
 def api(path, payload=None):
+    require_standalone_repository()
     command = ["gh", "api", path]
     if payload is not None:
         command += ["--method", "PUT", "--input", "-"]
@@ -94,6 +142,7 @@ def main():
 
 if __name__ == "__main__":
     try:
+        require_standalone_repository()
         raise SystemExit(main())
     except (ValueError, OSError, KeyError) as exc:
         print(f"PR merge: {exc}", file=sys.stderr)

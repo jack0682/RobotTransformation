@@ -116,3 +116,15 @@ main and develop with verified OpenPGP and author DCO. Five active rulesets
 matched the reviewed configuration. The [bootstrap CI run](https://github.com/jack0682/RobotTransformation/actions/runs/37497048372)
 passed for that exact G0 head with BOOTSTRAP_ONLY scope. Product import, full
 product CI, SDK qualification, cutover and legacy archival remain later gates.
+
+## M3 CI declaration and current source
+
+The declared stage is `CI_SCOPE_DECLARED_NOT_YET_RUN`; this source label is not a claim that hosted execution succeeded. The aggregate evaluates the exact sixteen required job results for each run. GitHub Actions run identity and artifacts establish what executed. CI success does not accept CP2 or authorize physical equipment.
+
+The import-fidelity job now verifies immutable ancestor `0cecec7516879584c4bd6d2ba24cbe5b3c8e54a0`, its complete source objects and provenance, and the unchanged identity baseline/evaluator. It verifies protected bytes using its own standard-library Git reader before executing the verified historical checker. Current product source is checked separately; the import manifest is never regenerated from evolved source.
+
+Platform and Solutions retain their original full required checks, including actual disposable Git/GPG hook tests on Linux. Current copied-document JSON, normative hashes, unique embedded table checks, and local links are required. An earlier set of missing evidence links was repaired in the copied ordinary documents before this gate; hash-bound documents and the original documentation repository were preserved.
+
+Every candidate job checks out the same head. Installed skills use current P by default and also test the frozen old-P compatibility pin on both amd64 and arm64. The compatibility checkout is a sibling of the product checkout. Cargo jobs are limited to two, including inside the skills Docker build, with component/architecture cache and target separation. Release records include repository, commit, component path and tree identity. CI artifacts with finite retention are not permanent acceptance evidence.
+
+M4 changes canonical documentation paths only through a further reviewed scope/path-map update. M5 establishes the declared distribution and consumer release scope. M7 handles changed implementation identities and fresh review/qualification explicitly; this M3 declaration does not assert those later gates passed.

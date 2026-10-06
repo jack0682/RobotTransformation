@@ -473,8 +473,8 @@ class BootstrapContentTests(Files):
         (self.root / "README.md").write_text("G0 fixture; no product source.\n")
         workflow = (self.root / ".github/workflows/ci.yml")
         workflow.write_text(workflow.read_text().replace(
-            "needs: [repository, commit_policy, import_fidelity, sdk_parity, static_identity]",
-            "needs: [repository, commit_policy]").replace("SOURCE_IMPORTED_UNVALIDATED", "BOOTSTRAP_ONLY"))
+            "needs: [" + ", ".join(check_ci.FULL_SCOPE["required_jobs"]) + "]",
+            "needs: [repository, commit_policy]").replace("CI_SCOPE_DECLARED_NOT_YET_RUN", "BOOTSTRAP_ONLY"))
 
     def check(self):
         return repository.check_bootstrap(self.root, [p for p in self.root.rglob("*") if p.is_file() or p.is_symlink()])

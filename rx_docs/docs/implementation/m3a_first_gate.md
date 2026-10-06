@@ -7,14 +7,14 @@
 | 기존 항목 | 실행 근거 | 판정/경계 |
 |---|---|---|
 | 1 v1 유지 | P/S 전체 workspace, 기존 strict/golden corpus, 8개 규범 baseline/SDK 동기화 검사; 변경 전후 같은 고정 v1 설치의 실제 운전 | PASS. 고정 runtime bytes 및 기존 데이터 의미를 바꾸지 않음 |
-| 2 고정 v1 주입 | [구버전 runtime](../../references/execution_v2_design_2026-10-02/legacy-runtime-injection.json), [구버전 UI 실패 및 새 UI 거절](../../references/execution_v2_design_2026-10-02/legacy-ui-injection.json) | **고정 UI 자체 FAIL 유지**. 승인된 설치 격리 하에서 PASS: 새 P↔구 UI, 구 P↔새 UI 혼합은 manifest에서 거절; 새 UI는 v2 참조/추가 policy를 거절; P의 독립 legacy Start 거절 유지 |
+| 2 고정 v1 주입 | [구버전 runtime](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/legacy-runtime-injection.json), [구버전 UI 실패 및 새 UI 거절](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/legacy-ui-injection.json) | **고정 UI 자체 FAIL 유지**. 승인된 설치 격리 하에서 PASS: 새 P↔구 UI, 구 P↔새 UI 혼합은 manifest에서 거절; 새 UI는 v2 참조/추가 policy를 거절; P의 독립 legacy Start 거절 유지 |
 | 3 다른 selection/type/unit/frame | `cross_run_and_other_selection_replay_is_rejected_even_with_same_parameter`, `execution_materialization_recomputes_stored_values_and_matches_preapproved_reports`, actual-object binding/slot custody transactions | PASS. 다른 part/slot/model/node, unit/frame 및 실제 객체 provenance를 확인 |
 | 4 변조/불완전 index/상한 | `parameter_tampering_and_non_parameter_intent_changes_are_rejected`, `strict_artifact_decoding_refuses_forgery_and_ambiguous_json`, `index_cannot_omit_duplicate_reorder_or_exceed_published_domain`, `derived_qualification_recomputes_every_candidate_even_with_a_valid_signed_report` | PASS. 서명된 잘못된 최종 index entry도 재계산에서 거절 |
 | 5 override/비고정 입력 | materialization의 60 mm/20..40 mm/kg 및 WRONG_FRAME 거절, 같은 공통 resolver의 geometry/force constraints; M2 dense/60 N/100 mm/kg/구간 경로의 기존 사용자 수락 | PASS. 최종 사용자 확인은 merge된 환경에서 A/B 및 BLOCKED smoke로 재확인 |
 
-등록 P↔S Executor의 [최종 normal/Begin/Submit/Complete 응답 유실 4종](../../references/execution_v2_design_2026-10-02/m3a-registered-final.json)이 통과했다.
+등록 P↔S Executor의 [최종 normal/Begin/Submit/Complete 응답 유실 4종](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/m3a-registered-final.json)이 통과했다.
 새 선택을 만들지 않고 원 요청을 query/reconcile하며 2 Part/2 operation/budget 2를 확인했다.
-기존 handover 정체 수정 후 [20회 연속, 실패 0회](../../references/execution_v2_design_2026-10-02/m3a-handover-repeat.json)도 보존한다.
+기존 handover 정체 수정 후 [20회 연속, 실패 0회](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/m3a-handover-repeat.json)도 보존한다.
 이 두 결과의 Host 완료/인계 입력은 합성이며 frozen test clock을 사용한다. native v2 Host나
 실제 UNKNOWN 복구 운전을 입증하지 않는다. 해당 운전/RC 항목은 **M3b/M3c 이관**이다.
 

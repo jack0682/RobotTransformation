@@ -153,5 +153,5 @@ manager loss, work use, dependency replacement, support limits, storage lock. re
 
 각 기여와 병합 tree가 같고 OpenPGP·DCO를 검증했다. 두 PR의 첫 CI는 각각 Linux
 408/0/16, 432/0/20이며 전체 main은 바뀌지 않았다. 이 문서의 commit을 위 조합과 함께
-사용한다. [원시 증거와 재현 안내](../references/multi_operating_area_2026-09-25/README.md)가
+사용한다. [원시 증거와 재현 안내](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/multi_operating_area_2026-09-25/README.md)가
 실제 명령·결과·실패·바이너리 및 이미지 해시를 잇는다.

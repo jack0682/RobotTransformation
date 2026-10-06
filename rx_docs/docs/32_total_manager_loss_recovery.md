@@ -48,6 +48,6 @@ OS backend가 아직 unreaped Child를 소유하는 동안만 생성 식별정�
 
 실제 관리자 프로세스를 SIGKILL한 뒤 새 관리자가 살아 있는 원 자식을 대조하고 재개를 거절했다. 외부 시험 관찰자는 namespace 수명을 유지하며 원 관리자의 소유 핸들을 전달하지 않았다. 시험 정리용으로만 상실 전에 연 pidfd로 자식을 종료·reap한 뒤, 새 관리자가 scope가 맞는 부재를 확인하여 새 run·instance로 재개했다. 이전 UNKNOWN과 미결 결과가 남았고 permit 재사용은 거절됐다. 별도 최소 권한 반례에서는 원 RX 자식의 PID8을 다른 프로세스가 실제 재사용했다. RX는 시작 시점 차이를 판별하고 대체 프로세스를 인수하거나 종료하지 않았다.
 
-일반/특권 fixture 명령과 이미지·바이너리 해시, 최초 실패, 원시 출력, 기존 library 32단계와 resident/resource 통과선은 [검증 근거](../references/manager_loss_2026-09-24/README.md)에 있다. 커널 기구 검증, 실제 상주 연결, 미지원 경계를 분리한다. 실물 장비 검증·운영 배포·전체 상주 프레임워크 완성은 주장하지 않는다.
+일반/특권 fixture 명령과 이미지·바이너리 해시, 최초 실패, 원시 출력, 기존 library 32단계와 resident/resource 통과선은 [검증 근거](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/manager_loss_2026-09-24/README.md)에 있다. 커널 기구 검증, 실제 상주 연결, 미지원 경계를 분리한다. 실물 장비 검증·운영 배포·전체 상주 프레임워크 완성은 주장하지 않는다.
 
 선택적인 생성 식별정보 필드가 저장 상태에 추가됐다. 이전 기록은 필드 없이 읽지만 조사 근거로 보완되지 않는다. 이전 writer의 downgrade 호환성은 보장하지 않는다. Rust Investigation 입력은 문자열에서 typed 근거로 바뀌고 Decision::Admitted에 optional identity 필드가 추가되어 소스 호환성 영향이 있다. 공유 SDK·wire/proto·규범 본문과 rx-platform, rx_ws/linux는 변경하지 않는다.

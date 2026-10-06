@@ -181,10 +181,18 @@ class StageBoundaryTests(unittest.TestCase):
         self.assertNotIn("/Users/", text)
         self.assertNotIn("/home/", text)
 
-    def test_m2_root_policy_checks_current_root_and_frozen_membership(self):
-        files = [p for p in ROOT.rglob("*") if (p.is_file() or p.is_symlink())
-                 and p.relative_to(ROOT).parts[0] not in {".git", ".g0-validation"}
-                 and "__pycache__" not in p.parts]
+    def test_current_root_policy_and_undeclared_root_rejection(self):
+        try:
+            git_root = Path(repository.git("rev-parse", "--show-toplevel").strip()).resolve()
+        except ValueError:
+            git_root = None
+        if git_root == ROOT.resolve():
+            paths = repository.git("ls-files", "-z", "--cached", "--others", "--exclude-standard").split("\0")
+            files = sorted({ROOT / name for name in paths if name})
+        else:
+            # Only the deliberately Git-free staging fixture uses filesystem inventory.
+            files = [p for p in ROOT.rglob("*") if (p.is_file() or p.is_symlink())
+                     and p.relative_to(ROOT).parts[0] not in {".git", ".g0-validation"} and "__pycache__" not in p.parts]
         self.assertEqual(repository.check(ROOT, files), [])
         self.assertTrue(repository.check(ROOT, files + [ROOT / "arbitrary-product.py"]))
 

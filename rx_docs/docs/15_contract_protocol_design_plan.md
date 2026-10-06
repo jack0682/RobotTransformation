@@ -1,6 +1,6 @@
 # 15. 계약과 프로토콜 변경 방법
 
-현재 원본은 [공통 계약 v1.0](contracts/v1.0/README.md)과 [셀 운영 v1.0](cell_operations/v1.0/README.md)이다. 선행 계획은 [이전 기록](../references/README.md)에 보존한다.
+현재 원본은 [공통 계약 v1.0](contracts/v1.0/README.md)과 [셀 운영 v1.0](cell_operations/v1.0/README.md)이다. 선행 계획은 [이전 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md)에 보존한다.
 
 변경은 해결할 반례·책임 경계·wire 의미·과거 기록 해석·지원 profile에 미치는 영향을 적는다. 규범 byte가 바뀌면 manifest·무결성·platform 사본·solutions SDK를 함께 동기화한다.
 

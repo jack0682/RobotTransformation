@@ -245,7 +245,7 @@ UI가 저장한 소스로 결과를 재현하고 실패 후 처리까지 확인�
 | 묶음 | 상태 | 정확한 근거와 다음 경계 |
 |---|---|---|
 | W00/W01 | 계획·설계 통합 | [문서 #88](https://github.com/jack0682/rx_docs/pull/88); 새 source/IR/API 구현 완료는 아님 |
-| W02 | 기존 v1 캔버스·저장 경로 통합 | [검증 기록](../../references/workflow_canvas_2026-10-01/README.md), P #70/S #79; 실제 저장/새로고침/서버 재시작 복원. 새 포트 의미·Task/Property resolver·물리 실행 미포함 |
+| W02 | 기존 v1 캔버스·저장 경로 통합 | [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/workflow_canvas_2026-10-01/README.md), P #70/S #79; 실제 저장/새로고침/서버 재시작 복원. 새 포트 의미·Task/Property resolver·물리 실행 미포함 |
 | W03 | 구현·로컬 검증 진행 | 서버 검색/분류/보관/이력과 그래프 중심 UI. 분류 label과 실제 영역 권한은 구분하며 후자는 W04/W19에 남음 |
 
 W01의 현재 산출물은 [저작·실행 계약 설계](workflow_contract_design.md)와 소스 hash가 있는

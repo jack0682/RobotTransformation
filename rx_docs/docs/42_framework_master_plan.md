@@ -181,7 +181,7 @@ ROS 코어는 통신을 연결하고, RX 코어는 작업 책임을 관리한다
 | API 수명주기 | 미구현 RPC를 구현 / 삭제 / 예약으로 판정한다. deprecation 절차를 둔다 |
 | 관리 축 연결 | 등록·준비·업무 사용을 supervisor와 platform 사이에서 끝까지 연결한다 |
 | 호스트 실행 자원 | 실행 요구를 cgroup v2(CPU·메모리)와 장치 접근으로 적용하고 보고한다. 지원하지 않는 요구는 거절한다 |
-| **P 재시작 뒤 유지된 Host의 운영 rebind** | P만 재시작하고 Host는 그대로이면 운영 등록이 옛 세션에 묶여 셀이 link를 되찾지 못했다([기록](../references/p_restart_adoption_2026-09-29/README.md)). **구현(#45)**: 재수용이 세션 만료된 같은 boot를 교체, grant 만료 대기, 소비 시 work 재검사, 이력 키에 세션. 실제 이미지 3회 연속 통과([기록](../references/p_restart_rebind_2026-09-29/README.md)) |
+| **P 재시작 뒤 유지된 Host의 운영 rebind** | P만 재시작하고 Host는 그대로이면 운영 등록이 옛 세션에 묶여 셀이 link를 되찾지 못했다([기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_adoption_2026-09-29/README.md)). **구현(#45)**: 재수용이 세션 만료된 같은 boot를 교체, grant 만료 대기, 소비 시 work 재검사, 이력 키에 세션. 실제 이미지 3회 연속 통과([기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_rebind_2026-09-29/README.md)) |
 | Host 재시작 뒤 복귀 | 무효화 origin 기록을 둔다. **DeviceRestart block 해제 경로**를 만든다. 재기동 Host의 결과를 아는 작업을 정산한다(settlement v2). 모두 재수용 기록을 기준으로 한다([비교표](implementation/host_readmission_delta.md)). **origin·해제 구현(#48)**: 재link(기록된 epoch 이후의 bound link) 뒤 재자격 선택으로만 해제. settlement v2는 남음 |
 | 관측 전용 참여 | observation-only binding(P와 Host). 제어 권한 없이 관측만 제공하는 구성요소를 참여시킨다 |
 | 시험 신뢰성 | 시간에 의존하는 불안정 시험을 결정적 대기로 바꾼다(예: platformd 기동 8초 타임아웃). **처리(2026-09-30)**: platformd 기동 대기는 준비 완료 또는 서버 종료 신호로 끝나게 했다(rx-platform #50). rx-host 시험의 간헐 실패는 CI 로그상 ETXTBSY였다. 실행 파일을 쓰자마자 exec할 때 다른 스레드의 fork와 겹치는 **제품 경합**이라, 운영 중 bridge 기동도 실패할 수 있었다. exec 실패만 제한 재시도하도록 고치고 Linux 재현 시험을 두었다(rx-solutions #66) |

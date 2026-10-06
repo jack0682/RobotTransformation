@@ -118,7 +118,7 @@ P의 선언 ID와 기존 S 등록/run/instance ID를 모두 유지하고 명시�
 값 타입·binding을 P에서 정의해 S SDK로 내보낸다. 기존 S ExecutionState 경로는 re-export로
 유지한다. 기존 클라이언트나 daemon이 자동으로 보고하게 되는 변경은 아니다.
 
-[검증 기록](../../references/resident_reporting_2026-10-01/README.md):
+[검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_reporting_2026-10-01/README.md):
 Platform `223c353bcee782e71afa10a5e8886c3c165b74b5`,
 Solutions `507f07eaf4421f4beaf4f0efbad4f7fba4f983a5`의 깨끗한 작업 트리에서 실제
 mTLS와 별도 빌드한 Supervisor의 소프트웨어 자식 실행·정상 종료 및 응답 유실 복구를 통과했다.
@@ -164,7 +164,7 @@ Supervisor를 호출하거나 프로세스 권한을 만들지 않는다. 로컬
 
 현재 시험은 P 재시작/소유자 재승인, 후속 범위의 단일성·원자성·순서 보존,
 S 저장 실패·응답 유실·재개·포화와 실제 Supervisor 소프트웨어 자식/mTLS 전달·RPC 지연 중 종료·
-보고 worker 재시작/재승인 장면을 포함한다. [현재 검증 근거](../../references/resident_delivery_2026-10-01/README.md)는
+보고 worker 재시작/재승인 장면을 포함한다. [현재 검증 근거](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_delivery_2026-10-01/README.md)는
 Platform `4be79f3f56d21674ceff0c0b5ac18ef055c31cec`와 Solutions
 `24c541f134b41e3f8f3b0e8e5b6d590574c068c4`의 깨끗한 소스로 통합 장면을 다시 실행한 결과다.
 최종 지연 장면의 로컬 자식 종료는 30ms였으며 이는 해당 모의 장면의 관찰값이다.
@@ -180,7 +180,7 @@ R4는 문서 [#76](https://github.com/jack0682/rx_docs/pull/76), Platform #64, S
 필수 CI·DCO를 확인하고 통합했다. 병합 커밋의 OpenPGP 서명과 작성자 DCO도 확인했다.
 Platform `1fcac11dc091425ee07008baa26073c6c0fa68b7`,
 Solutions `443dde3bf7a1055cad8253c163ba9c1ce09c0836`의 제품 내용은 시험한 feature 커밋과
-같으며 SDK 124개 파일도 다시 일치했다. [통합 기록](../../references/resident_delivery_2026-10-01/integration.json).
+같으며 SDK 124개 파일도 다시 일치했다. [통합 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_delivery_2026-10-01/integration.json).
 
 다음 핵심 구현은 **원본 S 등록/이력을 보존하는 P 소유권 이행과 P 실행 배정**이다.
 구버전 writer 차단, 원 수입 요청의 응답 유실/재시작, 새 P 등록의 S 실행, 기존 실행의 관측·소유권 구분을
@@ -206,14 +206,14 @@ S는 원 UUID·revision·선택 mapping·history cut을 보존하며 원 요청 
 
 현재 검증은 원본 R4 자료를 수정하지 않은 복제본에서 진행한다. 실제 이전 배포 daemon의 양성 읽기와
 동결 후 downgrade 거절, 원 요청 복구, 변경된 target 거절, SQL DML 차단과 비대상 키의 정상 쓰기,
-transaction rollback과 기존 ID/이력 보존을 검사한다. [현재 실행 근거](../../references/registration_transfer_source_2026-10-01/README.md)는
+transaction rollback과 기존 ID/이력 보존을 검사한다. [현재 실행 근거](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_transfer_source_2026-10-01/README.md)는
 Platform `238c183`과 Solutions `58e5fcb`의 깨끗한 코드, 실제 이전 배포 reader의 양성/거절 결과,
 원본 파일 해시 보존을 담는다. Linux CI는 P 514 passed / 0 failed / 18 ignored, S 467 passed / 0 failed / 22 ignored이며
 S amd64·arm64 설치 번들 검사도 통과했다. 문서 [#78](https://github.com/jack0682/rx_docs/pull/78),
 P [#65](https://github.com/jack0682/rx-platform/pull/65), S [#74](https://github.com/jack0682/rx-solutions/pull/74)
 순서로 통합했다. P `2db27621e025e97345b21d3a6d819f3067a1d418`,
 S `47e848a419e65895a020cd06f5831752b9cd858f`의 내용은 시험한 코드와 같고 SDK 125개도 일치했다.
-[통합 기록](../../references/registration_transfer_source_2026-10-01/integration.json).
+[통합 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_transfer_source_2026-10-01/integration.json).
 
 **R5는 아직 미완이다.** P의 신뢰된 source 검증·수용, 원본 revision/history 이식, 응답 유실 정산,
 S의 P 수용 확인 및 P 실행 배정이 남아 있다. 준비 CLI만으로 현재 운영 registry를 이행 완료했다고
@@ -249,8 +249,8 @@ R5 target intake 통합: [문서 #80](https://github.com/jack0682/rx_docs/pull/8
 [Platform #66](https://github.com/jack0682/rx-platform/pull/66),
 [Solutions #75](https://github.com/jack0682/rx-solutions/pull/75)을 이 순서로 필수 CI·DCO 확인 후 병합했다.
 Linux workspace 시험은 P 522 passed / 0 failed / 19 ignored, S 467 passed / 0 failed / 22 ignored다.
-S의 Ubuntu amd64·arm64 설치 번들 검사도 통과했다. [검증 근거](../../references/registration_intake_2026-10-01/README.md)와
-[통합 기록](../../references/registration_intake_2026-10-01/integration.json)은 시험/병합 트리 동일성과 SDK 126개 일치를 보존한다.
+S의 Ubuntu amd64·arm64 설치 번들 검사도 통과했다. [검증 근거](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_intake_2026-10-01/README.md)와
+[통합 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_intake_2026-10-01/integration.json)은 시험/병합 트리 동일성과 SDK 126개 일치를 보존한다.
 이는 실제 Linux daemon의 target intake 또는 신규 설치 릴리스 배포를 검증했다는 뜻이 아니다.
 
 다음 연결은 **S가 인증된 P 수용 결과를 원 freeze/설치/source cut과 대조해 지속 기록하는 절차**와
@@ -293,8 +293,8 @@ S 수용 확인 통합: [문서 #82](https://github.com/jack0682/rx_docs/pull/82
 [Platform #67](https://github.com/jack0682/rx-platform/pull/67),
 [Solutions #76](https://github.com/jack0682/rx-solutions/pull/76)을 필수 CI·DCO 확인 후 이 순서로 병합했다.
 Linux workspace 시험은 P 523 passed / 0 failed / 19 ignored, S 468 passed / 0 failed / 22 ignored다.
-S Ubuntu amd64·arm64 설치 검사도 통과했다. [검증 근거](../../references/registration_reconciliation_2026-10-01/README.md)와
-[통합 기록](../../references/registration_reconciliation_2026-10-01/integration.json)은 시험/병합 코드 트리 동일성,
+S Ubuntu amd64·arm64 설치 검사도 통과했다. [검증 근거](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_reconciliation_2026-10-01/README.md)와
+[통합 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_reconciliation_2026-10-01/integration.json)은 시험/병합 코드 트리 동일성,
 서명·DCO 및 SDK 126개 일치를 담는다. 새 설치 릴리스 배포나 실제 Linux daemon 이관을 수행한 것은 아니다.
 
 다음 구현은 **검증된 프로그램 내용과 연결된 P의 일반 구성요소 실행 배정**이다.
@@ -317,7 +317,7 @@ P 소유자가 현재 구성요소 revision·파라미터·의존 선택을 제�
 종료 보고/점유 해제가 통과했다. 승인 및 관측 응답 유실도 복구했다. P 지연/거절 장면에서는 로컬 종료 후
 원 미전송 종료 기록과 P의 미해결 점유를 보존했다. 같은 원 배정의 daemon 재실행은 거절되고 이전 이력이
 변하지 않았다. 이는 실제 소프트웨어/전송/커널 근거이며 물리 작업·기능 안전·business work 성공은 아니다.
-최종 커밋 기준 실행 결과·회귀·CI는 [검증 기록](../../references/resident_execution_2026-10-01/README.md)에 연결한다.
+최종 커밋 기준 실행 결과·회귀·CI는 [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_execution_2026-10-01/README.md)에 연결한다.
 
 불명인 실행이나 잔여 의무는 TTL/PID로 해제하지 않는다. 부여된 점유가 남아 있을 때 선언 변경/퇴역은
 현재 경로에서 거절한다. 운영 중 교체의 일반 모델은 RF06 후속이다. 새 운영 저장소는 schema 9로
@@ -341,7 +341,7 @@ R6 통합: [문서 #84](https://github.com/jack0682/rx_docs/pull/84),
 Linux workspace 시험은 P 530 passed / 0 failed / 21 ignored, S 470 passed / 0 failed / 22 ignored다.
 S의 amd64·arm64 설치 검사도 통과했다. 두 병합 커밋의 OpenPGP 서명·작성자 DCO와
 CI 대상 트리 동일성, P/S SDK 130개 파일 일치를 확인했다.
-[통합 기록](../../references/resident_execution_2026-10-01/integration.json)에 정확한 커밋과 CI를 남긴다.
+[통합 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_execution_2026-10-01/integration.json)에 정확한 커밋과 CI를 남긴다.
 실제 Linux 장면의 P 소스와 통합 소스는 클라이언트 생성 검사 한 파일만 다르며,
 추가 IDL의 개수·포함 검사 외에 런타임 변경은 없다. S는 실제 장면의 소스와 같은 트리다.
 
@@ -359,5 +359,5 @@ P 원 배정과 실제 source 저장소·카탈로그·Linux 관측을 대조하
 후속 P 소유자 승인·source 수용 확인·별도 처분·새 실행의 전체 연결은 미완으로 유지한다.
 
 source 조사 단계는 문서 #86, P #69, S #78의 필수 CI·DCO 통과 후 develop에 통합했다.
-[검증 및 통합 기록](../../references/resident_recovery_source_2026-10-01/README.md)에 실제 Linux의 정상·단절·
+[검증 및 통합 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_recovery_source_2026-10-01/README.md)에 실제 Linux의 정상·단절·
 관리자 상실 장면과 같은 커밋의 검사 범위를 남긴다. 조사 명령만으로 R7 또는 RF02/RF07이 완료된 것은 아니다.

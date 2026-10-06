@@ -1,6 +1,6 @@
 # Contributing
 
-RobotTransformation is a public Apache-2.0 personal project. M2 imports frozen source with static integrity and identity checks. Product builds/runtime validation, contract changes, releases, and acceptance retain their separate gates.
+RobotTransformation is a public Apache-2.0 personal project. M3 declares the full isolated CI union. Use exact run evidence for executed checks; releases and acceptance retain their separate gates.
 
 ## Branches
 
@@ -44,13 +44,15 @@ The origin-guarded helper commands above are for a maintainer clone whose origin
 
 Describe the concrete problem, resulting behavior, source and artifact identity, tests actually run, failures, unverified scope, dependencies, and rollback. Changes to authority, UNKNOWN, stopping, handover, or recovery need counterexamples and compatibility impact. A structural edit may change a source-based compiler, validator, or driver identity even when intended behavior stays the same.
 
-For the M2 static stage:
+For root/M3 fixtures:
 
 ```sh
 python3 -B .github/test_governance.py
 python3 -B .github/test_import.py
+python3 -B .github/test_full_ci.py
+python3 -B .github/test_documents.py
 python3 -B tools/governance/check_repository.py
-python3 -B tools/migration/check_import.py --git
+python3 -B tools/migration/check_origin.py
 python3 -B rx-platform/tools/check_host_sdk.py rx-solutions/sdk
 python3 -B tools/governance/check_commit_policy.py --head HEAD
 ```
@@ -68,3 +70,5 @@ Use English for source, comments, UI, contribution material, and governance. The
 Preserve source provenance, licenses, notices, history, and historical evidence. A snapshot commit certifies the contributor's actual work and rights; it does not fabricate the original authors' signoffs. Package verification, review, qualification, activation, execution, and maintainer acceptance remain distinct. CI or a PR merge never accepts the preserved CP2 Run.
 
 Dependency updates are manual, focused, signed PRs. Vulnerability alerts remain enabled; automatic security-fix proposals are disabled. An unverified dependency upgrade is not bundled into repository migration.
+
+The full required workflow runs original Platform and Solutions Rust, client, native, operator, and installed-skills checks on separate Linux runners. Do not run heavy migration builds on the preserved CP2 host. The origin audit anchors the original import to its immutable commit; current code is validated through current-source gates. A changed compiler, validator, or driver identity requires explicit impact review instead of reusing historical approval.

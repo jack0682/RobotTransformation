@@ -11,6 +11,6 @@
 
 platform DB와 Host journal은 별도 소유 volume이다. 백업에는 identity·generation·journal 연결을 포함하며 과거 outbox를 자동 운전 명령으로 재생하지 않는다. 전체 privileged와 전체 device mount를 기본 요구로 삼지 않는다.
 
-기존 이미지 digest와 모의 시험은 [이전 증거](../references/README.md)에 한정한다. 현재 중립 이미지의 검증은 새 commit·실행 결과로 남겨야 한다. [지원 등급](13_device_support_matrix.md)과 [유지보수](08_delivery_and_maintenance.md)를 따른다.
+기존 이미지 digest와 모의 시험은 [이전 증거](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md)에 한정한다. 현재 중립 이미지의 검증은 새 commit·실행 결과로 남겨야 한다. [지원 등급](13_device_support_matrix.md)과 [유지보수](08_delivery_and_maintenance.md)를 따른다.
 
 이 주제의 이전 산업 초안은 [고정 원문](https://github.com/jack0682/rx_docs/blob/6111a7d1dcf33052f38c3e67c6585aec2b44df3c/docs/14_image_support_spec.md)에 보존한다.

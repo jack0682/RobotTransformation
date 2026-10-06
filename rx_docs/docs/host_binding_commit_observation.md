@@ -10,8 +10,8 @@ P는 사용자 제공 JSON을 확인 증거로 받으면 안 된다. 인증된 H
 
 구현 순서: 공유 model/검사와 optional binding manifest → 생성 SDK → Host 현재 관측 → P의 사전 요청 기록과 실측 확인 → staged change 적용 조건 → 실제 이미지의 중단/재기동/잘못된 확인 반례. 마지막 P 확인·적용 조건을 연결하기 전까지 기존 HOST_BINDING_CHANGE_REQUIRED 차단은 유지한다.
 
-현재 서비스 identity는 durable startup marker에 실제 Host boot가 일치할 때만 제공한다. 정지 상태 또는 같은 identity를 가진 다른 boot는 현재 확인 정보가 아니다. 로컬 mTLS 시험과 모델 반례는 [검증 기록](../references/host_binding_observation_2026-09-29/README.md)에 있다. P 확인 정책은 아직 미구현이다.
+현재 서비스 identity는 durable startup marker에 실제 Host boot가 일치할 때만 제공한다. 정지 상태 또는 같은 identity를 가진 다른 boot는 현재 확인 정보가 아니다. 로컬 mTLS 시험과 모델 반례는 [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_observation_2026-09-29/README.md)에 있다. P 확인 정책은 아직 미구현이다.
 
 ## Source revision 3
 
-P가 교체 전 evidence 저널 ID도 직접 저장·대조하도록 Snapshot.evidence_journal을 추가했다. 필드가 없으면 기준 확인을 미지원으로 처리하며 추정하지 않는다. 같은 정확한 hash 협상 규칙을 적용하고 SDK를 다시 생성했다. [P 요청 발급과 대조 검증](../references/p_host_binding_intents_2026-09-29/README.md)을 참조한다.
+P가 교체 전 evidence 저널 ID도 직접 저장·대조하도록 Snapshot.evidence_journal을 추가했다. 필드가 없으면 기준 확인을 미지원으로 처리하며 추정하지 않는다. 같은 정확한 hash 협상 규칙을 적용하고 SDK를 다시 생성했다. [P 요청 발급과 대조 검증](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_host_binding_intents_2026-09-29/README.md)을 참조한다.

@@ -39,37 +39,37 @@
 
 ## 진행: 실제 Host gate 뒤의 Python adapter
 
-Rust PythonSkill adapter를 기존 Host gate에 연결해 준비 단계·잘못된 호출자에서는 SDK 효과가 없고, 올바른 허가 이후에만 실행되는 것을 확인했다. 반복 허가/조회는 효과를 반복하지 않았다. 시간 초과는 SendEntered를 유지하고 인계를 거절하며, 코드 변경과 만료된 dispatch도 거절했다. [검증 기록](../references/python_host_gate_2026-09-29/README.md)을 참조한다.
+Rust PythonSkill adapter를 기존 Host gate에 연결해 준비 단계·잘못된 호출자에서는 SDK 효과가 없고, 올바른 허가 이후에만 실행되는 것을 확인했다. 반복 허가/조회는 효과를 반복하지 않았다. 시간 초과는 SendEntered를 유지하고 인계를 거절하며, 코드 변경과 만료된 dispatch도 거절했다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_host_gate_2026-09-29/README.md)을 참조한다.
 
 현재는 Host 라이브러리의 실제 gate 시험이다. 제품 service Backend/Factory 등록 경로, P 등록, 출력/관측 전달과 운영자 조정은 아직 미완료이며 모의 support만 허용한다. 이 결과를 전체 설치 경로 또는 실제 장비 실행 지원으로 확대하지 않는다.
 
 ## 진행: 제품 Host 서비스 로딩
 
-제품 Builtin factory와 설정 로더에 Python 등록을 연결했다. 설치·Host·셀·Intent·환경 digest를 대조하고 실행 파일/보조 코드는 릴리스 경로에서 고정한다. 실제 이미지의 rx-hostd 초기화·기동·정지에서 SDK/스킬 import가 없었고, 물리 binding과 변조 입력은 거절됐다. [검증 기록](../references/python_host_service_2026-09-29/README.md)을 참조한다.
+제품 Builtin factory와 설정 로더에 Python 등록을 연결했다. 설치·Host·셀·Intent·환경 digest를 대조하고 실행 파일/보조 코드는 릴리스 경로에서 고정한다. 실제 이미지의 rx-hostd 초기화·기동·정지에서 SDK/스킬 import가 없었고, 물리 binding과 변조 입력은 거절됐다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_host_service_2026-09-29/README.md)을 참조한다.
 
 이제 제품 서비스가 등록 파일을 로드하지만, 파일은 아직 시험 도구에서 준비했다. P의 사용자 등록 명령과 배치, 실제 P/Executor/Host Python 실행 및 출력 연결은 다음 작업으로 남는다.
 
 ## 진행: 기존 서명 장치 패키지 경로 재사용
 
-Python 등록을 DEVICE_REFERENCE와 공통 operation catalog로 묶는 python-assemble을 추가했다. 서명 검증·원본 재조립·현재 정책과 선택 manifest 검증을 기존 경로에 연결했고, CLI와 변조/신뢰 키 제거 반례 시험을 통과했다. [검증 기록](../references/python_device_package_2026-09-29/README.md)을 참조한다.
+Python 등록을 DEVICE_REFERENCE와 공통 operation catalog로 묶는 python-assemble을 추가했다. 서명 검증·원본 재조립·현재 정책과 선택 manifest 검증을 기존 경로에 연결했고, CLI와 변조/신뢰 키 제거 반례 시험을 통과했다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_device_package_2026-09-29/README.md)을 참조한다.
 
 P에 별도 스킬 DB나 새 패키지 ABI를 추가하지 않았다. 다만 이번 시험은 metadata 패키지 fixture이며 실제 P 접수 및 설치된 signed-package Python 실행은 아직 다음 검증으로 남는다.
 
 ## 진행: 실제 P 접수와 소프트웨어 보고서 확인
 
-실제 Linux 이미지에서 SDK 환경을 준비하고 생성·서명한 Python 장치 패키지를 별도의 P에 공개 API로 접수했다. AWAITING_REVIEW 기록과 원본 catalog 일치, 동일 요청의 같은 접수 기록을 확인했다. P의 원 심사 요청을 실제 S 검증기가 검사하고 외부 테스트 서명자가 서명한 보고서를 P가 ready_for_software_approval로 기록했다. [검증 기록](../references/python_package_p_review_2026-09-29/README.md)을 참조한다.
+실제 Linux 이미지에서 SDK 환경을 준비하고 생성·서명한 Python 장치 패키지를 별도의 P에 공개 API로 접수했다. AWAITING_REVIEW 기록과 원본 catalog 일치, 동일 요청의 같은 접수 기록을 확인했다. P의 원 심사 요청을 실제 S 검증기가 검사하고 외부 테스트 서명자가 서명한 보고서를 P가 ready_for_software_approval로 기록했다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_package_p_review_2026-09-29/README.md)을 참조한다.
 
 아직 심사 결정은 없고 활성화 허가는 false다. 이 결과는 SDK 배치·binding 적용·실행이나 독립 승인으로 확대하지 않는다. 다음 단계는 승인된 Python 패키지의 실제 Host 배치와 공정 실행·출력 연결이다.
 
 ## 진행: 별도 계정 승인과 검토된 binding의 CLI 조합
 
-실제 P에서 제출자의 자기 승인은 거절됐고 별도 테스트 검토 계정이 현재 보고서를 승인했다. Python binding 계획의 영향 검토 후 설치된 CLI가 그 계획을 선택해 공정 초안을 저장하고 v2 컴파일 입력에 원 계획/binding 출처를 보존했다. compose-recover도 같은 결과였다. [검증 기록](../references/python_reviewed_composition_2026-09-29/README.md)을 참조한다.
+실제 P에서 제출자의 자기 승인은 거절됐고 별도 테스트 검토 계정이 현재 보고서를 승인했다. Python binding 계획의 영향 검토 후 설치된 CLI가 그 계획을 선택해 공정 초안을 저장하고 v2 컴파일 입력에 원 계획/binding 출처를 보존했다. compose-recover도 같은 결과였다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_reviewed_composition_2026-09-29/README.md)을 참조한다.
 
 최종 활성 구성은 바뀌지 않았고 Run/자격도 없었다. 별도 테스트 계정을 독립된 사람의 심사로 표현하지 않는다. 다음 남은 작업은 실제 배치·공정 적용/활성화·Python 실행과 출력/KPI 연결이다.
 
 ## 진행: 공정 staging과 기존 Host 교체 미구현 경계 확인
 
-검토된 Python binding으로 작성한 공정을 실제 도구로 패키징·검증하고 별도 테스트 계정의 승인과 staging까지 진행했다. P는 Host binding 변경 계획을 만들었지만 적용 준비를 HOST_BINDING_CHANGE_REQUIRED / CAPABILITY_MISSING으로 거절했다. [실행 증거와 다음 전환 요구](../references/python_deployment_boundary_2026-09-29/README.md)를 참조한다.
+검토된 Python binding으로 작성한 공정을 실제 도구로 패키징·검증하고 별도 테스트 계정의 승인과 staging까지 진행했다. P는 Host binding 변경 계획을 만들었지만 적용 준비를 HOST_BINDING_CHANGE_REQUIRED / CAPABILITY_MISSING으로 거절했다. [실행 증거와 다음 전환 요구](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_deployment_boundary_2026-09-29/README.md)를 참조한다.
 
 이는 배치 완료가 아니다. 기존 Host maintenance는 준비/취소까지만 있어, 원 저널·정상 정지 증거를 보존하는 교체 commit과 P의 실측 확인을 구현해야 한다. 해당 거절을 없애서 통과시키거나 별도 DB 수정으로 우회하지 않는다.
 
@@ -83,31 +83,31 @@ Host 내부 설치 descriptor에 선택적 native 세대 경로를 추가했다.
 
 ## 진행: 복구 가능한 Host 로컬 교체 commit
 
-정상 정지·준비 기록을 사용하는 commit/조회 CLI와 내구 상태 전환을 구현했다. 교체 의도, 새 native 세대, descriptor 교체 직후의 실제 SIGKILL에서 같은 요청으로 복구했고 원 delivery/evidence 저널 ID와 이전 native 기록을 보존했다. 변경 요청/변조된 세대/미완료 기동·취소를 거절하며, 정확한 P 구성 확인 전에는 Arm을 막는다. [검증 기록](../references/host_binding_commit_2026-09-29/README.md)을 참조한다.
+정상 정지·준비 기록을 사용하는 commit/조회 CLI와 내구 상태 전환을 구현했다. 교체 의도, 새 native 세대, descriptor 교체 직후의 실제 SIGKILL에서 같은 요청으로 복구했고 원 delivery/evidence 저널 ID와 이전 native 기록을 보존했다. 변경 요청/변조된 세대/미완료 기동·취소를 거절하며, 정확한 P 구성 확인 전에는 Arm을 막는다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_commit_2026-09-29/README.md)을 참조한다.
 
 현재는 FILE_SIMULATION 로컬 Host 시험이다. 설치 이미지의 signed Python backend 교체, P의 새 Host 결과 확인과 전체 공정 적용·자격 활성화는 아직 미완료다. P의 배치 거절은 유지하며, 다음에는 확인 계약/SDK와 실제 일치 검증을 연결한다.
 
 ## 진행: 현재 Host 교체 관측과 선택 계약 revision 2
 
-현재 서비스 boot·설치 identity·binding digest·저널이 완료된 교체 기록과 일치할 때만 관측을 내보내도록 연결했다. 실제 mTLS 조회에서 원 요청/계획/저널을 확인했고, 정지·다른 boot·잘못된 binding hash는 현재 증거가 되지 않았다. 선택 계약 revision/hash와 생성 SDK를 맞췄으며 기본 동결 manifest는 유지했다. [검증 기록](../references/host_binding_observation_2026-09-29/README.md)을 참조한다.
+현재 서비스 boot·설치 identity·binding digest·저널이 완료된 교체 기록과 일치할 때만 관측을 내보내도록 연결했다. 실제 mTLS 조회에서 원 요청/계획/저널을 확인했고, 정지·다른 boot·잘못된 binding hash는 현재 증거가 되지 않았다. 선택 계약 revision/hash와 생성 SDK를 맞췄으며 기본 동결 manifest는 유지했다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_observation_2026-09-29/README.md)을 참조한다.
 
 다음은 P가 사전에 저장한 교체 요청/기준과 실측 관측을 대조하는 판정 경로다. 아직 배치 거절을 해제하지 않았으며 Host 관측만으로 자격·실행 권한이 생기지 않는다.
 
 ## 진행: P의 원 교체 요청 저장과 대조 정책
 
-P가 staged change/Host별 원 요청 ID를 저장하는 ReleaseManager API를 추가했고 실제 이미지에서 동일 요청 재조회·권한 거절·요청 키 내용 변경 거절을 확인했다. 전후 구성, 현재 boot, 두 저널, 셀 범위와 시각을 대조하는 정책 및 내부 저장 handler도 구현했다. [검증 기록](../references/p_host_binding_intents_2026-09-29/README.md)을 참조한다.
+P가 staged change/Host별 원 요청 ID를 저장하는 ReleaseManager API를 추가했고 실제 이미지에서 동일 요청 재조회·권한 거절·요청 키 내용 변경 거절을 확인했다. 전후 구성, 현재 boot, 두 저널, 셀 범위와 시각을 대조하는 정책 및 내부 저장 handler도 구현했다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_host_binding_intents_2026-09-29/README.md)을 참조한다.
 
 아직 요청 상태는 AWAITING_BASELINE이다. 인증된 Host transport worker의 수집, fences와 최종 재확인, 배치 허용 조건 연결은 미완료이며 기존 차단을 유지했다. P 재시작 시 원 요청을 보존하는 adoption도 별도 검증이 필요하다.
 
 ## 진행: 설정 worker의 실제 Host 기준 수집
 
-P의 Host 설정 worker가 등록된 Host 세션에 보이는 교체 요청을 조회하고, 묶음마다 한 번의 transport 읽기로 얻은 관측을 P에 제출하도록 연결했다. transport 실패는 `TRANSPORT_UNAVAILABLE`, 제출 거절은 `AUTHORIZATION_CHANGED`로 기록하며 어느 쪽도 기준을 만들지 않는다. 실제 P 이미지 옆에 격리된 FILE_SIMULATION Host를 띄운 연속 3회 시험에서 모든 요청이 실제 Host snapshot으로 `BASELINE_RECORDED`가 됐고, 활성화 권한은 false, 배치 거절(409)은 유지됐다. Host가 없으면 `AWAITING_BASELINE`에 머문다. [검증 기록](../references/p_host_binding_reader_2026-09-29/README.md)을 참조한다.
+P의 Host 설정 worker가 등록된 Host 세션에 보이는 교체 요청을 조회하고, 묶음마다 한 번의 transport 읽기로 얻은 관측을 P에 제출하도록 연결했다. transport 실패는 `TRANSPORT_UNAVAILABLE`, 제출 거절은 `AUTHORIZATION_CHANGED`로 기록하며 어느 쪽도 기준을 만들지 않는다. 실제 P 이미지 옆에 격리된 FILE_SIMULATION Host를 띄운 연속 3회 시험에서 모든 요청이 실제 Host snapshot으로 `BASELINE_RECORDED`가 됐고, 활성화 권한은 false, 배치 거절(409)은 유지됐다. Host가 없으면 `AWAITING_BASELINE`에 머문다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_host_binding_reader_2026-09-29/README.md)을 참조한다.
 
-시험 중 종료 단계의 간헐 실패는 제품 결함이 아니라 등록 시점의 경합이었다. P는 종료할 때 모든 셀을 무효화하고 등록된 Host에 fence를 보내지만 그 확인을 기다리지 않는다. 그래서 등록된 Host가 제때 확인하지 못하면 `HOST_FENCE_UNCONFIRMED`와 exit 2가, 확인하면 exit 0이 나온다. 두 결과 모두 보고와 종료 코드가 일치하면 올바르며, 시험은 등록을 기다린 뒤 이 일치를 요구한다. 이후 사용자 결정에 따라 P가 최대 5초 동안 Host의 fence 확인을 기다리도록 바꿔, 연결된 Host는 항상 exit 0, 도달할 수 없는 Host는 대기 후 exit 2가 되게 했다([검증 기록](../references/platform_stop_fence_wait_2026-09-29/README.md)). (정정: 처음 기록은 원인을 fence를 받은 적 없는 Host로 적었다.) 남은 범위는 fence와 현재 확인의 재검증, 배치 허용 연결, P 재시작 뒤 원 요청 인수, 같은 실시간 경로에서의 Host 교체 commit 관측이다.
+시험 중 종료 단계의 간헐 실패는 제품 결함이 아니라 등록 시점의 경합이었다. P는 종료할 때 모든 셀을 무효화하고 등록된 Host에 fence를 보내지만 그 확인을 기다리지 않는다. 그래서 등록된 Host가 제때 확인하지 못하면 `HOST_FENCE_UNCONFIRMED`와 exit 2가, 확인하면 exit 0이 나온다. 두 결과 모두 보고와 종료 코드가 일치하면 올바르며, 시험은 등록을 기다린 뒤 이 일치를 요구한다. 이후 사용자 결정에 따라 P가 최대 5초 동안 Host의 fence 확인을 기다리도록 바꿔, 연결된 Host는 항상 exit 0, 도달할 수 없는 Host는 대기 후 exit 2가 되게 했다([검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/platform_stop_fence_wait_2026-09-29/README.md)). (정정: 처음 기록은 원인을 fence를 받은 적 없는 Host로 적었다.) 남은 범위는 fence와 현재 확인의 재검증, 배치 허용 연결, P 재시작 뒤 원 요청 인수, 같은 실시간 경로에서의 Host 교체 commit 관측이다.
 
 ## 진행: 기준을 잡은 Host 세대에만 준비·fence 허용
 
-binding 계획이 있는 변경의 준비를 일괄 거절하던 조건을 [Host binding 교체의 P 진행 조건](host_binding_admission.md)의 standing으로 바꿨다. 모든 계획 Host의 기준이 현재 등록된 세대의 것이거나 현재 세대의 교체가 확인된 경우에만 P가 셀을 fence한다. 변경 상세에는 `HOST_BINDING_CHANGE_REQUIRED`와 함께 Host별 `HOST_BINDING_BASELINE_REQUIRED` 또는 `HOST_BINDING_COMMIT_UNCONFIRMED`를 표시한다. 실제 이미지 시험 3회에서 준비와 Host의 fence 확인이 성립했고 구성 전달은 409로 거절됐다. 기준이 없으면 준비가 409로 거절된다. [검증 기록](../references/host_binding_admission_2026-09-29/README.md)을 참조한다. 구성 전달·적용, Host 교체 commit의 실시간 확인, P 재시작 인수는 아직 미구현이다.
+binding 계획이 있는 변경의 준비를 일괄 거절하던 조건을 [Host binding 교체의 P 진행 조건](host_binding_admission.md)의 standing으로 바꿨다. 모든 계획 Host의 기준이 현재 등록된 세대의 것이거나 현재 세대의 교체가 확인된 경우에만 P가 셀을 fence한다. 변경 상세에는 `HOST_BINDING_CHANGE_REQUIRED`와 함께 Host별 `HOST_BINDING_BASELINE_REQUIRED` 또는 `HOST_BINDING_COMMIT_UNCONFIRMED`를 표시한다. 실제 이미지 시험 3회에서 준비와 Host의 fence 확인이 성립했고 구성 전달은 409로 거절됐다. 기준이 없으면 준비가 409로 거절된다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_admission_2026-09-29/README.md)을 참조한다. 구성 전달·적용, Host 교체 commit의 실시간 확인, P 재시작 인수는 아직 미구현이다.
 
 ## 진행: 반복 관측 저장 결함 수정과 S4 차단 확인
 
@@ -117,14 +117,14 @@ S3–S5를 준비하며 P에 재기동 Host를 다시 등록하는 경로가 없
 
 ## 진행: 재기동 Host 재수용과 교체 확인의 실제 시험
 
-P에 재기동 Host 재수용과 binding 전이 등록을 추가했고, 연결된 Host가 재기동해도 P가 종료되지 않도록 link를 고쳤다. 실제 이미지에서 Host 정지 → 같은 요청 ID로 commit → 서명 Python package backend로 재기동 → `METADATA_MATCHED` → 새 boot fence → 구성 전달·적용 거절 → 승인 없는 재기동 시 하강을 3회 연속 확인했다. [검증 기록](../references/host_binding_commit_live_2026-09-29/README.md). 구성 전달(S6)·적용(S7)과 P 재시작 인수는 남는다.
+P에 재기동 Host 재수용과 binding 전이 등록을 추가했고, 연결된 Host가 재기동해도 P가 종료되지 않도록 link를 고쳤다. 실제 이미지에서 Host 정지 → 같은 요청 ID로 commit → 서명 Python package backend로 재기동 → `METADATA_MATCHED` → 새 boot fence → 구성 전달·적용 거절 → 승인 없는 재기동 시 하강을 3회 연속 확인했다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_commit_live_2026-09-29/README.md). 구성 전달(S6)·적용(S7)과 P 재시작 인수는 남는다.
 
 ## 진행: binding 교체의 구성 전달과 적용
 
-모든 계획 Host가 교체를 확인한 현재 세대일 때만 구성 전달·적용을 허용하도록 연결했고, 실제 이미지에서 요청 발급부터 APPLIED_UNQUALIFIED 적용까지 5회 연속 통과했다. [검증 기록](../references/host_binding_apply_live_2026-09-29/README.md). 자격 활성화와 적용된 Python 스킬의 실제 실행, P 재시작 인수는 남는다.
+모든 계획 Host가 교체를 확인한 현재 세대일 때만 구성 전달·적용을 허용하도록 연결했고, 실제 이미지에서 요청 발급부터 APPLIED_UNQUALIFIED 적용까지 5회 연속 통과했다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_apply_live_2026-09-29/README.md). 자격 활성화와 적용된 Python 스킬의 실제 실행, P 재시작 인수는 남는다.
 
 ## 진행: commit 전 무계획 재시작과 재자격 연결 조사
 
-기준 수집 뒤 commit 전에 Host가 교체 없이 재시작하면 변경을 끝낼 수 없던 막다른 경로를 고쳤다(rx-platform 82cee39). 실제 이미지에서 재시작 → 일반 재수용 → commit 미확인 → 재시작 세대로 binding 재수용 → 적용을 5회 연속 확인했고, 수정 전 이미지는 거절한다. [검증 기록](../references/host_restart_before_commit_2026-09-29/README.md).
+기준 수집 뒤 commit 전에 Host가 교체 없이 재시작하면 변경을 끝낼 수 없던 막다른 경로를 고쳤다(rx-platform 82cee39). 실제 이미지에서 재시작 → 일반 재수용 → commit 미확인 → 재시작 세대로 binding 재수용 → 적용을 5회 연속 확인했고, 수정 전 이미지는 거절한다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_restart_before_commit_2026-09-29/README.md).
 
 적용된 binding 변경을 재자격으로 활성화하는 경로는 현재 설계로 바로 이을 수 없다. 재자격 정책은 P 시작 때 고정되고 변경 후 구성의 정확한 digest와 모든 의존 artifact 바이트를 요구하는데, binding 변경의 구성은 실행 중에 만들어진다. 선택지와 권장안은 [P 진행 조건](host_binding_admission.md#재자격-연결의-설계-제약-2026-09-29-결정-필요)에 적었다. P 재시작 인수의 결정(A/B)도 남아 있다.

@@ -61,7 +61,7 @@ ROS 비의존 Rust 코어·작업 의미·판정·권한·기록을 맡는 `rx-p
 
 작업 식별, 접수와 완료의 구분, UNKNOWN 보존, 영속 전달 기록, 권한 세대, 결과 확정과 자원 인계의 분리, 개입 후 재확인 규칙을 재사용 대상으로 삼는다. 새 적용 분야에서도 의미가 성립하는지 확인하고 부족한 부분은 영향과 호환성을 검토해 확장한다.
 
-장비별 능력·검증·권한은 [장비 지원 정책](13_device_support_matrix.md)에 따른다. 2026-09-25 사용자 추가 지시에 따라 기본 전체 개발 번들의 목표는 DYNAMIXEL SDK, DYNAMIXEL Hardware Interface, AI Worker, AI Sapiens, OpenMANIPULATOR와 필요한 의존성·RX 어댑터·프로파일·예제를 모두 포함하는 것으로 바뀌었다. 이전의 제조사 기본 포함 의무가 없다는 문장은 이 요구에 한해 대체된다. 공통 계약은 특정 제조사·모델에 종속시키지 않는다. 이 목표는 설치·연결·검증 완료 선언이 아니며, G5.1은 로봇을 연결하지 않는다. [G5.1 범위](40_strict_wire_and_clients.md)와 [G5.2 모의 Ping 및 나머지 필수 통합](41_dynamixel_ping_adapter.md)을 따른다. 기존 조사·지원표·시험 근거는 [과거 기록](../references/README.md)에서 원래 범위로 보존한다.
+장비별 능력·검증·권한은 [장비 지원 정책](13_device_support_matrix.md)에 따른다. 2026-09-25 사용자 추가 지시에 따라 기본 전체 개발 번들의 목표는 DYNAMIXEL SDK, DYNAMIXEL Hardware Interface, AI Worker, AI Sapiens, OpenMANIPULATOR와 필요한 의존성·RX 어댑터·프로파일·예제를 모두 포함하는 것으로 바뀌었다. 이전의 제조사 기본 포함 의무가 없다는 문장은 이 요구에 한해 대체된다. 공통 계약은 특정 제조사·모델에 종속시키지 않는다. 이 목표는 설치·연결·검증 완료 선언이 아니며, G5.1은 로봇을 연결하지 않는다. [G5.1 범위](40_strict_wire_and_clients.md)와 [G5.2 모의 Ping 및 나머지 필수 통합](41_dynamixel_ping_adapter.md)을 따른다. 기존 조사·지원표·시험 근거는 [과거 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md)에서 원래 범위로 보존한다.
 
 ## 6. 규모 확장에 대한 설계 방향
 
@@ -79,6 +79,6 @@ ROS 비의존 Rust 코어·작업 의미·판정·권한·기록을 맡는 `rx-p
 
 이 문서는 이후 **목적·정체성·우선순위**에서 이전 산업 제품 정의보다 우선한다. 계약 v1.0의 적용 범위와 작업 의미는 유지하고 제조사 중립 문서 개정은 별도 revision과 manifest로 기록한다. 현재 저장소 구성 변경의 검증과 이전 런타임 시험 근거를 구별한다.
 
-이전 정의는 [전환 전 기록](../references/README.md)에 보존했다. 별도의 미확정 설계 초안은 이번 결정으로 승인하거나 수정하지 않았다.
+이전 정의는 [전환 전 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md)에 보존했다. 별도의 미확정 설계 초안은 이번 결정으로 승인하거나 수정하지 않았다.
 
 관련 문서: [00 후속 방향](00_design_roadmap.md) · [02 가치와 평가](02_value_and_business.md) · [03 범위](03_product_scope.md) · [09 결정 기록](09_decisions_and_sources.md)

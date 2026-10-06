@@ -23,7 +23,7 @@ the same released `rx-hostd`, without S1-specific platform or solutions source c
 The general registry is framework work; its cost is measured separately. CP1 fixes the
 design and measurement boundary. It does not establish that registration or recovery works.
 That conditional acceptance permits CP2 prerequisite checks, not bypass of a failed prerequisite. Review steps are in
-[RUN_CP1.md](../../references/2026-10-04-f2-checkpoint1/RUN_CP1.md).
+[RUN_CP1.md](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f2-checkpoint1/RUN_CP1.md).
 
 ## 1. Existing meaning and ownership remain fixed
 

@@ -89,7 +89,7 @@ G1 standalone probe의 lockfile에도 새 storage→rustix 의존 edge 갱신이
 
 아홉 통과선을 통과했다고 보고할 때에도 첫 manager 시도는 미규명 빌드 사유로 실패했고 같은 target의 진단 및 새 격리 전체 재현으로 통과했다는 사실을 함께 유지한다. 원 사건은 수정됐다고 부르지 않는다.
 
-명령·원시 출력·호환 commit·검증 범위는 [근거 기록](../references/operating_area_2026-09-25/README.md)에 둔다. 규범·wire 형식과 기존 아홉 통과선은 유지하며, main 승격·배포·실제 장비 검증은 하지 않는다.
+명령·원시 출력·호환 commit·검증 범위는 [근거 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/operating_area_2026-09-25/README.md)에 둔다. 규범·wire 형식과 기존 아홉 통과선은 유지하며, main 승격·배포·실제 장비 검증은 하지 않는다.
 
 
 최종 코드 조합은 platform [75e19331](https://github.com/jack0682/rx-platform/commit/75e19331ec1c3bfdb275f75480188f485c86d64b) + solutions [ed3d90f9](https://github.com/jack0682/rx-solutions/commit/ed3d90f9bd1e54e78023b77ae399b4d237c8e4b4)다. 각각 [PR21](https://github.com/jack0682/rx-platform/pull/21)·[PR22](https://github.com/jack0682/rx-platform/pull/22), [PR37](https://github.com/jack0682/rx-solutions/pull/37)·[PR38](https://github.com/jack0682/rx-solutions/pull/38)의 결과이며 source/SDK115개 파일이 일치한다. exact merge CI는 platform406/0/16, solutions430/0/20으로 모두 attempt1 통과했다. macOS는405/0/16,386/0/17이며 단위시험 배치 이동은 같은 세 시험을 보존한다. 아홉 통과선 완료와 첫 manager의 미규명 빌드 실패·재현 이력을 함께 유지한다.
