@@ -6,7 +6,7 @@
 
 상주 프레임워크의 첫 조각으로 작성자가 호스트 실행 요구를 표현하고, 적용할 수 없으면 실행을 거절하는 경로를 추가한다. F1은 등록 신원(F2), 명시적 복구(F3), 준비와 업무 사용 허용의 연결(F4), 의존 기능의 결합·재판정(F5)을 완성하지 않는다. 시험 개수나 프로세스 생존은 프레임워크 완성의 근거가 아니다.
 
-기존 [v1 자원 계약](contracts/v1.0/02_identity_durability_recovery.md#4-authority-and-resources)은 다음을 규정한다.
+기존 [v1 자원 계약](../contracts/semantic/v1.0/02_identity_durability_recovery.md#4-authority-and-resources)은 다음을 규정한다.
 
 > v1 reserves every resource needed at operation start in one transaction and prohibits waiting while holding a partial allocation.
 

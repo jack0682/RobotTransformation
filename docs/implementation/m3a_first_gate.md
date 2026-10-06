@@ -1,7 +1,7 @@
 # M3a 첫 관문 — 2026-10-03
 
 관문 범위는 승인된 반례 1–5와 기존 P/Executor 등록 경로다. 신규 관문을 추가하지 않았다.
-고정 v1 UI 실패를 숨기지 않고, 사용자가 승인한 [격리 조건](../contracts/workflow-execution/v2/legacy-isolation.md)을 적용했다.
+고정 v1 UI 실패를 숨기지 않고, 사용자가 승인한 [격리 조건](../../contracts/semantic/workflow-execution/v2/legacy-isolation.md)을 적용했다.
 이 문서는 구현 precheck이며 merge 후 사용자의 M1/M2 제품 smoke 수락을 대신하지 않는다.
 
 | 기존 항목 | 실행 근거 | 판정/경계 |

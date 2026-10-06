@@ -27,10 +27,10 @@ That conditional acceptance permits CP2 prerequisite checks, not bypass of a fai
 
 ## 1. Existing meaning and ownership remain fixed
 
-This proposal uses the extension point in [common native completion](../contracts/workflow-execution/v2/native-completion.md)
-and [Host input membership](../contracts/workflow-execution/v2/host-input-membership.md).
+This proposal uses the extension point in [common native completion](../../contracts/semantic/workflow-execution/v2/native-completion.md)
+and [Host input membership](../../contracts/semantic/workflow-execution/v2/host-input-membership.md).
 It does not revise execution-v2, NativeAdapter/AdapterFactory, or
-[Python execution profile v2](../contracts/workflow-execution/v2/python-execution-profile.md).
+[Python execution profile v2](../../contracts/semantic/workflow-execution/v2/python-execution-profile.md).
 The external provider specifies its own process pins and native evidence; it does not
 pretend a restarted daemon is the finite Python runner or reinterpret Python return facts.
 The existing Python profile continues to run the other S2 finite skills unchanged.

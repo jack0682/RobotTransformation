@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import copy
 import json
+import os
+import subprocess
 from pathlib import Path
 import sys
 import tempfile
@@ -42,6 +44,7 @@ class DocumentFixtures(unittest.TestCase):
         temporary = tempfile.TemporaryDirectory(prefix="documents-", dir=folder)
         self.addCleanup(temporary.cleanup)
         self.root = Path(temporary.name)
+        self.initial_material = {}
         self.bound = []
         for family, key in (("contracts/v1.0", "schema_hash_sha256"),
                             ("cell_operations/v1.0", "cell_manifest_sha256")):
@@ -110,9 +113,16 @@ class DocumentFixtures(unittest.TestCase):
                               IMPORT_PAYLOAD_SHA256=payload_hash, ORIGIN_COUNTS=(1, 1, 1, 18))
         pins.start()
         self.addCleanup(pins.stop)
+        self.source_material = copy.deepcopy(self.initial_material)
+        historical = patch.object(gate, "historical_material", return_value=self.source_material)
+        historical.start(); self.addCleanup(historical.stop)
+        layout = patch.object(gate, "check_canonical_layout", return_value={"synthetic_fixture": True})
+        layout.start(); self.addCleanup(layout.stop)
+        # check_canonical_layout's independent full corpus fixtures exercise the actual layout.
 
     def write(self, name, raw):
-        path = self.root / name
+        self.initial_material[name] = {"raw": raw, "mode": "100644"}
+        path = gate.current_path(self.root, name)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(raw)
         path.chmod(0o644)
@@ -126,7 +136,7 @@ class DocumentFixtures(unittest.TestCase):
                                "owner_manifest": owner, "manifest_sha256": gate.sha256(raw), "manifest_field": field})
 
     def documents(self):
-        return {p: gate.read(self.root, p).decode() for p in gate.document_paths(self.root) if p.endswith(".md")}
+        return {p: item["raw"].decode() for p, item in self.source_material.items() if p.endswith(".md")}
 
     def test_valid_fixture_does_not_execute_table_code_by_default(self):
         with patch.object(gate.subprocess, "run") as run:
@@ -138,6 +148,11 @@ class DocumentFixtures(unittest.TestCase):
 
     def test_new_missing_local_target_fails_without_allowlist(self):
         self.write(gate.DOCS + "/new.md", b"[new](missing.md)\n")
+        with self.assertRaisesRegex(ValueError, "missing local target"):
+            gate.check(self.root)
+
+    def test_old_physical_href_is_not_resolved_by_historical_alias(self):
+        self.write(gate.DOCS + "/legacy-link.md", b"[old](../rx_docs/docs/ordinary.md)\n")
         with self.assertRaisesRegex(ValueError, "missing local target"):
             gate.check(self.root)
 
@@ -165,18 +180,20 @@ class DocumentFixtures(unittest.TestCase):
             gate.check(self.root)
 
     def test_projection_bytes_are_frozen_separately(self):
-        self.write(self.projections[0]["target"], b'{"changed":true}\n')
+        self.source_material[self.projections[0]["target"]]["raw"] = b'{"changed":true}\n'
         with self.assertRaisesRegex(ValueError, "evidence projection differs"):
             gate.check(self.root)
 
-    def test_reviewed_index_and_current_after_bytes_are_bound(self):
+    def test_historical_index_is_bound_while_current_prose_can_evolve(self):
         path = self.root / gate.ORIGINS
         path.write_bytes(path.read_bytes() + b"\n")
         with self.assertRaisesRegex(ValueError, "index bytes differ"):
             gate.check(self.root)
         self.write(gate.ORIGINS, gate.canonical(self.index))
-        path = self.root / self.document
-        path.write_bytes(path.read_bytes() + b"Changed prose\n")
+        path = gate.current_path(self.root, self.document)
+        path.write_bytes(b"A later introduction.\n" + path.read_bytes() + b"Changed prose\n")
+        self.assertEqual(gate.check(self.root)["converted_occurrences"], 1)
+        self.source_material[self.document]["raw"] += b"Tampered historical prose\n"
         with self.assertRaisesRegex(ValueError, "changed document bytes differ"):
             gate.check(self.root)
 
@@ -186,16 +203,16 @@ class DocumentFixtures(unittest.TestCase):
             if kind == "ref": value["origins"][0]["url"] = self.url.replace(gate.SOURCE_COMMIT, "main")
             else: value["occurrences"][0]["line"] = 999
             with self.subTest(kind=kind), self.assertRaises(ValueError):
-                gate.check_origins(self.root, value, gate.check_contracts(self.root), self.documents())
+                gate.check_origins(self.root, value, gate.check_contracts(self.root), self.documents(), source_material=self.source_material)
 
     def test_symlink_target_is_not_a_valid_local_document(self):
-        link = self.root / gate.DOCS / "alias.md"
-        link.symlink_to(self.root / self.document)
+        link = gate.current_path(self.root, gate.DOCS + "/alias.md")
+        link.symlink_to(gate.current_path(self.root, self.document))
         with self.assertRaisesRegex(ValueError, "Symlink"):
             gate.check(self.root)
 
     def test_table_fence_must_be_unique_and_complete(self):
-        path = self.root / gate.DOCS / gate.TABLE_DOCUMENTS[1]
+        path = gate.current_path(self.root, gate.DOCS + "/" + gate.TABLE_DOCUMENTS[1])
         path.write_bytes(path.read_bytes() + b"```python\nmissing close\n")
         with self.assertRaisesRegex(ValueError, "exactly one"):
             gate.check(self.root)
@@ -204,10 +221,57 @@ class DocumentFixtures(unittest.TestCase):
         with patch.object(gate.subprocess, "run", return_value=SimpleNamespace(returncode=0)) as run:
             result = gate.check(self.root, run_tables=True)
         self.assertEqual(run.call_count, 3)
-        self.assertTrue(all(call.kwargs["cwd"] == self.root / "rx_docs" for call in run.call_args_list))
+        self.assertTrue(all(call.kwargs["cwd"] == self.root for call in run.call_args_list))
         self.assertEqual(result["embedded_tables"], 3)
         with patch.object(gate.subprocess, "run", return_value=SimpleNamespace(returncode=7)), self.assertRaisesRegex(ValueError, "table check failed"):
             gate.check(self.root, run_tables=True)
+
+
+class HistoricalReaderTests(unittest.TestCase):
+    def setUp(self):
+        folder = ROOT / ".g0-validation"; folder.mkdir(exist_ok=True)
+        self.tmp = tempfile.TemporaryDirectory(prefix="historical-docs-", dir=folder)
+        self.addCleanup(self.tmp.cleanup); self.root = Path(self.tmp.name)
+        self.env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
+        self.env.update(GIT_OPTIONAL_LOCKS="0", GIT_CONFIG_GLOBAL=os.devnull,
+                        GIT_CONFIG_NOSYSTEM="1", GIT_TERMINAL_PROMPT="0")
+        self.git("init", "-q", "-b", "fixture")
+        self.git("config", "user.name", "Disposable migration fixture")
+        self.git("config", "user.email", "fixture@example.invalid")
+        self.git("config", "commit.gpgsign", "false")
+        self.git("config", "core.hooksPath", os.devnull)
+        self.paths = {"rx_docs/docs/fixture-%03d.md" % n for n in range(121)}
+        for path in self.paths:
+            p = self.root / path; p.parent.mkdir(parents=True, exist_ok=True); p.write_text("# Original\n")
+        p = self.root / gate.ORIGINS; p.parent.mkdir(parents=True, exist_ok=True); p.write_text("{}\n")
+        self.git("add", "."); self.git("commit", "-q", "-m", "Disposable origin")
+        self.anchor = self.git("rev-parse", "HEAD").strip()
+        self.pins = patch.multiple(gate, M3_ANCHOR=self.anchor)
+        self.pins.start(); self.addCleanup(self.pins.stop)
+        rows = patch.object(gate, "import_rows", return_value={p: {} for p in self.paths})
+        rows.start(); self.addCleanup(rows.stop)
+    def git(self, *args):
+        result = subprocess.run(["git", "-C", str(self.root), *args], env=self.env, text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        return result.stdout
+    def test_reads_exact_ancestor_without_writing_checkout(self):
+        before = (self.root / ".git/index").read_bytes()
+        material = gate.historical_material(self.root)
+        self.assertEqual(set(material), self.paths)
+        self.assertTrue(all(v["raw"] == b"# Original\n" and v["mode"] == "100644" for v in material.values()))
+        self.assertEqual((self.root / ".git/index").read_bytes(), before)
+    def test_wrong_commit_and_nonancestor_are_rejected(self):
+        with patch.object(gate, "M3_ANCHOR", "0" * 40), self.assertRaisesRegex(ValueError, "Historical Git read refused"):
+            gate.historical_material(self.root)
+        tree = self.git("rev-parse", "HEAD^{tree}").strip()
+        other = self.git("commit-tree", tree, "-m", "Disconnected disposable root").strip()
+        with patch.object(gate, "M3_ANCHOR", other), self.assertRaisesRegex(ValueError, "Historical Git read refused"):
+            gate.historical_material(self.root)
+    def test_unfinalized_anchor_and_redirected_context_are_rejected(self):
+        with patch.object(gate, "M3_ANCHOR", "UNSET"), self.assertRaisesRegex(ValueError, "not finalized"):
+            gate.historical_material(self.root)
+        with patch.dict(os.environ, {"GIT_DIR": str(self.root / ".git")}), self.assertRaisesRegex(ValueError, "redirected"):
+            gate.historical_material(self.root)
 
 
 if __name__ == "__main__":

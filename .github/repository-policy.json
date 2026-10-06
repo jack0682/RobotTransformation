@@ -1,5 +1,7 @@
 {
-  "schema": "rx.repository-content-policy.v1",
+  "schema": "rx.repository-content-policy.v2",
   "language": "en",
+  "canonical_document_language": "preserve-source",
+  "canonical_document_inventory": ".github/root-file-inventory.json#canonical_documents",
   "exclude_ai_artifacts": true
 }

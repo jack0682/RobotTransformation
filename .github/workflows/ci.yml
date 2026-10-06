@@ -182,7 +182,7 @@ jobs:
           python3 -B tools/test_native_inventory.py
 
   document_integrity:
-    name: Current copied-document integrity and links
+    name: Canonical documents and historical origin integrity
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -190,10 +190,13 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
+          fetch-depth: 0
           persist-credentials: false
       - name: Check JSON normative hashes links and embedded tables
         run: |
           python3 -B .github/test_documents.py
+          python3 -B .github/test_canonical_layout.py
+          python3 -B .github/test_canonical_root.py
           python3 -B tools/docs/check_documents.py --run-tables
 
   platform_rust:

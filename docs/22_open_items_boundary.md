@@ -41,11 +41,11 @@
 
 | 별칭 | 파일·절 |
 |---|---|
-| S1–S7 / S2 | [셀 01](cell_operations/v1.0/01_scope_conditions_functions.md)의 §§1–7. S2는 §2 Per-installation operating-scope record |
-| B1–B6 | [공통 04](contracts/v1.0/04_binding_and_admission.md)의 §§1–6. B1은 BindingProfile의 Required item 표 |
-| M1 | [공통 01](contracts/v1.0/01_responsibility_and_semantics.md) |
-| D3 | [공통 03](contracts/v1.0/03_data_and_protocol.md) |
-| C4 | [셀 04](cell_operations/v1.0/04_protocol_integration_ui.md) |
+| S1–S7 / S2 | [셀 01](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md)의 §§1–7. S2는 §2 Per-installation operating-scope record |
+| B1–B6 | [공통 04](../contracts/semantic/v1.0/04_binding_and_admission.md)의 §§1–6. B1은 BindingProfile의 Required item 표 |
+| M1 | [공통 01](../contracts/semantic/v1.0/01_responsibility_and_semantics.md) |
+| D3 | [공통 03](../contracts/semantic/v1.0/03_data_and_protocol.md) |
+| C4 | [셀 04](../contracts/cell-operations/v1.0/04_protocol_integration_ui.md) |
 
 좌변은 문서 20 §5 마지막 열의 입력 문장을 분리한 요구다. M-01–M-08은
 OPEN-MOBILE-SUPPORT, R-01–R-11은 OPEN-RECEIPT다. N2의 판정 의무와 N3의 후속 의무,

@@ -22,7 +22,9 @@ import sys
 from urllib.parse import quote, unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
-DOCS = "rx_docs/docs"
+DOCS = "rx_docs/docs"  # Historical logical paths; current_path resolves the M4 layout.
+M3_ANCHOR = "da22697ba05262712e44acf23748ecac817e7d52"
+from check_canonical_layout import check as check_canonical_layout, current_path as moved_document_name
 ORIGINS = "provenance/import/M3-document-origins.json"
 ORIGIN_INDEX_SHA256 = "245f00ebc384de5cb4836eb9ecad761b9ddae4926490232e2fd674c3fc51aff2"
 SOURCE_REPOSITORY = "jack0682/rx_docs"
@@ -69,12 +71,17 @@ def relative(value):
     return value
 
 
-def current_path(root, name):
-    """M3 path lookup. Later layout transitions must supply reviewed path evidence."""
+def physical_path(root, name):
+    """Validate the actual rendered repository path, without historical aliases."""
     path = root / relative(name)
     for parent in [path, *path.parents]:
         require(not parent.is_symlink(), "Symlink document path: " + name)
     return path
+
+
+def current_path(root, name):
+    """Internal historical-name lookup used only for pinned records and contracts."""
+    return physical_path(root, moved_document_name(name))
 
 
 def read(root, name):
@@ -84,19 +91,20 @@ def read(root, name):
 
 
 def document_paths(root):
-    folder = current_path(root, DOCS)
-    require(folder.is_dir(), "Current document directory is missing")
     paths = []
     def failed(error):
         raise ValueError("Unreadable document directory: " + str(error))
-    for directory, dirs, files in os.walk(folder, followlinks=False, onerror=failed):
-        for name in dirs + files:
-            path = Path(directory) / name
-            require(not path.is_symlink(), "Symlink in current documents: " + str(path))
-        for name in files:
-            path = Path(directory) / name
-            require(stat.S_ISREG(path.stat().st_mode), "Nonregular current document: " + str(path))
-            paths.append(path.relative_to(root).as_posix())
+    for prefix in ("docs", "contracts"):
+        folder = current_path(root, prefix)
+        require(folder.is_dir(), "Current document directory is missing: " + prefix)
+        for directory, dirs, files in os.walk(folder, followlinks=False, onerror=failed):
+            for name in dirs + files:
+                path = Path(directory) / name
+                require(not path.is_symlink(), "Symlink in current documents: " + str(path))
+            for name in files:
+                path = Path(directory) / name
+                require(stat.S_ISREG(path.stat().st_mode), "Nonregular current document: " + str(path))
+                paths.append(path.relative_to(root).as_posix())
     return sorted(paths)
 
 
@@ -196,7 +204,7 @@ def check_local_links(root, document, text):
     for link in link_spans(text):
         target = local_target(document, link["href"])
         if target is not None:
-            path = current_path(root, target)
+            path = physical_path(root, target)
             require(path.exists(), f"{document}:{link['line']}: missing local target {link['href']}")
             count += 1
     return count
@@ -247,7 +255,14 @@ def load_origins(root):
     return decode(raw)
 
 
-def check_origins(root, index, protected, documents):
+def check_origins(root, index, protected, documents, *, source_material):
+    """Verify exact M3 provenance against its pinned ancestor, not today's prose."""
+    def original_read(name):
+        require(name in source_material, "Missing historical origin material: " + name)
+        return source_material[name]["raw"]
+    def original_mode(name):
+        require(name in source_material, "Missing historical origin mode: " + name)
+        return int(source_material[name]["mode"], 8) & 0o777
     require(index.get("schema") == "rx.document-origin-index.v1"
             and index.get("source_repository") == SOURCE_REPOSITORY
             and index.get("source_commit") == SOURCE_COMMIT
@@ -279,10 +294,10 @@ def check_origins(root, index, protected, documents):
         before = frozen.get(path, {})
         require((item.get("before_sha256"), item.get("before_bytes"), item.get("mode"))
                 == (before.get("sha256"), before.get("bytes"), before.get("mode")), "Changed document preimage differs: " + path)
-        raw = read(root, path)
+        raw = original_read(path)
         require((sha256(raw), len(raw)) == (item.get("after_sha256"), item.get("after_bytes")),
                 "M3 changed document bytes differ: " + path)
-        require(stat.S_IMODE(current_path(root, path).stat().st_mode) == int(item["mode"], 8) & 0o777,
+        require(original_mode(path) == int(item["mode"], 8) & 0o777,
                 "M3 changed document mode differs: " + path)
         changed_by_path[path] = item
     expected = Counter()
@@ -304,6 +319,9 @@ def check_origins(root, index, protected, documents):
     for item in bound:
         path = item["path"]
         require(path not in recorded, "Duplicate hash-bound origin record")
+        require(sha256(original_read(path)) == item["sha256"]
+                and sha256(original_read(item["owner_manifest"])) == item["manifest_sha256"],
+                "Historical normative material differs: " + path)
         recorded[path] = (item["sha256"], item["owner_manifest"], item["manifest_sha256"], item["manifest_field"])
     require(recorded == protected, "Frozen normative document or owner-manifest proof differs")
     projections = index.get("unchanged_local_evidence_projections")
@@ -311,12 +329,61 @@ def check_origins(root, index, protected, documents):
     for item in projections:
         require(local_target(item["document"], item["href"]) == item["target"], "Projection path mapping differs")
         row = frozen.get(item["target"], {})
-        raw = read(root, item["target"])
+        raw = original_read(item["target"])
         require((sha256(raw), len(raw)) == (row.get("sha256"), row.get("bytes")), "Frozen local evidence projection differs")
         decode(raw)
         require(any(link["line"] == item["line"] and link["href"] == item["href"]
                     for link in link_spans(documents[item["document"]])), "Projection href missing from normative document")
     return {"recorded_origins": len(origins), "converted_occurrences": len(occurrences), "changed_documents": len(changed)}
+
+
+def historical_material(root):
+    require(re.fullmatch(r"[0-9a-f]{40}", M3_ANCHOR), "M3 signed origin commit anchor is not finalized")
+    forbidden = {"GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE",
+                 "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_NAMESPACE",
+                 "GIT_CONFIG", "GIT_CONFIG_COUNT", "GIT_CONFIG_PARAMETERS"}
+    require(not any(k in forbidden or k.startswith(("GIT_CONFIG_KEY_", "GIT_CONFIG_VALUE_"))
+                    for k in os.environ), "Historical Git context is redirected")
+    env = dict(os.environ, GIT_OPTIONAL_LOCKS="0", GIT_NO_REPLACE_OBJECTS="1", GIT_NO_LAZY_FETCH="1")
+    command = ["git", "--no-replace-objects", "-c", "gc.auto=0", "-c", "maintenance.auto=false", "-C", str(root)]
+    def git(*args, data=None):
+        result = subprocess.run(command + list(args), input=data, env=env, capture_output=True)
+        require(result.returncode == 0, "Historical Git read refused: " + " ".join(args))
+        return result.stdout
+    require(git("rev-parse", "--is-shallow-repository").strip() == b"false", "Historical proof requires full ancestry")
+    git("merge-base", "--is-ancestor", M3_ANCHOR, "HEAD")
+    raw_tree = git("ls-tree", "-r", "-z", M3_ANCHOR, "--", "rx_docs")
+    entries = {}
+    for entry in raw_tree.split(b"\0"):
+        if not entry:
+            continue
+        header, path = entry.split(b"\t", 1)
+        mode, kind, oid = header.decode().split()
+        path = relative(path.decode())
+        require(kind == "blob" and mode in ("100644", "100755"), "Historical document is not a regular blob")
+        require(path not in entries, "Duplicate historical document")
+        entries[path] = {"mode": mode, "oid": oid}
+    expected = {path for path in import_rows(root) if path.startswith("rx_docs/")}
+    require(set(entries) == expected and len(entries) == 121, "Historical document inventory differs")
+    require(git("show", M3_ANCHOR + ":" + ORIGINS) == read(root, ORIGINS), "Historical M3 origin record differs")
+    paths = sorted(entries)
+    requests = ("\n".join(M3_ANCHOR + ":" + path for path in paths) + "\n").encode()
+    response = git("cat-file", "--batch", data=requests)
+    offset = 0
+    for path in paths:
+        end = response.find(b"\n", offset)
+        require(end >= offset, "Truncated historical object response")
+        header = response[offset:end].decode().split()
+        require(len(header) == 3 and header[:2] == [entries[path]["oid"], "blob"]
+                and header[2].isdigit(), "Historical object type/identity differs")
+        size = int(header[2]); start = end + 1; stop = start + size
+        require(response[stop:stop+1] == b"\n", "Truncated historical object payload")
+        raw = response[start:stop]
+        require(hashlib.sha1(b"blob " + str(size).encode() + b"\0" + raw).hexdigest() == entries[path]["oid"],
+                "Historical Git object hash differs")
+        entries[path]["raw"] = raw; offset = stop + 1
+    require(offset == len(response), "Unexpected historical object response tail")
+    return entries
 
 
 def table_blocks(root):
@@ -332,6 +399,8 @@ def table_blocks(root):
 
 def check(root, run_tables=False):
     root = Path(root).absolute()
+    layout = check_canonical_layout(root)
+    source_material = historical_material(root)
     paths = document_paths(root)
     documents, json_count, links = {}, 0, 0
     for name in paths:
@@ -343,20 +412,24 @@ def check(root, run_tables=False):
             documents[name] = text
             links += check_local_links(root, name, text)
     protected = check_contracts(root)
-    origins = check_origins(root, load_origins(root), protected, documents)
+    historical_documents = {path: item["raw"].decode("utf-8") for path, item in source_material.items()
+                            if path.startswith(DOCS + "/") and path.endswith(".md")}
+    origins = check_origins(root, load_origins(root), protected, historical_documents,
+                            source_material=source_material)
     blocks = table_blocks(root)
     if run_tables:
         for name, block in blocks:
             print("Checking embedded table: " + name, flush=True)
-            result = subprocess.run([sys.executable, "-B", "-c", block], cwd=root / "rx_docs",
+            result = subprocess.run([sys.executable, "-B", "-c", block], cwd=root,
                                     env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1", GIT_OPTIONAL_LOCKS="0"))
             require(result.returncode == 0, name + ": embedded table check failed")
-    return {"status": "DOCUMENT_CHECKS_OK", "scope": "CURRENT_DOCUMENTS_AND_PINNED_ORIGIN_RECORDS",
+    return {"status": "DOCUMENT_CHECKS_OK", "scope": "CURRENT_CANONICAL_DOCUMENTS_AND_SEPARATE_M3_ANCESTOR_PROOF",
+            "historical_origin_commit": M3_ANCHOR, "canonical_layout": layout,
             "json_files": json_count, "markdown_files": len(documents), "local_targets": links,
             "hash_bound_documents": len(protected), **origins,
             "embedded_tables": len(blocks) if run_tables else "NOT_RUN",
             "external_network_and_anchor_checks": "NOT_RUN",
-            "origin_proof_scope": "Pinned records verified from frozen original Git objects during preparation",
+            "origin_proof_scope": "Exact M3 ancestor objects plus pinned original-object index; current prose checked separately",
             "product_builds_and_runtime": "NOT_RUN"}
 
 

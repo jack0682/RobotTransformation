@@ -27,7 +27,7 @@ N3의 반례 작성에 넘긴다. 규범·API·schema·실행 가능한 profile�
 하나의 `CellDefinition`에 등록하는 실내·실외 두 operating scope**로 고정한다.
 두 scope는 인계 구획과 소포 지지 자원을 공유한다. 운영 영역은 실행 책임·정책의 범위이고
 Runtime 수와 같은 개념이 아니다([제품 정의 §3](01_product_definition.md),
-[공통 계약 Scope](contracts/v1.0/README.md), [셀 계약 §1·6](cell_operations/v1.0/01_scope_conditions_functions.md)).
+[공통 계약 Scope](../contracts/semantic/v1.0/README.md), [셀 계약 §1·6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md)).
 건물 안팎이라는 위치만으로 독립된 두 Runtime을 가정하지 않는다.
 
 출입문은 이번 동작의 참여자로 추가하지 않는다. 시작 시 인계 구획이 확보된 조건을
@@ -58,14 +58,14 @@ Runtime 수와 같은 개념이 아니다([제품 정의 §3](01_product_definit
 
 | 물음·하위 항목 | 사례의 답 | 분류·근거 |
 |---|---|---|
-| Q1-a 무엇이 이동하는가 | `PKG-01`의 위치와 지지를 `IN-01` 그리퍼에서 `OUT-01/TRAY-01`로 바꾼다. 중간에는 두 쪽이 함께 지지할 수 있다. 소포 식별 근거·위치·각 지지 근거·변경 세대를 함께 남긴다. | **cited** — `MaterialState`, sender-release, receiver-support evidence. [셀 01 §6](cell_operations/v1.0/01_scope_conditions_functions.md). |
-| Q1-b 어떤 작업이며 누가 기록·판정하는가 | 인계 한 건을 하나의 `Run`에 연결하고 내려놓기·받는 장치의 유지·보내는 그리퍼 해제·후퇴의 필요한 native 효과를 별개 `Activation`/`Operation`으로 구별한다. `RUNTIME-01`은 의도와 결론, 두 Host는 각 native 전달 사실과 원 관측을 맡는다. 물리 이동 전 지지자는 `IN-01`, 이동 후 지지자는 `OUT-01`이며 플랫폼 판정 책임은 이동하지 않는다. | **cited** — C02·C03·C04, `Run`, `Activation`, `Operation`, `NativeInvocation`. 임의의 다중 native 명령을 한 operation으로 숨기지 않는다. [공통 01 §1–2](contracts/v1.0/01_responsibility_and_semantics.md). |
-| Q2-a 필요한 능력·권한·자원을 어떻게 확인하는가 | `HOST-OUT`은 적재·유지·도킹 관련 capability와 관측을 제공해야 한다. 플랫폼은 바인딩·현재 모드·교정·물품·증거원을 대조하고 충돌 자원을 예약한다. `RunMandate`와 별개로 해당 operation·Host·epoch·증거에 묶인 `DispatchPermit`을 쓰며 Host가 전송 직전에 다시 검사한다. | **cited** — `BindingProfile`, `resource_set`, admission, `RunMandate`, `DispatchPermit`. [공통 04 §1·5](contracts/v1.0/04_binding_and_admission.md), [셀 02 §2·4–5](cell_operations/v1.0/02_authorization_invalidation.md). |
+| Q1-a 무엇이 이동하는가 | `PKG-01`의 위치와 지지를 `IN-01` 그리퍼에서 `OUT-01/TRAY-01`로 바꾼다. 중간에는 두 쪽이 함께 지지할 수 있다. 소포 식별 근거·위치·각 지지 근거·변경 세대를 함께 남긴다. | **cited** — `MaterialState`, sender-release, receiver-support evidence. [셀 01 §6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md). |
+| Q1-b 어떤 작업이며 누가 기록·판정하는가 | 인계 한 건을 하나의 `Run`에 연결하고 내려놓기·받는 장치의 유지·보내는 그리퍼 해제·후퇴의 필요한 native 효과를 별개 `Activation`/`Operation`으로 구별한다. `RUNTIME-01`은 의도와 결론, 두 Host는 각 native 전달 사실과 원 관측을 맡는다. 물리 이동 전 지지자는 `IN-01`, 이동 후 지지자는 `OUT-01`이며 플랫폼 판정 책임은 이동하지 않는다. | **cited** — C02·C03·C04, `Run`, `Activation`, `Operation`, `NativeInvocation`. 임의의 다중 native 명령을 한 operation으로 숨기지 않는다. [공통 01 §1–2](../contracts/semantic/v1.0/01_responsibility_and_semantics.md). |
+| Q2-a 필요한 능력·권한·자원을 어떻게 확인하는가 | `HOST-OUT`은 적재·유지·도킹 관련 capability와 관측을 제공해야 한다. 플랫폼은 바인딩·현재 모드·교정·물품·증거원을 대조하고 충돌 자원을 예약한다. `RunMandate`와 별개로 해당 operation·Host·epoch·증거에 묶인 `DispatchPermit`을 쓰며 Host가 전송 직전에 다시 검사한다. | **cited** — `BindingProfile`, `resource_set`, admission, `RunMandate`, `DispatchPermit`. [공통 04 §1·5](../contracts/semantic/v1.0/04_binding_and_admission.md), [셀 02 §2·4–5](../contracts/cell-operations/v1.0/02_authorization_invalidation.md). |
 | Q2-b 이 이동형 receiver는 실제로 그 자격이 있는가 | `TRAY-01`의 소포 유지와 도킹·제동, 인계 중 지지 상실에 대한 근거가 필요하다. 현재 문서는 그 근거를 제공하지 않는다. | **open — OPEN-MOBILE-SUPPORT**: v1.0 본문에는 이 사례의 장치·소포·공간 조합에 대한 관측 범위, 허용 하중·자세·위치 범위, 신선도 한계, 고장 반응과 검증 결과 값이 없다. §5에 입력 묶음을 명명한다. |
-| Q3-a 접수와 실제 전달을 어떻게 구별하는가 | 인계 요청의 저장과 개별 operation의 접수는 구별한다. operation의 identity·intent·activation binding·pending dispatch가 영속 확정된 단계가 `ADMITTED`, Host 준비는 `HOST_PREPARED`, native 접수는 profile이 의미를 보장할 때의 `NATIVE_ACCEPTED`다. 실제 전달은 operation 종류에 맞는 완료 근거와 소포 식별·받는 쪽 지지·보내는 쪽 분리 관측이 필요하며 판정 입력과 결과를 함께 기록한다. | **cited** — acceptance stages, `completion_rule`, `RESULT_RECORDED`, I04·I07·I08. [공통 01 §1–8](contracts/v1.0/01_responsibility_and_semantics.md), [셀 01 §6](cell_operations/v1.0/01_scope_conditions_functions.md). |
-| Q3-b 사람의 인수 확인과 이 인계 서비스의 완료는 무엇인가 | `RECIPIENT-01`이 이 소포를 이 받는 로봇으로 인수한다고 선언한 기록을 물리 근거와 구별해 요구한다. 그 선언을 유효하게 인정할 사람 식별·권한·절차와 물리 근거의 결합 규칙이 필요하다. §4는 요구할 관측을 적는다. | **open — OPEN-RECEIPT**: `HUMAN_ATTESTATION`의 actor·scope·observation time·procedure revision은 기존 필드지만, 이 서비스의 수령자 식별 수단, 위임 범위, 선언 유효기간과 최종 완료 결합 규칙은 v1.0에 주어져 있지 않다. [공통 01 §6](contracts/v1.0/01_responsibility_and_semantics.md). |
-| Q4-a 유실·지연·경합·고장 때 무엇을 보존하는가 | 원 operation의 identity·전달 가능성·원 증거를 보존한다. 불명은 `RECONCILING/UNKNOWN`, 결론과 충돌하는 늦은 근거는 기존 outcome을 보존한 `integrity=DISPUTED`로 구별한다. 관련 자원의 `QUARANTINED`와 결과 판정을 분리하고 자동 재전송·자동 재시작으로 빈 근거를 덮지 않는다. | **cited** — I03·I05·I08·I09, SC02·SC03·SC06·SC14. [공통 01 §5–8](contracts/v1.0/01_responsibility_and_semantics.md), [공통 06 §2–3](contracts/v1.0/06_scenarios_and_validation.md). |
-| Q4-b 누가 후속 조치를 맡는가 | `RUNTIME-01`이 기록 조회·결론·관련 dispatch 제한을 맡고 각 Host가 장치 관측·잔여 명령 확인·정의된 현지 반응을 맡는다. 조사·직접 개입은 `RECIPIENT-01`이 현장 개입 역할로 맡으며, 접근 자체의 허가와 물리 정지는 별도 확인한다. 개입 후 재시작에는 그 역할의 새 시작 의도가 필요하다. 구체 반례 질문은 §6이다. | **cited** — C03·C05, Site operations/intervention role, `TRANSIENT`/`LATCHED`, `RestartRun`. [공통 01 §1](contracts/v1.0/01_responsibility_and_semantics.md), [셀 01 §1](cell_operations/v1.0/01_scope_conditions_functions.md), [셀 02 §2–3](cell_operations/v1.0/02_authorization_invalidation.md). |
+| Q3-a 접수와 실제 전달을 어떻게 구별하는가 | 인계 요청의 저장과 개별 operation의 접수는 구별한다. operation의 identity·intent·activation binding·pending dispatch가 영속 확정된 단계가 `ADMITTED`, Host 준비는 `HOST_PREPARED`, native 접수는 profile이 의미를 보장할 때의 `NATIVE_ACCEPTED`다. 실제 전달은 operation 종류에 맞는 완료 근거와 소포 식별·받는 쪽 지지·보내는 쪽 분리 관측이 필요하며 판정 입력과 결과를 함께 기록한다. | **cited** — acceptance stages, `completion_rule`, `RESULT_RECORDED`, I04·I07·I08. [공통 01 §1–8](../contracts/semantic/v1.0/01_responsibility_and_semantics.md), [셀 01 §6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md). |
+| Q3-b 사람의 인수 확인과 이 인계 서비스의 완료는 무엇인가 | `RECIPIENT-01`이 이 소포를 이 받는 로봇으로 인수한다고 선언한 기록을 물리 근거와 구별해 요구한다. 그 선언을 유효하게 인정할 사람 식별·권한·절차와 물리 근거의 결합 규칙이 필요하다. §4는 요구할 관측을 적는다. | **open — OPEN-RECEIPT**: `HUMAN_ATTESTATION`의 actor·scope·observation time·procedure revision은 기존 필드지만, 이 서비스의 수령자 식별 수단, 위임 범위, 선언 유효기간과 최종 완료 결합 규칙은 v1.0에 주어져 있지 않다. [공통 01 §6](../contracts/semantic/v1.0/01_responsibility_and_semantics.md). |
+| Q4-a 유실·지연·경합·고장 때 무엇을 보존하는가 | 원 operation의 identity·전달 가능성·원 증거를 보존한다. 불명은 `RECONCILING/UNKNOWN`, 결론과 충돌하는 늦은 근거는 기존 outcome을 보존한 `integrity=DISPUTED`로 구별한다. 관련 자원의 `QUARANTINED`와 결과 판정을 분리하고 자동 재전송·자동 재시작으로 빈 근거를 덮지 않는다. | **cited** — I03·I05·I08·I09, SC02·SC03·SC06·SC14. [공통 01 §5–8](../contracts/semantic/v1.0/01_responsibility_and_semantics.md), [공통 06 §2–3](../contracts/semantic/v1.0/06_scenarios_and_validation.md). |
+| Q4-b 누가 후속 조치를 맡는가 | `RUNTIME-01`이 기록 조회·결론·관련 dispatch 제한을 맡고 각 Host가 장치 관측·잔여 명령 확인·정의된 현지 반응을 맡는다. 조사·직접 개입은 `RECIPIENT-01`이 현장 개입 역할로 맡으며, 접근 자체의 허가와 물리 정지는 별도 확인한다. 개입 후 재시작에는 그 역할의 새 시작 의도가 필요하다. 구체 반례 질문은 §6이다. | **cited** — C03·C05, Site operations/intervention role, `TRANSIENT`/`LATCHED`, `RestartRun`. [공통 01 §1](../contracts/semantic/v1.0/01_responsibility_and_semantics.md), [셀 01 §1](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md), [셀 02 §2–3](../contracts/cell-operations/v1.0/02_authorization_invalidation.md). |
 
 집계: 하위 항목 8개 = `cited` 6개 + `open` 2개. 열린 물음은 Q2·Q3 두 개다.
 Q1·Q4가 닫혔다는 것은 인용 가능한 책임·표현 규칙이 있다는 뜻이며,
@@ -83,7 +83,7 @@ Q1·Q4가 닫혔다는 것은 인용 가능한 책임·표현 규칙이 있다�
 | 인수 확인 | 실제 전달 근거와 별도로 `RECIPIENT-01`이 `PKG-01`, `OUT-01`, 이 인계 건, 본인이 관찰한 범위와 시각을 특정한 `HUMAN_ATTESTATION`. `OPEN-RECEIPT`의 절차 revision·권한·유효성 확인이 필요하다. | 인수 확인을 주장할 수 없다. 기계 관측이 사람의 수령 선언을 대신하지 않고, 사람의 선언도 native 성공·센서 지지 근거를 대신하지 않는다. 일반 UI 확인 클릭은 이 기록이 아니다. |
 | 전체 완료 | 위 세 단계의 유효한 기록 연결, 필요한 operation 결과와 후퇴 근거, 인수 선언과 물리 근거 사이 모순 부재, 관련 미해결·개입 부재, 보내는 제어 자원을 해제할 별도 근거와 받는 쪽·공유 구획의 잔여 점유 기록을 함께 확인한다. 이 결합을 서비스 완료로 기록하는 규칙은 `OPEN-RECEIPT`에 남는다. | 전체 완료를 주장할 수 없다. 어느 한 operation의 `SUCCEEDED`나 `RESULT_RECORDED`, 또는 인수 선언 하나를 전체 완료로 승격하지 않는다. |
 
-결과 확정과 자원 해제는 [공통 01 §7·I08](contracts/v1.0/01_responsibility_and_semantics.md)에
+결과 확정과 자원 해제는 [공통 01 §7·I08](../contracts/semantic/v1.0/01_responsibility_and_semantics.md)에
 따라 분리한다. `RELEASED`에는 잔여 native 명령의 추가 실행 불가, 다음 owner가 사용할
 제어 상태, 필요한 물품·중력 지지 인계 완료의 확인이 필요하다. terminal result·torque off·
 lease 만료만으로 해제하지 않는다. 인계 완료 시 보내는 제어 자원은 해제 조건을 확인하지만,
@@ -91,7 +91,7 @@ lease 만료만으로 해제하지 않는다. 인계 완료 시 보내는 제어
 `BAY-01`을 빈 공간으로 해제하지 않으며, 그 공간과 충돌하는 새 인계를 허가하지 않는다.
 완료를 모든 자원·모든 지지의 해제로 읽지 않는다.
 
-특히 [셀 01 §6](cell_operations/v1.0/01_scope_conditions_functions.md)에 따라
+특히 [셀 01 §6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md)에 따라
 지지를 줄이는 operation은 같은 소포·인계 세대의 지지 자원을 예약한다. 수신 측 지지가
 확인됐다는 사실만으로 양측이 동시에 해제할 수 없다. 해제 과정 내내 대체 지지가
 유지되는 근거와 결과·새 지지 상태 확인은 `OPEN-MOBILE-SUPPORT`의 검증 범위다.
@@ -100,18 +100,18 @@ lease 만료만으로 해제하지 않는다. 인계 완료 시 보내는 제어
 
 | 이름 | 현재 규범에 있는 것 | 이 사례에 빠진 값·판정과 다음 산출물 |
 |---|---|---|
-| OPEN-MOBILE-SUPPORT | `BindingProfile`의 capability·resource_set·completion/cancel·timing·evidence, `OperatingEnvelope`의 조합 조건, `MaterialState`와 receiver-support 및 H03·H06 의무. [공통 04 §1·2·5](contracts/v1.0/04_binding_and_admission.md), [셀 01 §3·6–7](cell_operations/v1.0/01_scope_conditions_functions.md). | `IN-01/OUT-01` 실제 장치·버전, 소포/적재함 조합, 인계 구획·도킹·제동 범위, 식별·지지·분리 관측의 source와 신선도, 허용 하중·자세·위치, 전원·압력·통신 상실 시 유지/반응 근거를 가진 사례별 입력 카드. 지금 임의 수치나 PASS를 채우지 않는다. N2가 기존 profile 설정으로 충분한지 판정하고 N3가 지지 상실 반례를 구체화한다. |
-| OPEN-RECEIPT | `HUMAN_ATTESTATION`의 출처 필드와 일반 확인 클릭의 한계, `completion_rule` 및 operator 역할. [공통 01 §6](contracts/v1.0/01_responsibility_and_semantics.md), [셀 01 §1·5](cell_operations/v1.0/01_scope_conditions_functions.md). | `RECIPIENT-01` 식별·수령 권한·위임 확인, 실제 관찰 범위와 시각·절차 revision·유효기간, 중복/늦은 선언·소포 불일치 처리, 물리 결과와 선언을 이 인계 서비스의 완료로 묶을 규칙. N2가 기존 기록·profile/업무 구성과 추가 의미의 경계를 판정한다. 법적 소유권 이전을 선언하는 문서가 아니다. |
+| OPEN-MOBILE-SUPPORT | `BindingProfile`의 capability·resource_set·completion/cancel·timing·evidence, `OperatingEnvelope`의 조합 조건, `MaterialState`와 receiver-support 및 H03·H06 의무. [공통 04 §1·2·5](../contracts/semantic/v1.0/04_binding_and_admission.md), [셀 01 §3·6–7](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md). | `IN-01/OUT-01` 실제 장치·버전, 소포/적재함 조합, 인계 구획·도킹·제동 범위, 식별·지지·분리 관측의 source와 신선도, 허용 하중·자세·위치, 전원·압력·통신 상실 시 유지/반응 근거를 가진 사례별 입력 카드. 지금 임의 수치나 PASS를 채우지 않는다. N2가 기존 profile 설정으로 충분한지 판정하고 N3가 지지 상실 반례를 구체화한다. |
+| OPEN-RECEIPT | `HUMAN_ATTESTATION`의 출처 필드와 일반 확인 클릭의 한계, `completion_rule` 및 operator 역할. [공통 01 §6](../contracts/semantic/v1.0/01_responsibility_and_semantics.md), [셀 01 §1·5](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md). | `RECIPIENT-01` 식별·수령 권한·위임 확인, 실제 관찰 범위와 시각·절차 revision·유효기간, 중복/늦은 선언·소포 불일치 처리, 물리 결과와 선언을 이 인계 서비스의 완료로 묶을 규칙. N2가 기존 기록·profile/업무 구성과 추가 의미의 경계를 판정한다. 법적 소유권 이전을 선언하는 문서가 아니다. |
 
 위 두 의무의 [N2 경계 판정](22_open_items_boundary.md)은 기존 표현 수단과 남은 사례별 입력·검증·업무 의미를 구분했다. 사용한 단위와 라벨은 [77자리 측정](21_declaration_reuse_measurement.md)을 따른다. N2의 문서 판정이 끝나도 두 미결의 상태는 **open**이며, 물리 지지 자격이나 실제 수령 규칙이 확정된 것은 아니다.
 
 **범위 밖 변형 `INDEPENDENT-RUNTIMES`**: `HOST-IN`과 `HOST-OUT`의 판정 주체를
 각각 독립 Runtime으로 바꾸는 경우다. 이 문서의 `RUNTIME-01` 원장·자원 예약·epoch를
 두 원장에 그대로 적용할 수 있다고 주장하지 않는다.
-[공통 계약 Scope](contracts/v1.0/README.md)는 단일 authoritative Runtime을 전제하고,
-[공통 04 §4](contracts/v1.0/04_binding_and_admission.md)는 fleet manager 연결만으로
+[공통 계약 Scope](../contracts/semantic/v1.0/README.md)는 단일 authoritative Runtime을 전제하고,
+[공통 04 §4](../contracts/semantic/v1.0/04_binding_and_admission.md)는 fleet manager 연결만으로
 독립 Runtime의 분산 권한을 검증했다고 주장하지 못하게 하며,
-[셀 02 §7](cell_operations/v1.0/02_authorization_invalidation.md)은 동일 state DB의
+[셀 02 §7](../contracts/cell-operations/v1.0/02_authorization_invalidation.md)은 동일 state DB의
 transaction을 요구한다. 이 변형은 N2의 범위 질문으로만 남기며 정상 사례나 위 집계에
 넣지 않는다. 영역 간 신뢰·권한 위임·분산 원장 구현은 N6의 별도 작업이다.
 
@@ -128,10 +128,10 @@ transaction을 요구한다. 이 변형은 N2의 범위 질문으로만 남기�
 
 위 후보의 [N3 문서 반례 검토](23_handover_counterexamples.md)는 원 질문을 유지한 채 유발 단계와 책임·권한·증거·격리·후속 조치, 규범상 금지 문장과 남는 현장 근거를 구체화한다. 후보 표와 두 open 상태는 그대로이며, 실행한 장애 시험이나 물리 자격의 승인이 아니다.
 
-공통 invariant와 SC 인용의 원본은 [공통 01 §8](contracts/v1.0/01_responsibility_and_semantics.md)과
-[공통 06 §2–3](contracts/v1.0/06_scenarios_and_validation.md)이며,
-셀 조건·무효화 인용은 [셀 01 §4·6](cell_operations/v1.0/01_scope_conditions_functions.md)과
-[셀 02 §3–6](cell_operations/v1.0/02_authorization_invalidation.md)이다.
+공통 invariant와 SC 인용의 원본은 [공통 01 §8](../contracts/semantic/v1.0/01_responsibility_and_semantics.md)과
+[공통 06 §2–3](../contracts/semantic/v1.0/06_scenarios_and_validation.md)이며,
+셀 조건·무효화 인용은 [셀 01 §4·6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md)과
+[셀 02 §3–6](../contracts/cell-operations/v1.0/02_authorization_invalidation.md)이다.
 이 규칙이 있다는 사실은 해당 모바일 장치의 보호 기능·반응 시간·현장 접근을 검증한
 결과가 아니다. 필요한 실물 근거는 [핵심 미결 O01–O03·N01](implementation/critical_open_items.md)에
 연결된다. N1 정의가 끝나도 N01의 정상·유실·거부·미결 검증 의무는 남는다.
