@@ -83,3 +83,28 @@ G0 deliberately rejects product roots and keeps `BOOTSTRAP_ONLY`. The source-imp
 The M2 change must add a frozen source tuple and per-file repository/commit/path/blob/mode provenance, raw-import fidelity checks, static source-identity comparison, and same-commit SDK parity. The required aggregate must include those import/static jobs in addition to repository and full-head commit-policy checks, with negative controls for missing/extra files, mode or byte changes, stale SDK, and altered identity inputs. The source-import result must continue to state that product builds, runtime conformance, and acceptance are NOT_RUN until actually exercised.
 
 M3 then adds the full union of product checks under its separately reviewed validation scope. This sequence makes the M2 import PR reviewable before M3 without treating G0 or static import validation as product success. The current G0 does not implement either later stage.
+
+## Recorded bootstrap checkpoint — 2026-10-07
+
+The maintainer requested execution of the migration plan. Before creating G0,
+Codex and independent agent reviewers on the maintainer's Mac verified recovery
+of 319 source refs, 24 signed tags, and three dirty worktrees. Preservation also
+covers the recorded PR heads, bases and actual merge commits (854 locators),
+GitHub metadata, and 38 release assets. The original source refs, index and
+worktree contents remained unchanged. Historical exceptions retain their original
+repository identity and are not inherited here.
+
+Cryptographic re-verification covered the three import commits and 24 tags,
+plus the three available detached release-checksum signatures. This does not
+claim cryptographic re-verification of every historical commit. Private backup
+material stays outside this public source repository.
+
+The local preservation gate record has SHA-256 `74b16b6bab1dfda6e538305305db97a4cd03a49b4e9cb0c9d47b0c725c5620ea`.
+This is a preservation result, not user acceptance, a live CP2 backup, or a
+product/runtime validation result.
+
+G0 is `2a02ab9fb152e78ae7c948cb63fcb0924429a282`, published identically to
+main and develop with verified OpenPGP and author DCO. Five active rulesets
+matched the reviewed configuration. The [bootstrap CI run](https://github.com/jack0682/RobotTransformation/actions/runs/37497048372)
+passed for that exact G0 head with BOOTSTRAP_ONLY scope. Product import, full
+product CI, SDK qualification, cutover and legacy archival remain later gates.
