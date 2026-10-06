@@ -130,6 +130,35 @@ class ProvenanceTests(unittest.TestCase):
 
 
 class WheelTests(unittest.TestCase):
+    def _root_metadata_fixture(self, rows):
+        temporary=tempfile.TemporaryDirectory(dir=HERE);self.addCleanup(temporary.cleanup)
+        path=Path(temporary.name)/'example-1-py3-none-any.whl'
+        with zipfile.ZipFile(path,'w') as archive:
+            for name,value in rows:archive.writestr(name,value)
+        return path
+
+    def _root_pair(self):
+        return [('example-1.dist-info/METADATA','Metadata-Version: 2.1\nName: example\nVersion: 1\n'),
+                ('example-1.dist-info/WHEEL','Wheel-Version: 1.0\nTag: py3-none-any\n')]
+
+    def test_vendored_dist_info_is_not_wheel_ownership(self):
+        rows=self._root_pair()+[('example/_vendor/pkg-9.dist-info/METADATA','Name: pkg\nVersion: 9\n'),
+                               ('example/_vendor/pkg-9.dist-info/WHEEL','Tag: py3-none-any\n')]
+        value=b.wheel_metadata(self._root_metadata_fixture(rows))
+        self.assertEqual((value['name'],value['version']),('example','1'))
+
+    def test_two_root_dist_info_owners_are_refused(self):
+        rows=self._root_pair()+[('other-1.dist-info/METADATA','Name: other\nVersion: 1\n')]
+        with self.assertRaises(ValueError):b.wheel_metadata(self._root_metadata_fixture(rows))
+
+    def test_root_metadata_and_wheel_directories_must_match(self):
+        rows=[self._root_pair()[0],('other-1.dist-info/WHEEL','Tag: py3-none-any\n')]
+        with self.assertRaises(ValueError):b.wheel_metadata(self._root_metadata_fixture(rows))
+
+    def test_vendor_only_metadata_cannot_impersonate_root(self):
+        rows=[('example/_vendor/'+name,value) for name,value in self._root_pair()]
+        with self.assertRaises(ValueError):b.wheel_metadata(self._root_metadata_fixture(rows))
+
     def test_wheel_metadata_and_traversal_gate(self):
         with tempfile.TemporaryDirectory(dir=HERE) as folder:
             path=Path(folder)/'sample.whl'
@@ -176,6 +205,7 @@ class PipelineStateTests(unittest.TestCase):
             with patch('sys.argv',args),patch.dict('os.environ',{'CI':'true'}),patch.object(b.platform,'system',return_value='Linux'), \
                  patch.object(b.platform,'machine',return_value='x86_64'),patch.object(b,'source_snapshot',return_value=source), \
                  patch.object(b.Runner,'text',return_value=json.dumps(image)),patch.object(b,'toolchain',return_value={}), \
+                 patch.object(b,'vocabulary',return_value={}), \
                  patch.object(b,'build_clients',return_value={'artifacts':{}}), \
                  patch.object(b,'build_adapter',return_value={'artifact':{'path':'external-adapter-sdk.tar.gz'}}), \
                  patch.object(b,'build_verification_kit',return_value={'artifact':{'path':'verification-kit.tar.gz'}}), \

@@ -7,7 +7,7 @@ import re
 
 # Filled when the staged workflow is frozen. A workflow edit requires an explicit
 # reviewed policy update; content filters or tolerated failure cannot slip in.
-REVIEWED_WORKFLOW_SHA256 = '82bff19aa0cdceffcfbd3d38b30567b604f61382e8b0442b81173c2802178dc7'
+REVIEWED_WORKFLOW_SHA256 = '89fdd6eb342b53708d9c22dea3f6c142c0100d0ce7a81779a2ebece65338b931'
 WORKFLOW = '.github/workflows/m5-artifact-candidate.yml'
 JOBS = {'produce','sdk_consumer','runtime_consumer','simulation_candidate'}
 
@@ -34,10 +34,15 @@ def workflow_errors(text):
         if token not in text:errors.append('Missing required M5 boundary: '+token)
     for action in re.findall(r'(?m)^\s*- uses:\s*(\S+)',text):
         if not re.fullmatch(r'[^@\s]+@[0-9a-f]{40}',action):errors.append('M5 action must be SHA-pinned')
-    allowed={'${{ always() }}','always()'}
+    allowed={'${{ always() }}','always()',"${{ always() && steps.producer_publication.outputs.m5_publication_ready == 'true' }}"}
     for line in text.splitlines():
         match=re.match(r'^\s*(?:-\s*)?if\s*:\s*(.+)$',line)
         if match and match.group(1).strip() not in allowed:errors.append('M5 required job/step can be conditionally skipped')
+    readiness="${{ always() && steps.producer_publication.outputs.m5_publication_ready == 'true' }}"
+    if text.count(readiness)!=1 or ('if: '+readiness+'\n        with:\n          name: m5-producer-diagnostics-') not in text:
+        errors.append('Only the current producer publication step may select early diagnostic upload')
+    if '--mode producer --repo source --candidate "$CANDIDATE_SHA"' not in text:
+        errors.append('Early diagnostic publication must revalidate the workflow candidate')
     return errors
 
 

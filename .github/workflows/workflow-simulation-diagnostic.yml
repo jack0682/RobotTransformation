@@ -1,0 +1,71 @@
+name: Advisory workflow simulation diagnosis
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - '.github/workflows/workflow-simulation-diagnostic.yml'
+      - 'tools/diagnostics/workflow_simulation/**'
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workflow-simulation-diagnostic-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CI: 'true'
+  GIT_OPTIONAL_LOCKS: '0'
+  GIT_NO_REPLACE_OBJECTS: '1'
+  PYTHONDONTWRITEBYTECODE: '1'
+  RUSTUP_TOOLCHAIN: '1.98.1'
+  CARGO_BUILD_JOBS: '2'
+
+jobs:
+  diagnostic:
+    name: Advisory diagnostic only (not CI or M5 acceptance)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out candidate diagnostic tools
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: control
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check out the immutable failed source separately
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 314c9f323a7dd8865a3f9e2b1347325684858c8e
+          path: source
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Require supported Python for diagnostic hashing
+        run: python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "Python 3.11 or newer is required")'
+      - name: Check diagnostic fixture boundaries
+        run: python3 -B -m unittest discover -s control/tools/diagnostics/workflow_simulation -p 'test_runner.py' -v
+      - name: Install the pinned compiler and formatter
+        run: rustup toolchain install 1.98.1 --profile minimal --component rustfmt
+      - name: Run one fresh diagnostic projection
+        env:
+          CONTROL_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python3 -B control/tools/diagnostics/workflow_simulation/runner.py \
+            --control "$GITHUB_WORKSPACE/control" \
+            --expected-control "$CONTROL_SHA" \
+            --source "$GITHUB_WORKSPACE/source" \
+            --work "$RUNNER_TEMP/workflow-simulation-diagnostic" \
+            --public "$RUNNER_TEMP/workflow-simulation-diagnostic-public" \
+            --execute-isolated-linux
+      - name: Preserve only scanned diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: workflow-simulation-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/workflow-simulation-diagnostic-public/**
+          if-no-files-found: warn
+          retention-days: 30

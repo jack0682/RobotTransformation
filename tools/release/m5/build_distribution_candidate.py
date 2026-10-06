@@ -15,6 +15,7 @@ import shutil
 import subprocess
 import sys
 from artifacts import sha,sha_file,inventory,archive,checksums,safe_name
+from build_diagnostics import vocabulary,save_failure,encoded
 
 BTCPP='6e469c6ba133aaa842dac9b096b41f2d33ee2b0e'
 WITNESSES={'host-recovery.log':'sigkill_at_both_journal_native_boundaries_never_replays_device_effect',
@@ -64,6 +65,23 @@ def bounded_recipe(runtime,append,namespace):
     return recipe
 
 
+def diagnostic_recipe(recipe):
+    # The sidecar is build tooling outside /source and never enters a runtime
+    # image. Failed sealed tests retain their original nonzero result while
+    # publishing only a closed projection of their redirected stdout.
+    marker='ENV CARGO_BUILD_JOBS=1\nRUN apt-get update'
+    require=recipe.count(marker)==1
+    if not require:raise ValueError('unrecognized solutions build stage')
+    recipe=recipe.replace(marker,'ENV CARGO_BUILD_JOBS=1\nCOPY --from=m5_diagnostics / /opt/m5-diagnostics/\nRUN apt-get update')
+    paths=['external-process.log','host-recovery.log','executor-recovery.log','executor-identity.log']
+    for name in paths:
+        pattern=r'(cargo test [^\n]*? > /out/'+re.escape(name)+r')(?= &&|\n|$)'
+        replacement=lambda m:'('+m[1]+' || { rc=$?; python3 /opt/m5-diagnostics/build_diagnostics.py --vocabulary /opt/m5-diagnostics/vocabulary.json --log /out/'+name+' --returncode "$rc"; exit "$rc"; })'
+        recipe,count=re.subn(pattern,replacement,recipe)
+        if count!=1:raise ValueError('unrecognized sealed test command: '+name)
+    return recipe
+
+
 def verify_source_manifest(raw,source):
     result={}
     for line in raw.decode().splitlines():
@@ -98,11 +116,16 @@ def main():
     identity=source_identity(repo,a.expected_head)
     if shutil.disk_usage(work.parent).free < 12*1024**3:raise ValueError('at least 12 GiB free runner disk required; no global Docker/cache cleanup is performed')
     work.mkdir(parents=True,exist_ok=False);out.mkdir(parents=True,exist_ok=False)
+    public_vocab=vocabulary(repo,a.expected_head)
     env=dict(os.environ,GIT_OPTIONAL_LOCKS='0',GIT_NO_REPLACE_OBJECTS='1',PYTHONDONTWRITEBYTECODE='1',DOCKER_BUILDKIT='1')
     def run(args,label,capture=False):
         result=subprocess.run(list(map(str,args)),env=env,capture_output=True,text=True)
         (work/(label+'.stdout')).write_text(result.stdout);(work/(label+'.stderr')).write_text(result.stderr)
-        if result.returncode:raise RuntimeError(label+' failed; preserve logs')
+        if result.returncode:
+            if label in ('build-platform','build-solutions'):
+                save_failure(work/'closed-failure.json',public_vocab,'DISTRIBUTION_BUILD',label.removeprefix('build-'),
+                    result.returncode,[('stdout',work/(label+'.stdout')),('stderr',work/(label+'.stderr'))],work)
+            raise RuntimeError(label+' failed; preserve logs')
         return result.stdout.strip()
     run([sys.executable,repo/'rx-solutions/tools/build_linux_dev_bundle.py','--platform',repo/'rx-platform',
         '--platform-ref',a.expected_head,'--architecture',a.architecture,'--output',work/'source-export'],'source-export')
@@ -111,13 +134,19 @@ def main():
     (out/'source-inventory.json').write_text(json.dumps({'source':identity,'components':closure},indent=2)+'\n')
     recipe=bounded_recipe((bundle/'sources/solutions/docker/RuntimeSkillValidation.Dockerfile').read_text(),
                           (bundle/'Dockerfile.append').read_text(),a.cache_namespace)
+    recipe=diagnostic_recipe(recipe)
     dockerfile=out/'Developer.Dockerfile';dockerfile.write_text(recipe)
+    diagnostic_context=work/'diagnostic-context';diagnostic_context.mkdir()
+    diagnostic_helper=Path(__file__).with_name('build_diagnostics.py')
+    shutil.copyfile(diagnostic_helper,diagnostic_context/'build_diagnostics.py')
+    (diagnostic_context/'vocabulary.json').write_bytes(encoded(public_vocab))
     images={};inspections={};holders=[]
     try:
         for role in ('platform','solutions'):
             tag='rx-m5-'+role+':'+a.expected_head[:12]+'-'+a.architecture+'-'+a.cache_namespace
             run(['docker','build','--progress','plain','--platform','linux/'+a.architecture,
                  '--build-context','platform_source='+str(bundle/'sources/platform'),
+                 '--build-context','m5_diagnostics='+str(diagnostic_context),
                  '--build-context','btcpp=https://github.com/BehaviorTree/BehaviorTree.CPP.git#'+BTCPP,
                  '--target','dev-'+role,'-f',dockerfile,'-t',tag,bundle/'sources/solutions'],'build-'+role)
             info=json.loads(run(['docker','image','inspect',tag],'inspect-'+role))[0]
@@ -152,6 +181,8 @@ def main():
         manifest={'schema':'rx.m5.distribution-candidate.v1','status':'BUILT_NOT_ACCEPTED','source':identity,'architecture':a.architecture,
             'images':images,'image_inspections':inspections,'image_source_files':image_closure,
             'dockerfile':{'path':dockerfile.name,'sha256':sha_file(dockerfile),'resource_limit':'Cargo jobs1; CMake jobs1',
+                          'diagnostic_sidecar_sha256':sha_file(diagnostic_helper),
+                          'diagnostic_vocabulary_sha256':sha_file(diagnostic_context/'vocabulary.json'),
                           'source_recipe_sha256':sha((bundle/'sources/solutions/docker/RuntimeSkillValidation.Dockerfile').read_bytes()),
                           'source_append_sha256':sha((bundle/'Dockerfile.append').read_bytes())},
             'third_party':{'BehaviorTree.CPP':{'repository':'https://github.com/BehaviorTree/BehaviorTree.CPP','commit':BTCPP}},

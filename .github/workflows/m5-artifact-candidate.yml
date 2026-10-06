@@ -50,7 +50,7 @@ jobs:
       - name: Fixture checks only before production
         working-directory: source/tools/release/m5
         run: |
-          python3 -B -m unittest -v test_m5_artifacts.py test_publication.py test_sdk_builder.py test_local_sim_candidate.py test_m5_policy.py
+          python3 -B -m unittest -v test_m5_artifacts.py test_publication.py test_sdk_builder.py test_local_sim_candidate.py test_m5_policy.py test_build_diagnostics.py
           (cd full_run && python3 -B -m unittest -v test_full_run.py test_leak_audit.py test_historical_bundle.py)
           (cd historical && python3 -B -m unittest -v test_historical_runtime_probe.py)
       - name: Materialize exact published historical runtime consumer without executing it
@@ -82,9 +82,12 @@ jobs:
         run: |
           python3 -B source/tools/release/m5/package_handoff.py --tools source/tools/release/m5 --sdk "$RUNNER_TEMP/m5-sdk" --distribution "$RUNNER_TEMP/m5-distribution" --local-sim "$RUNNER_TEMP/m5-local-sim" --candidate "$CANDIDATE_SHA" --output "$RUNNER_TEMP/m5-handoff"
       - name: Audit private values before publishing producer artifacts or diagnostics
+        id: producer_publication
         if: always()
+        env:
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          python3 -B source/tools/release/m5/publish_ci_evidence.py --mode producer --runner-temp "$RUNNER_TEMP" --output "$RUNNER_TEMP/m5-producer-public"
+          python3 -B source/tools/release/m5/publish_ci_evidence.py --mode producer --repo source --candidate "$CANDIDATE_SHA" --runner-temp "$RUNNER_TEMP" --output "$RUNNER_TEMP/m5-producer-public"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: m5-sdk-${{ matrix.arch }}
@@ -113,7 +116,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: always()
+        if: ${{ always() && steps.producer_publication.outputs.m5_publication_ready == 'true' }}
         with:
           name: m5-producer-diagnostics-${{ matrix.arch }}
           path: |

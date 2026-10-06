@@ -24,6 +24,8 @@ import sysconfig
 import tomllib
 import uuid
 import zipfile
+import traceback
+from build_diagnostics import vocabulary,save_failure
 
 from full_run.historical_bundle import validate_historical_bundle
 from artifacts import archive, checksums, inventory, safe_name, verify_checksums, sha_file
@@ -84,7 +86,7 @@ class Runner:
         self.environment=dict(os.environ,GIT_OPTIONAL_LOCKS='0',PYTHONDONTWRITEBYTECODE='1',
             PIP_DISABLE_PIP_VERSION_CHECK='1',PIP_CACHE_DIR=str(work/'pip-cache'),
             XDG_CACHE_HOME=str(work/'cache'),TMPDIR=str(work/'tmp'),
-            CARGO_BUILD_JOBS='2',CARGO_INCREMENTAL='0',CARGO_TARGET_DIR=str(work/'rust-target'),
+            CARGO_BUILD_JOBS='1',CARGO_INCREMENTAL='0',CARGO_TARGET_DIR=str(work/'rust-target'),
             CARGO_HOME=str(work/'cargo-home'),CMAKE_BUILD_PARALLEL_LEVEL='2')
         (work/'tmp').mkdir()
 
@@ -222,9 +224,13 @@ def wheel_metadata(path):
         names=stream.namelist()
         if len(names)!=len(set(names)):raise ValueError('Duplicate wheel member')
         for name in names:safe_name(name.rstrip('/'))
-        metadata=[n for n in names if n.endswith('.dist-info/METADATA')]
-        wheel=[n for n in names if n.endswith('.dist-info/WHEEL')]
-        if len(metadata)!=1 or len(wheel)!=1:raise ValueError('Wheel metadata is ambiguous')
+        # Vendored distributions may carry nested dist-info data (setuptools
+        # does). Only this wheel's root dist-info identifies the distribution.
+        metadata=[n for n in names if n.count('/')==1 and n.endswith('.dist-info/METADATA')]
+        wheel=[n for n in names if n.count('/')==1 and n.endswith('.dist-info/WHEEL')]
+        if (len(metadata)!=1 or len(wheel)!=1
+                or metadata[0].rsplit('/',1)[0]!=wheel[0].rsplit('/',1)[0]):
+            raise ValueError('Wheel root metadata is ambiguous or inconsistent')
         info=BytesParser().parsebytes(stream.read(metadata[0]));tags=BytesParser().parsebytes(stream.read(wheel[0]))
         if not info.get('Name') or not info.get('Version'):raise ValueError('Wheel name/version absent')
         return {'filename':Path(path).name,'name':info['Name'],'version':info['Version'],
@@ -350,7 +356,8 @@ def build_clients(runner,repo,snapshot,output):
     return {'artifacts':{'rxclpy':python_artifact,'python_wheelhouse':python_dependencies,'rxclcpp':cpp,'client_sources':sources},
         'status':'BUILT_AND_EXISTING_CLIENT_TESTS_PASSED','producer_test':result,
         'protocol_build':json.loads((build/'prepared/build.json').read_bytes()),'python_environment':versions,
-        'python_wheels':dependencies,'cpp_dynamic_dependencies':dynamic_dependencies(libs,install),'source_input_inventory':lineage}
+        'python_wheels':dependencies,'cpp_dynamic_dependencies':dynamic_dependencies(libs,install),'source_input_inventory':lineage,
+        'build_resource_budget':{'cargo_jobs':1,'cmake_jobs':2,'cmake_scope':'two original client test --build invocations explicitly use -j2; distribution recipe CMake jobs1 is separate'}}
 
 
 def build_adapter(runner,repo,snapshot,image,assets,output):
@@ -442,6 +449,22 @@ def build_rust(runner,repo,snapshot,output):
             'lock':lock,'manifest_sha256':digest(root/'Cargo.toml'),'lock_sha256':digest(root/'Cargo.lock')}
 
 
+
+def record_closed_sdk_failure(runner,public_vocab):
+    if public_vocab is None:return
+    # Raw failure details remain local; only candidate-bounded locations and
+    # fixed categories can reach the early-failure publication path.
+    try:
+        detail=runner.work/'wrapper-failure.stderr';detail.write_text(traceback.format_exc())
+        logs=[('stderr',detail)]
+        if runner.commands:
+            item=runner.commands[-1]
+            if item['returncode']:
+                files=sorted(runner.logs.glob('*'+item['label']+'.stderr'))
+                if files:logs.append(('stderr',files[-1]))
+        save_failure(runner.work/'closed-failure.json',public_vocab,'SDK_BUILD','sdk',1,logs,runner.work)
+    except Exception:pass  # Diagnostic unavailability cannot make the build pass.
+
 def parser():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--repo',type=Path,required=True)
@@ -469,8 +492,10 @@ def main():
     runner=Runner(work)
     state={'schema':'rx.sdk-build-state.v1','status':'BUILDING','registered_run_executed':False,
            'publication_signature_created':False,'architecture':a.architecture,'artifacts':{}}
+    public_vocab=None
     try:
         source=source_snapshot(runner,repo,a.expected_head);state['source']=source
+        public_vocab=vocabulary(repo,a.expected_head)
         image=json.loads(runner.text('candidate-s-image',['docker','image','inspect',a.solutions_image]))
         if len(image)!=1 or image[0]['Id']!=a.solutions_image or image[0]['Os']!='linux' or image[0]['Architecture']!=a.architecture:
             raise ValueError('Candidate S image identity/platform differs')
@@ -487,6 +512,7 @@ def main():
             try:
                 rust=build_rust(runner,repo,source,output)
             except Exception as error:
+                record_closed_sdk_failure(runner,public_vocab)
                 state.update(status='PARTIAL_UNVERIFIED',rust={'status':'UNVERIFIED','reason':str(error),
                     'runtime_api_qualification_claim':False})
                 publish(work/'partial-build.json',state)
@@ -514,10 +540,11 @@ def main():
         print(json.dumps({'status':state['status'],'manifest':str(output/'manifest.json'),'unsigned':True}))
         return 0
     except Exception as error:
+        record_closed_sdk_failure(runner,public_vocab)
         state.update(status='FAILED_UNVERIFIED',failure={'type':type(error).__name__,'reason':str(error)},
             final_candidate_authorized=False)
         if not (work/'partial-build.json').exists():publish(work/'partial-build.json',state)
-        print(str(error)+'; partial artifacts/logs retained, no release acceptance claim.',file=sys.stderr)
+        print('SDK candidate failed; raw details retained privately; closed diagnostics may be available. No release acceptance claim.',file=sys.stderr)
         return 1
 
 
