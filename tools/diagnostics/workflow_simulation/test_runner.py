@@ -148,6 +148,32 @@ class Fixtures(unittest.TestCase):
                 with self.subTest(name=name), self.assertRaisesRegex(ValueError, "Redirected"): runner.environment()
                 call.assert_not_called()
 
+    def test_frozen_calculator_context_schema_is_consumed_without_a_mock_report(self):
+        root = Path(__file__).resolve().parents[3]
+        calculator, _, _ = runner.load_calculator(root)
+        blobs = {prefix + name: b"unchanged fixture" for prefix in ("rx-platform/", "rx-solutions/")
+                 for name in ("Cargo.toml", "Cargo.lock", "rust-toolchain.toml")}
+        blobs["rx-solutions/sdk/Cargo.toml"] = b"unchanged fixture"
+        blobs[runner.TEST] = b"original test"
+        baseline = calculator.MemoryView(blobs)
+        original = calculator.semantic_context(baseline, baseline)
+        projected = dict(blobs); projected[runner.TEST] = b"observer test"
+        context = calculator.semantic_context(calculator.MemoryView(projected), baseline)
+        self.assertEqual(original["status"], "PASS")
+        self.assertEqual(context["status"], "UNKNOWN_CONTEXT_CHANGED")
+        before = {"named_identities": {}, "sdk_integrity": {}, "semantic_context": original}
+        after = {"named_identities": {}, "sdk_integrity": {}, "semantic_context": context}
+        runner.verify_observer_identities(before, after)
+        for change in (lambda v: v["missing"].append("rx-solutions/other.rs"),
+                       lambda v: v["changed"].append({"path": "rx-solutions/other.rs"}),
+                       lambda v: v.update(status="PASS")):
+            mutated = json.loads(json.dumps(after)); change(mutated["semantic_context"])
+            with self.assertRaises(runner.DiagnosticRefusal):
+                runner.verify_observer_identities(before, mutated)
+        malformed = json.loads(json.dumps(after))
+        malformed["semantic_context"]["changes"] = malformed["semantic_context"].pop("changed")
+        with self.assertRaises(KeyError): runner.verify_observer_identities(before, malformed)
+
     def test_old_python_is_refused_before_filesystem_or_process_work(self):
         with patch.object(runner.sys, "version_info", (3, 10, 0)), patch.object(runner.subprocess, "run") as call:
             with self.assertRaisesRegex(ValueError, "Python 3.11"):

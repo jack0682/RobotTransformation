@@ -16,12 +16,12 @@ Source import is a later reviewed snapshot change with immutable source provenan
 |---|---|---|
 | Signed contributions | Every branch | GitHub-verified commit signatures |
 | Branch naming | Branch creation | Only main/develop and documented work/release/hotfix prefixes |
-| Quality rules | main/develop | PR, up-to-date CI/DCO, verified signatures, resolved review threads; no deletion or force push; no bypass actors |
+| Quality rules | main/develop | PR, up-to-date CI/M5/DCO, verified signatures, resolved review threads; no deletion or force push; no bypass actors |
 | PR-only updates | main/develop | Administrator update exception applies only through PRs and cannot bypass quality rules |
 | Immutable tags | Every tag | No update or deletion; signed annotated tags checked by local hooks and release review |
 | Full-head audit | Every PR and branch CI head | Every ancestor has author DCO and verified OpenPGP; zero exceptions |
 
-CI must come from Actions app 15368 and DCO from app 1861. PR CI and push Branch CI are distinct. The DCO app has owner checks enabled and remediation-commit shortcuts disabled. The repository's audit also checks merges and bots. GitHub signature rules do not independently certify author DCO on a future merge; the merge helper adds the authenticated merger's own signoff and checks the resulting commit.
+CI and M5 must come from Actions app 15368 and DCO from app 1861. PR acceptance checks and branch checks are distinct; branch results and advisory diagnostics do not replace the required PR checks. The DCO app has owner checks enabled and remediation-commit shortcuts disabled. The repository's audit also checks merges and bots. GitHub signature rules do not independently certify author DCO on a future merge; the merge helper adds the authenticated merger's own signoff and checks the resulting commit.
 
 The current approval count is zero because one maintainer cannot approve their own PR. Increase it together with code-owner review when independent maintainer review becomes available. Owners retain GitHub administrative authority; these controls do not remove that authority. No workflow receives private signing keys or an administrative token.
 
@@ -46,7 +46,7 @@ Use `git commit -s -S` explicitly. Unlock the existing key through the normal GP
 python3 tools/governance/merge_pr.py PR_NUMBER
 ```
 
-The helper audits live policy without changing it, validates GitFlow and repository identity, checks successful CI/DCO provider IDs for the exact head, and verifies the CI workflow path, PR identity, event, base, and successful completed run. It rereads the PR before requesting an exact-head merge commit. GitHub's strict base checks enforce a later base race. Any missing verification, API error, policy drift, or changed head/base stops the request.
+The helper audits live policy without changing it, validates GitFlow and repository identity, checks successful CI/M5/DCO provider IDs for the exact head, and verifies both required Actions workflow paths, PR identity, event, base, and successful completed runs. It rereads the PR before requesting an exact-head merge commit. GitHub's strict base checks enforce a later base race. Any missing verification, API error, policy drift, or changed head/base stops the request.
 
 The helper derives the signoff from the authenticated actor's current name and GitHub no-reply identity. It accepts no arbitrary signoff override. Confirm that account's web-merge author settings before its first merge. A resulting merge is independently read back for matching author DCO and verified OpenPGP. An uncertain response or `MERGED_BUT_VERIFICATION_FAILED` requires inspection of the same PR and original result before any retry; it is not permission to rewrite history or add an exception.
 

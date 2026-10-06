@@ -151,6 +151,15 @@ def load_calculator(source):
     return module, baseline, module.ReportReference(baseline)
 
 
+def verify_observer_identities(before, after):
+    require(after["named_identities"] == before["named_identities"]
+            and after["sdk_integrity"] == before["sdk_integrity"], "Observer changed named production identities")
+    context = after["semantic_context"]
+    require(context["status"] == "UNKNOWN_CONTEXT_CHANGED"
+            and [row["path"] for row in context["changed"]] == [TEST]
+            and context["missing"] == [], "Unexpected diagnostic semantic context")
+
+
 def secret_fields(value):
     if isinstance(value, dict):
         return any((k.lower().replace("-", "_") in SECRET_FIELDS and v not in (None, "", False)) or secret_fields(v) for k, v in value.items())
@@ -309,9 +318,7 @@ def execute(args):
         require(changed_paths(source_before, projection) == [TEST], "Formatter changed unexpected source")
         projected = inventory(projection)
         after = module.calculate(module.FilesystemView(projection), reference)
-        require(after["named_identities"] == before["named_identities"] and after["sdk_integrity"] == before["sdk_integrity"], "Observer changed named production identities")
-        require(after["semantic_context"]["status"] == "UNKNOWN_CONTEXT_CHANGED"
-                and [row["path"] for row in after["semantic_context"]["changes"]] == [TEST], "Unexpected diagnostic semantic context")
+        verify_observer_identities(before, after)
         write_json(selected / "diagnostic-source-identities.json", after)
         write_json(selected / "observer-change.json", {"path": TEST, "original_sha256": TEST_SHA,
                    "reviewed_observer_sha256": OBSERVER_SHA, "formatted_observer_sha256": projected[TEST]["sha256"],

@@ -30,7 +30,7 @@ git switch -c feature/your-change
 git add <changed-paths>
 git commit -s -S -m "Describe the resulting behavior"
 git push -u origin feature/your-change
-# Open a PR to develop, then wait for current CI and DCO.
+# Open a PR to develop, then wait for current CI, M5 and DCO.
 python3 tools/governance/merge_pr.py PR_NUMBER
 ```
 
@@ -59,7 +59,7 @@ python3 -B tools/governance/check_commit_policy.py --head HEAD
 
 The last command uses trusted public keys in the local GPG keyring. GitHub-backed CI uses the same full-head scope and GitHub's recorded OpenPGP verification. The fixture tests do not themselves establish real signature validity.
 
-Required CI is the exact PR-head `CI` from GitHub Actions (app 15368), plus `DCO` from the DCO app (app 1861). A Branch CI result, stale head, other provider, cancelled child, or local test result does not substitute. Required review conversations must be resolved. Zero external approvals are required while the project has one maintainer; the maintainer still reviews the output and evidence.
+Required checks are the exact PR-head `CI` and `M5` from GitHub Actions (app 15368), plus `DCO` from the DCO app (app 1861). Branch results, stale heads, other providers, cancelled children, advisory diagnostics and local test results do not substitute. `M5` verifies the declared SDK and installed-distribution scopes on isolated Linux runners; artifact signing and acceptance remain separate. Required review conversations must be resolved. Zero external approvals are required while the project has one maintainer; the maintainer still reviews the output and evidence.
 
 M2 has a fixed snapshot-only contract: the manifest, file bytes/modes, SDK producer parity, and named static identities must match the reviewed baseline. Product-source work after import requires the documented M3 scope transition, anchoring frozen import evidence to its original commit while enforcing current-source gates. Unified product CI must retain all prior required contract, SDK, invariant, boundary, language, package, and runtime checks. Do not relabel static import verification as product conformance.
 
