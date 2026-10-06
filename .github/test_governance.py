@@ -470,6 +470,7 @@ class BootstrapContentTests(Files):
             target = self.root / name; target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
         (self.root / ".github/validation-scope.json").write_text(json.dumps(repository.SCOPE))
+        (self.root / ".github/repository-policy.json").write_text(json.dumps({"schema": "rx.repository-content-policy.v1", "language": "en", "exclude_ai_artifacts": True}))
         (self.root / "README.md").write_text("G0 fixture; no product source.\n")
         workflow = (self.root / ".github/workflows/ci.yml")
         workflow.write_text(workflow.read_text().replace(

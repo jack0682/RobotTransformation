@@ -6,8 +6,8 @@
 |---|---|---|
 | PG01–PG06 개인 프로젝트·이기종·전체 작업·규모 확장 | [프로젝트 정의](../01_product_definition.md) | 사용자 목표 확정, 서비스·규모 구현/실증 미완료 |
 | PG07 RX Client Libraries와 ROBOTIS 다섯 프로젝트의 기본 전체 개발 번들 | [프로젝트 정의](../01_product_definition.md), [strict wire와 클라이언트](../40_strict_wire_and_clients.md), [DYNAMIXEL Ping](../41_dynamixel_ping_adapter.md) | 사용자 요구 확정(2026-09-25), G5.1 클라이언트·G5.2 모의 Ping까지. 번들 완결·실물 연결 미완료 |
-| 공통 작업 의미·권한·기록·인계 | [공통 계약](../contracts/v1.0/README.md) | v1.0 문서 개정, 기존 구현의 범위는 인계와 개별 검증 근거 참조 |
-| 설치 범위·조건·허가·개입·복구 | [셀 운영 계약](../cell_operations/v1.0/README.md) | 문서 규범, 실물 설치 NOT_COMMISSIONED |
+| 공통 작업 의미·권한·기록·인계 | [공통 계약](../../contracts/semantic/v1.0/README.md) | v1.0 문서 개정, 기존 구현의 범위는 인계와 개별 검증 근거 참조 |
+| 설치 범위·조건·허가·개입·복구 | [셀 운영 계약](../../contracts/cell-operations/v1.0/README.md) | 문서 규범, 실물 설치 NOT_COMMISSIONED |
 | 제조사 중립 지원·선택 의존성 | [지원 정책](../13_device_support_matrix.md) | 현재 요구, 새 구성 검증은 별도 결과 필요 |
 | door-to-door 참조 인계 | [범위](../03_product_scope.md) | 제안, 실제 장비·최종 완료 조건 미정 |
 | 분산 운영 영역·도시 규모 | [후속 방향](../00_design_roadmap.md) | 설계·성능 요구·실증 미완료 |

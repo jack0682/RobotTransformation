@@ -9,6 +9,6 @@
 - 결과가 확정돼도 잔류 명령·물품 지지·제어권을 확인해야 자원을 넘긴다.
 - 재부팅·저장 복원·권한 세대 변경은 과거 결과와 현재 실행 허가를 구별한다.
 
-규범 원본은 [공통 계약 v1.0](contracts/v1.0/README.md)과 [셀 운영 v1.0](cell_operations/v1.0/README.md)이다. 개정은 영향·반례·호환성·manifest를 함께 기록한다. 설계의 엄밀성이 실제 장비 관측의 신뢰성을 대신하지 않는다.
+규범 원본은 [공통 계약 v1.0](../contracts/semantic/v1.0/README.md)과 [셀 운영 v1.0](../contracts/cell-operations/v1.0/README.md)이다. 개정은 영향·반례·호환성·manifest를 함께 기록한다. 설계의 엄밀성이 실제 장비 관측의 신뢰성을 대신하지 않는다.
 
-검증은 [반례와 시험 의무](contracts/v1.0/06_scenarios_and_validation.md), 실제 미결은 [현재 항목](implementation/critical_open_items.md)을 따른다.
+검증은 [반례와 시험 의무](../contracts/semantic/v1.0/06_scenarios_and_validation.md), 실제 미결은 [현재 항목](implementation/critical_open_items.md)을 따른다.

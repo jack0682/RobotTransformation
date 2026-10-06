@@ -78,7 +78,7 @@ P와 S가 같은 등록을 독립적으로 변경하는 경로를 내놓지 않�
 
 ## R2 — Platform 원장의 새 등록 선언
 
-2026-10-01. [후보 계약](../contracts/resident-registration/v1/README.md)과
+2026-10-01. [후보 계약](../../contracts/semantic/resident-registration/v1/README.md)과
 [Platform 구현](https://github.com/jack0682/rx-platform/commit/7608043ee50137fd2736a064728e0b6a37388131),
 [PR #62](https://github.com/jack0682/rx-platform/pull/62).
 
@@ -104,7 +104,7 @@ R2를 RF02 완료나 상주 프레임워크 전체 완성으로 표시하지 않
 
 ## R3 — 범위가 제한된 Supervisor 보고 통로
 
-2026-10-01. [보고 계약 revision 1](../contracts/resident-reporting/v1/README.md)은
+2026-10-01. [보고 계약 revision 1](../../contracts/semantic/resident-reporting/v1/README.md)은
 별도 Observer-only mTLS 세션과 작성자/관리자가 발급한 구성요소별 보고 범위를 정의한다.
 P의 선언 ID와 기존 S 등록/run/instance ID를 모두 유지하고 명시적인 범위로 관계를 기록한다.
 이 관계는 등록 writer 이행이나 실행 배정이 아니다.
@@ -148,7 +148,7 @@ R3 시점의 후속 요건은 `rx-solutionsd`의 50ms 로컬 관리 루프를 �
 
 2026-10-01, 구현·범위별 검증 및 develop 통합 완료. 변경 범위는 P의 기존 보고 writer/HTTP/mTLS 경로,
 S의 reporting client·영속 outbox·별도 전달 worker와 기존 rx-solutionsd 진입점이다.
-새 프로세스 관리자나 업무 권한 원장을 만들지 않는다. [보고 계약 revision 2](../contracts/resident-reporting/v1/README.md)는
+새 프로세스 관리자나 업무 권한 원장을 만들지 않는다. [보고 계약 revision 2](../../contracts/semantic/resident-reporting/v1/README.md)는
 소유자가 이전 범위를 원자적으로 폐기하고 같은 출처의 후속 범위를 승인하는 절차와 scoped head 조회를 추가한다.
 기존 receipt는 원 peer/scope/sequence 그대로 남는다. 이 승인은 프로세스 소유나 실행 권한 이행이 아니다.
 
@@ -195,7 +195,7 @@ Solutions `443dde3bf7a1055cad8253c163ba9c1ce09c0836`의 제품 내용은 시험�
 ## R5 — 등록 소유권 이행: 원본 동결 경계부터 구현 중
 
 2026-10-01. 기존 package intake와 Executor assignment는 Cell 문맥이므로 일반 구성요소의
-이행/실행 권한으로 재명명하지 않는다. [원본 이행 계약 r1](../contracts/registration-transfer/v1/README.md)은
+이행/실행 권한으로 재명명하지 않는다. [원본 이행 계약 r1](../../contracts/semantic/registration-transfer/v1/README.md)은
 이전 등록 writer를 차단한 원본 cut과 P 수용을 구분한다. 현재 첫 구현은 source-side 준비다.
 
 P 소유 storage adapter에 선택적 namespace seal을 추가했다. 동결 marker와 SQL 쓰기 차단을
@@ -221,7 +221,7 @@ S의 P 수용 확인 및 P 실행 배정이 남아 있다. 준비 CLI만으로 �
 
 ## R5 후속 — Platform의 실제 원본 수용
 
-2026-10-01. [이행 계약 revision 2](../contracts/registration-transfer/v1/README.md)는
+2026-10-01. [이행 계약 revision 2](../../contracts/semantic/registration-transfer/v1/README.md)는
 신뢰된 시작 설정의 source 이름·경로·소유자와 사용자의 원 수입 요청을 구분한다.
 현재 권한 검사 후 실제 동결 원본을 잠가 읽고, 기존 application writer에 원 UUID·revision·이력을
 분할 저장한다. 수용 완료 전 등록은 일반 조회·변경·보고 범위 발급에서 사용할 수 없다.
@@ -262,8 +262,8 @@ S의 programs_from_release는 검증된 릴리스에서 Program을 구성하므�
 
 ## R5 후속 — Supervisor의 인증된 수용 확인
 
-2026-10-01. [보고 계약 revision 3](../contracts/resident-reporting/v1/README.md)과
-[등록 이행 계약 revision 3](../contracts/registration-transfer/v1/README.md)는 기존 Observer-only mTLS
+2026-10-01. [보고 계약 revision 3](../../contracts/semantic/resident-reporting/v1/README.md)과
+[등록 이행 계약 revision 3](../../contracts/semantic/registration-transfer/v1/README.md)는 기존 Observer-only mTLS
 세션과 소유자가 발급한 원 ID 보고 범위로 P의 과거 수용 기록을 조회하도록 연결한다.
 별도 관리자 자격을 S에 주지 않으며, P의 기존 writer가 현재 인증서/세션/범위와 원 이관 관계를 확인한다.
 S는 정확한 원 FreezeRecord·대상 설치·구성요소 소속을 대조한 typed 결과만 받아 최초 근거와 이력 이벤트를
@@ -306,7 +306,7 @@ RegisteredBackend의 배정 기록 후 OS 생성 경로를 연결하고, 원 등
 
 ## R6 — P가 배정하고 S가 실제 실행하는 경로
 
-2026-10-01, 아래 범위의 구현·검증 및 develop 통합 완료. [실행 계약 r1](../contracts/resident-execution/v1/README.md)은
+2026-10-01, 아래 범위의 구현·검증 및 develop 통합 완료. [실행 계약 r1](../../contracts/semantic/resident-execution/v1/README.md)은
 기존 P writer와 S RegisteredSupervisor/OS 집행 경로를 연결한다. 별도 Supervisor-only mTLS 세션과
 설치가 승인한 registry/release/program digest를 사용하며 Observer 보고·이관 확인을 실행 권한으로 바꾸지 않는다.
 P 소유자가 현재 구성요소 revision·파라미터·의존 선택을 제안하고, S가 실제 서명된 릴리스와 카탈로그로

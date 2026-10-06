@@ -48,16 +48,16 @@ OPEN-MOBILE-SUPPORT와 OPEN-RECEIPT는 계속 **open**이며, 현재 사례는 *
 기준 revision은 rx_docs `b7d3639fcdca565e044f1893f4f52852bd1b587b`다. 아래 파일 이름과 절을
 각 표에 붙였다. I 식별자의 원본은 공통 01 §8, SC 식별자의 원본은 공통 06의 표다.
 
-- [공통 01](contracts/v1.0/01_responsibility_and_semantics.md)
-- [공통 02](contracts/v1.0/02_identity_durability_recovery.md)
-- [공통 03](contracts/v1.0/03_data_and_protocol.md)
-- [공통 04](contracts/v1.0/04_binding_and_admission.md)
-- [공통 06](contracts/v1.0/06_scenarios_and_validation.md)
-- [셀 01](cell_operations/v1.0/01_scope_conditions_functions.md)
-- [셀 02](cell_operations/v1.0/02_authorization_invalidation.md)
-- [셀 04](cell_operations/v1.0/04_protocol_integration_ui.md)
+- [공통 01](../contracts/semantic/v1.0/01_responsibility_and_semantics.md)
+- [공통 02](../contracts/semantic/v1.0/02_identity_durability_recovery.md)
+- [공통 03](../contracts/semantic/v1.0/03_data_and_protocol.md)
+- [공통 04](../contracts/semantic/v1.0/04_binding_and_admission.md)
+- [공통 06](../contracts/semantic/v1.0/06_scenarios_and_validation.md)
+- [셀 01](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md)
+- [셀 02](../contracts/cell-operations/v1.0/02_authorization_invalidation.md)
+- [셀 04](../contracts/cell-operations/v1.0/04_protocol_integration_ui.md)
 
-S2는 [셀 01 §2](cell_operations/v1.0/01_scope_conditions_functions.md)의 설치별 입력 의무를 뜻한다.
+S2는 [셀 01 §2](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md)의 설치별 입력 의무를 뜻한다.
 
 ## 2. 응답 유실
 
@@ -84,11 +84,11 @@ S2는 [셀 01 §2](cell_operations/v1.0/01_scope_conditions_functions.md)의 설
 
 | 축 | 해당 순간의 규범상 판단 | 근거 |
 |---|---|---|
-| 책임 | RUNTIME-01은 원 identity·evidence·결론을 소유하고, HOST-IN은 native 전달/원 결과를, HOST-OUT은 받는 쪽 관측을 제공한다. 현장 조사가 필요하면 N1의 RECIPIENT-01이 개입 역할을 맡되 기록 버튼이 물리 사실을 대신하지 않는다. | [공통 01 §1·6](contracts/v1.0/01_responsibility_and_semantics.md) · [셀 01 §1](cell_operations/v1.0/01_scope_conditions_functions.md) |
-| 권한 | 조회는 접근 권한을 확인하며 motion permit을 요구하지 않는다. 이미 SEND_ENTERED인 원 호출은 새 grant/permit이나 새 key로 자동 재전송하지 않는다. 취소가 필요하면 원 operation에 묶인 별도 cancel 경로의 조건을 따른다. | [공통 02 §1·3](contracts/v1.0/02_identity_durability_recovery.md) · [셀 02 §4·8](cell_operations/v1.0/02_authorization_invalidation.md) · I01·I03 |
-| 증거 | delivery receipt와 evidence outbox의 journal identity를 구별한다. 조회한 receipt도 결론에 사용하기 전에 immutable evidence로 T2에 남긴다. 원 invocation correlation, 실제 결과, 현재 지지·잔여 명령 근거를 보존한다. | [공통 02 §1–2](contracts/v1.0/02_identity_durability_recovery.md) · [공통 01 §6](contracts/v1.0/01_responsibility_and_semantics.md) · I04·I07 |
-| 격리 | SC02의 원 자원 quarantine과 관련 후속 dispatch 보류를 유지한다. native 응답 유실을 단순 결과조회 RPC 유실과 같게 취급해 자동 TRANSIENT로 두지 않는다. 조회만의 유실로 좁혀지고 연속성이 입증되는 경우와, 물리 변화/연속성이 불명하여 revocation/LATCHED가 필요한 경우를 구별한다. | [공통 06 §2 SC02](contracts/v1.0/06_scenarios_and_validation.md) · [셀 02 §3](cell_operations/v1.0/02_authorization_invalidation.md) · I08 |
-| 후속 조치 | 원 결과 회수 또는 조사·근거 있는 UNRESOLVED 처분으로 간다. UNRESOLVED 뒤에도 success branch와 자동 자원 해제는 불가하다. 자원을 풀려면 검증된 RecoveryDisposition의 별도 조건이 필요하며, 이전 outcome을 성공으로 바꾸지 않는다. | [공통 01 §5·7](contracts/v1.0/01_responsibility_and_semantics.md) · [공통 02 §2 T5](contracts/v1.0/02_identity_durability_recovery.md) |
+| 책임 | RUNTIME-01은 원 identity·evidence·결론을 소유하고, HOST-IN은 native 전달/원 결과를, HOST-OUT은 받는 쪽 관측을 제공한다. 현장 조사가 필요하면 N1의 RECIPIENT-01이 개입 역할을 맡되 기록 버튼이 물리 사실을 대신하지 않는다. | [공통 01 §1·6](../contracts/semantic/v1.0/01_responsibility_and_semantics.md) · [셀 01 §1](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md) |
+| 권한 | 조회는 접근 권한을 확인하며 motion permit을 요구하지 않는다. 이미 SEND_ENTERED인 원 호출은 새 grant/permit이나 새 key로 자동 재전송하지 않는다. 취소가 필요하면 원 operation에 묶인 별도 cancel 경로의 조건을 따른다. | [공통 02 §1·3](../contracts/semantic/v1.0/02_identity_durability_recovery.md) · [셀 02 §4·8](../contracts/cell-operations/v1.0/02_authorization_invalidation.md) · I01·I03 |
+| 증거 | delivery receipt와 evidence outbox의 journal identity를 구별한다. 조회한 receipt도 결론에 사용하기 전에 immutable evidence로 T2에 남긴다. 원 invocation correlation, 실제 결과, 현재 지지·잔여 명령 근거를 보존한다. | [공통 02 §1–2](../contracts/semantic/v1.0/02_identity_durability_recovery.md) · [공통 01 §6](../contracts/semantic/v1.0/01_responsibility_and_semantics.md) · I04·I07 |
+| 격리 | SC02의 원 자원 quarantine과 관련 후속 dispatch 보류를 유지한다. native 응답 유실을 단순 결과조회 RPC 유실과 같게 취급해 자동 TRANSIENT로 두지 않는다. 조회만의 유실로 좁혀지고 연속성이 입증되는 경우와, 물리 변화/연속성이 불명하여 revocation/LATCHED가 필요한 경우를 구별한다. | [공통 06 §2 SC02](../contracts/semantic/v1.0/06_scenarios_and_validation.md) · [셀 02 §3](../contracts/cell-operations/v1.0/02_authorization_invalidation.md) · I08 |
+| 후속 조치 | 원 결과 회수 또는 조사·근거 있는 UNRESOLVED 처분으로 간다. UNRESOLVED 뒤에도 success branch와 자동 자원 해제는 불가하다. 자원을 풀려면 검증된 RecoveryDisposition의 별도 조건이 필요하며, 이전 outcome을 성공으로 바꾸지 않는다. | [공통 01 §5·7](../contracts/semantic/v1.0/01_responsibility_and_semantics.md) · [공통 02 §2 T5](../contracts/semantic/v1.0/02_identity_durability_recovery.md) |
 
 ### 2.4 답과 남는 결손
 
@@ -98,11 +98,11 @@ S2는 [셀 01 §2](cell_operations/v1.0/01_scope_conditions_functions.md)의 설
 
 > An unknown outcome after SEND_ENTERED does not justify automatic native retransmission.
 
-[공통 01 §8 I03](contracts/v1.0/01_responsibility_and_semantics.md)
+[공통 01 §8 I03](../contracts/semantic/v1.0/01_responsibility_and_semantics.md)
 
 > At SEND_ENTERED or later, only lookup/reconciliation is allowed.
 
-[공통 02 §3](contracts/v1.0/02_identity_durability_recovery.md)
+[공통 02 §3](../contracts/semantic/v1.0/02_identity_durability_recovery.md)
 
 **미확정: 과거 호출 결과 회수와 지지/잔여 명령 근거.** 결과 lookup 제공·보존 범위, 실제 correlation 및 release 근거가 없다. [문서 22 §4의 관측/완료 근거·상실 반응](22_open_items_boundary.md#4-open-mobile-support-판정), 문서 21의 P18/P19/P30/P35/P44/P45로 연결한다. 규범 경로가 있다는 것만으로 이 입력들을 생성하지 못한다.
 
@@ -131,11 +131,11 @@ S2는 [셀 01 §2](cell_operations/v1.0/01_scope_conditions_functions.md)의 설
 
 | 축 | 해당 순간의 규범상 판단 | 근거 |
 |---|---|---|
-| 책임 | RUNTIME-01은 ConditionDefinition과 연속성 근거에 따라 대기/무효화 경로를 고른다. Host는 원 표본과 현재 native 조건을 제공하고 국소 반응을 맡는다. 개입 사건의 조사는 현장 역할에 속한다. | [셀 01 §1·4](cell_operations/v1.0/01_scope_conditions_functions.md) · [셀 02 §3](cell_operations/v1.0/02_authorization_invalidation.md) |
-| 권한 | RunMandate가 ACTIVE인 것만으로 해제 호출 권한이 생기지 않는다. 정상 대기/보류와 revocation을 구별하고, 현재 조건을 만족하는 개별 DispatchPermit 및 최종 Host gate가 필요하다. LATCHED 뒤에는 새 시작 경로를 거친다. | [셀 02 §2–5](cell_operations/v1.0/02_authorization_invalidation.md) |
-| 증거 | 원 취득 age·source/boot/quality·오차와 연속성 근거를 요구한다. cache를 다시 읽거나 PASS가 재출현한 사실만으로 신선도/연속성을 갱신하지 않는다. 이전 native 성공 이력과 현재 지지 증거도 구별한다. | [공통 01 §6](contracts/v1.0/01_responsibility_and_semantics.md) · [공통 02 §5](contracts/v1.0/02_identity_durability_recovery.md) · [공통 06 §3 SC06](contracts/v1.0/06_scenarios_and_validation.md) · I04·I09 |
-| 격리 | 정상 대기는 관련 다음 동작을 보류하며 그 자체로 전체 셀을 중단시키지 않는다. P가 TRANSIENT를 소유하고, Host의 별도 LATCHED 이상은 P의 transient 해제로 지워지지 않는다. revocation 사건이면 검증된 dependency 영향 범위를 막는다. | [셀 02 §1·3·6](cell_operations/v1.0/02_authorization_invalidation.md) · [셀 01 §6](cell_operations/v1.0/01_scope_conditions_functions.md) |
-| 후속 조치 | 연속성 입증 경로이면 새 evidence를 평가하고 명시적 transient 해제 후 진행한다. 입증 못 하면 원인 조사·필요한 intervention/qualification/epoch 확인을 거쳐 operator의 새 RestartRun으로 간다. 구체 복구 절차·인원/지지 검증을 이 문서에서 채우지 않는다. | [셀 02 §2–3](cell_operations/v1.0/02_authorization_invalidation.md) · [셀 04 §6](cell_operations/v1.0/04_protocol_integration_ui.md) |
+| 책임 | RUNTIME-01은 ConditionDefinition과 연속성 근거에 따라 대기/무효화 경로를 고른다. Host는 원 표본과 현재 native 조건을 제공하고 국소 반응을 맡는다. 개입 사건의 조사는 현장 역할에 속한다. | [셀 01 §1·4](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md) · [셀 02 §3](../contracts/cell-operations/v1.0/02_authorization_invalidation.md) |
+| 권한 | RunMandate가 ACTIVE인 것만으로 해제 호출 권한이 생기지 않는다. 정상 대기/보류와 revocation을 구별하고, 현재 조건을 만족하는 개별 DispatchPermit 및 최종 Host gate가 필요하다. LATCHED 뒤에는 새 시작 경로를 거친다. | [셀 02 §2–5](../contracts/cell-operations/v1.0/02_authorization_invalidation.md) |
+| 증거 | 원 취득 age·source/boot/quality·오차와 연속성 근거를 요구한다. cache를 다시 읽거나 PASS가 재출현한 사실만으로 신선도/연속성을 갱신하지 않는다. 이전 native 성공 이력과 현재 지지 증거도 구별한다. | [공통 01 §6](../contracts/semantic/v1.0/01_responsibility_and_semantics.md) · [공통 02 §5](../contracts/semantic/v1.0/02_identity_durability_recovery.md) · [공통 06 §3 SC06](../contracts/semantic/v1.0/06_scenarios_and_validation.md) · I04·I09 |
+| 격리 | 정상 대기는 관련 다음 동작을 보류하며 그 자체로 전체 셀을 중단시키지 않는다. P가 TRANSIENT를 소유하고, Host의 별도 LATCHED 이상은 P의 transient 해제로 지워지지 않는다. revocation 사건이면 검증된 dependency 영향 범위를 막는다. | [셀 02 §1·3·6](../contracts/cell-operations/v1.0/02_authorization_invalidation.md) · [셀 01 §6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md) |
+| 후속 조치 | 연속성 입증 경로이면 새 evidence를 평가하고 명시적 transient 해제 후 진행한다. 입증 못 하면 원인 조사·필요한 intervention/qualification/epoch 확인을 거쳐 operator의 새 RestartRun으로 간다. 구체 복구 절차·인원/지지 검증을 이 문서에서 채우지 않는다. | [셀 02 §2–3](../contracts/cell-operations/v1.0/02_authorization_invalidation.md) · [셀 04 §6](../contracts/cell-operations/v1.0/04_protocol_integration_ui.md) |
 
 ### 3.4 답과 남는 결손
 
@@ -145,15 +145,15 @@ S2는 [셀 01 §2](cell_operations/v1.0/01_scope_conditions_functions.md)의 설
 
 > If that continuity is unknown, take the revocation path.
 
-[셀 02 §3](cell_operations/v1.0/02_authorization_invalidation.md)
+[셀 02 §3](../contracts/cell-operations/v1.0/02_authorization_invalidation.md)
 
 > Reappearance of PASS alone does not establish lost continuity.
 
-[셀 02 §3](cell_operations/v1.0/02_authorization_invalidation.md)
+[셀 02 §3](../contracts/cell-operations/v1.0/02_authorization_invalidation.md)
 
 > SUCCEEDED satisfies the specified evidence rule and is not created from timeout/idle/BT success alone.
 
-[공통 01 §8 I04](contracts/v1.0/01_responsibility_and_semantics.md)
+[공통 01 §8 I04](../contracts/semantic/v1.0/01_responsibility_and_semantics.md)
 
 **미확정: 관측 신선도와 연속성의 실제 입증.** 원 취득 경로·시간 오차·boot 관측·silent change 검출 한계가 없다. [문서 22의 M-05/M-06 및 §4 관측 근거](22_open_items_boundary.md#4-open-mobile-support-판정), 문서 21의 P17/P36/P42/P43/P47로 연결한다. 이 값이 없으면 문서상 PASS를 지어내지 않고 정해진 불명/무효화 경로를 적용해야 한다.
 
@@ -182,11 +182,11 @@ S2는 [셀 01 §2](cell_operations/v1.0/01_scope_conditions_functions.md)의 설
 
 | 축 | 해당 순간의 규범상 판단 | 근거 |
 |---|---|---|
-| 책임 | RUNTIME-01이 두 Host에 걸친 같은 자원의 예약을 직렬화한다. 각 Host는 자기 native 진입과 현재 조건을 확인한다. 물품 동일성·충돌 단위·지지 범위를 정하는 책임은 설치/장치/검증 역할에 남는다. | [공통 02 §2 T1·§4](contracts/v1.0/02_identity_durability_recovery.md) · [셀 01 §1·6](cell_operations/v1.0/01_scope_conditions_functions.md) |
-| 권한 | 서로 다른 제어기 이름은 서로 다른 물리 지지 권한의 근거가 아니다. 공통 support resource를 포함해 T1 예약을 얻고 현재 permit을 만족해야 한다. 자원이 없으면 BUSY이며 partial allocation을 쥔 채 추가 자원을 기다리지 않는다. | [공통 02 §4](contracts/v1.0/02_identity_durability_recovery.md) · [셀 02 §4–5](cell_operations/v1.0/02_authorization_invalidation.md) · I05 |
-| 증거 | 같은 PKG-01/HG-01을 가리키는 alias/slot 근거, receiver-support의 물품·도구·하중·자세·진단·신선도 범위, 실제 stop/release 결과와 대체 지지를 확인한다. CAS가 그 물리 근거를 만들어 주지는 않는다. | [셀 01 §3·6](cell_operations/v1.0/01_scope_conditions_functions.md) · [공통 04 §1·5](contracts/v1.0/04_binding_and_admission.md) · [공통 06 §3 SC14](contracts/v1.0/06_scenarios_and_validation.md) |
-| 격리 | 정상 경합이면 승자가 자원을 HELD로 유지하고 패자는 예약되지 않는다. BUSY만으로 전체 셀을 LATCHED 처리하지 않는다. 물품 동일성이 불명이면 해당 지지 감소는 금지하고, 영향 범위 정의 자체가 불명이면 셀 범위를 넓혀 제한한다. 원 native 효과 불명은 별도 quarantine 사유다. | [공통 02 §3–4](contracts/v1.0/02_identity_durability_recovery.md) · [셀 01 §6](cell_operations/v1.0/01_scope_conditions_functions.md) · I08 |
-| 후속 조치 | 선행 동작의 실제 결과와 지지/자원 해제 조건을 확인한 뒤 다음 요청을 다시 평가한다. 단순 시간 대기나 제어기 이름 변경으로 우회하지 않는다. N1의 종료에서도 OUT-01의 소포 유지와 BAY-01 점유가 남으므로 모든 자원을 해제했다고 기록하지 않는다. | [공통 01 §7](contracts/v1.0/01_responsibility_and_semantics.md) · [셀 01 §6](cell_operations/v1.0/01_scope_conditions_functions.md) · [문서 20 §4](20_first_handover_case.md) |
+| 책임 | RUNTIME-01이 두 Host에 걸친 같은 자원의 예약을 직렬화한다. 각 Host는 자기 native 진입과 현재 조건을 확인한다. 물품 동일성·충돌 단위·지지 범위를 정하는 책임은 설치/장치/검증 역할에 남는다. | [공통 02 §2 T1·§4](../contracts/semantic/v1.0/02_identity_durability_recovery.md) · [셀 01 §1·6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md) |
+| 권한 | 서로 다른 제어기 이름은 서로 다른 물리 지지 권한의 근거가 아니다. 공통 support resource를 포함해 T1 예약을 얻고 현재 permit을 만족해야 한다. 자원이 없으면 BUSY이며 partial allocation을 쥔 채 추가 자원을 기다리지 않는다. | [공통 02 §4](../contracts/semantic/v1.0/02_identity_durability_recovery.md) · [셀 02 §4–5](../contracts/cell-operations/v1.0/02_authorization_invalidation.md) · I05 |
+| 증거 | 같은 PKG-01/HG-01을 가리키는 alias/slot 근거, receiver-support의 물품·도구·하중·자세·진단·신선도 범위, 실제 stop/release 결과와 대체 지지를 확인한다. CAS가 그 물리 근거를 만들어 주지는 않는다. | [셀 01 §3·6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md) · [공통 04 §1·5](../contracts/semantic/v1.0/04_binding_and_admission.md) · [공통 06 §3 SC14](../contracts/semantic/v1.0/06_scenarios_and_validation.md) |
+| 격리 | 정상 경합이면 승자가 자원을 HELD로 유지하고 패자는 예약되지 않는다. BUSY만으로 전체 셀을 LATCHED 처리하지 않는다. 물품 동일성이 불명이면 해당 지지 감소는 금지하고, 영향 범위 정의 자체가 불명이면 셀 범위를 넓혀 제한한다. 원 native 효과 불명은 별도 quarantine 사유다. | [공통 02 §3–4](../contracts/semantic/v1.0/02_identity_durability_recovery.md) · [셀 01 §6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md) · I08 |
+| 후속 조치 | 선행 동작의 실제 결과와 지지/자원 해제 조건을 확인한 뒤 다음 요청을 다시 평가한다. 단순 시간 대기나 제어기 이름 변경으로 우회하지 않는다. N1의 종료에서도 OUT-01의 소포 유지와 BAY-01 점유가 남으므로 모든 자원을 해제했다고 기록하지 않는다. | [공통 01 §7](../contracts/semantic/v1.0/01_responsibility_and_semantics.md) · [셀 01 §6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md) · [문서 20 §4](20_first_handover_case.md) |
 
 ### 4.4 답과 남는 결손
 
@@ -196,15 +196,15 @@ S2는 [셀 01 §2](cell_operations/v1.0/01_scope_conditions_functions.md)의 설
 
 > Current receiver PASS alone does not authorize mutual release.
 
-[셀 01 §6](cell_operations/v1.0/01_scope_conditions_functions.md)
+[셀 01 §6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md)
 
 > If it is unknown whether object aliases/slots reference the same physical material, do not allow support reduction.
 
-[셀 01 §6](cell_operations/v1.0/01_scope_conditions_functions.md)
+[셀 01 §6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md)
 
 > If resources are unavailable, return BUSY with a retry hint.
 
-[공통 02 §4](contracts/v1.0/02_identity_durability_recovery.md)
+[공통 02 §4](../contracts/semantic/v1.0/02_identity_durability_recovery.md)
 
 **미확정: 동일 물품의 지지 자원 정의와 실제 지지 연속성.** alias, 실제 충돌 집합, 지지 predicate 및 stop/release 근거가 없다. [문서 22의 M-03/M-04/M-07/M-08과 §4 조합·인계 결손](22_open_items_boundary.md#4-open-mobile-support-판정), 문서 21의 P20/P29/P34/P35로 연결한다. resource_set을 문법상 채우는 것만으로 이 결손을 해소하지 못한다.
 
@@ -233,11 +233,11 @@ S2는 [셀 01 §2](cell_operations/v1.0/01_scope_conditions_functions.md)의 설
 
 | 축 | 해당 순간의 규범상 판단 | 근거 |
 |---|---|---|
-| 책임 | Host는 실제 local 반응·관측·native 전달 사실을 제공하고 RUNTIME-01은 영향을 받은 권한·근거를 무효화한다. RECIPIENT-01의 현장 조사는 절차·접근 조건을 따르며, UI/fence 기록이 물리 보호 책임을 대신하지 않는다. | [셀 01 §1·5–7](cell_operations/v1.0/01_scope_conditions_functions.md) · [공통 02 §8](contracts/v1.0/02_identity_durability_recovery.md) · I12 |
-| 권한 | revocation/epoch 갱신은 이전 권한을 그대로 재사용할 수 없게 한다. 다만 P의 DB 갱신 순간을 모든 Host의 미진입 차단 시점으로 보지 않는다. Host fence 설치 후의 거부와 이미 진입한 호출의 별도 조사를 구별한다. | [셀 02 §4–6](cell_operations/v1.0/02_authorization_invalidation.md) |
-| 증거 | 장치 boot/관측 generation과 Host process boot를 구별하고 원 결과·현재 지지·잔여 native 명령을 확인한다. 실제 고장 반응/정지 성능은 profile·현장 증거가 필요하다. 과거 성공 이력과 현재 상태 무효화는 다른 주장이다. | [공통 01 §5–7](contracts/v1.0/01_responsibility_and_semantics.md) · [공통 02 §7–8](contracts/v1.0/02_identity_durability_recovery.md) · [공통 06 §2 SC03-C·§3 SC09](contracts/v1.0/06_scenarios_and_validation.md) · I08·I09 |
-| 격리 | 영향 closure의 LATCHED block과 관련 mandate/permit 무효화를 유지한다. 범위가 모호하면 전체 셀 경계로 넓힌다. 미확인 native 효과가 남은 자원을 새 owner나 접근 근거로 넘기지 않는다. fence ack와 물리 격리는 구별한다. | [셀 01 §6](cell_operations/v1.0/01_scope_conditions_functions.md) · [셀 02 §5–6](cell_operations/v1.0/02_authorization_invalidation.md) · [셀 04 §8](cell_operations/v1.0/04_protocol_integration_ui.md) |
-| 후속 조치 | 정해진 local stop/hold 반응의 결과와 잔여 명령·지지를 조사하고, 필요 시 qualification/절차를 재검증한다. PrepareRestart의 새 epoch와 같은 세대의 clearance/Arm 확인 및 operator RestartRun으로 진행한다. 일반적인 torque-off, 자동 재시작 또는 정상 production을 I12 예외에 넣지 않는다. | [공통 02 §8](contracts/v1.0/02_identity_durability_recovery.md) · [셀 02 §2·8](cell_operations/v1.0/02_authorization_invalidation.md) · [셀 04 §6](cell_operations/v1.0/04_protocol_integration_ui.md) |
+| 책임 | Host는 실제 local 반응·관측·native 전달 사실을 제공하고 RUNTIME-01은 영향을 받은 권한·근거를 무효화한다. RECIPIENT-01의 현장 조사는 절차·접근 조건을 따르며, UI/fence 기록이 물리 보호 책임을 대신하지 않는다. | [셀 01 §1·5–7](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md) · [공통 02 §8](../contracts/semantic/v1.0/02_identity_durability_recovery.md) · I12 |
+| 권한 | revocation/epoch 갱신은 이전 권한을 그대로 재사용할 수 없게 한다. 다만 P의 DB 갱신 순간을 모든 Host의 미진입 차단 시점으로 보지 않는다. Host fence 설치 후의 거부와 이미 진입한 호출의 별도 조사를 구별한다. | [셀 02 §4–6](../contracts/cell-operations/v1.0/02_authorization_invalidation.md) |
+| 증거 | 장치 boot/관측 generation과 Host process boot를 구별하고 원 결과·현재 지지·잔여 native 명령을 확인한다. 실제 고장 반응/정지 성능은 profile·현장 증거가 필요하다. 과거 성공 이력과 현재 상태 무효화는 다른 주장이다. | [공통 01 §5–7](../contracts/semantic/v1.0/01_responsibility_and_semantics.md) · [공통 02 §7–8](../contracts/semantic/v1.0/02_identity_durability_recovery.md) · [공통 06 §2 SC03-C·§3 SC09](../contracts/semantic/v1.0/06_scenarios_and_validation.md) · I08·I09 |
+| 격리 | 영향 closure의 LATCHED block과 관련 mandate/permit 무효화를 유지한다. 범위가 모호하면 전체 셀 경계로 넓힌다. 미확인 native 효과가 남은 자원을 새 owner나 접근 근거로 넘기지 않는다. fence ack와 물리 격리는 구별한다. | [셀 01 §6](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md) · [셀 02 §5–6](../contracts/cell-operations/v1.0/02_authorization_invalidation.md) · [셀 04 §8](../contracts/cell-operations/v1.0/04_protocol_integration_ui.md) |
+| 후속 조치 | 정해진 local stop/hold 반응의 결과와 잔여 명령·지지를 조사하고, 필요 시 qualification/절차를 재검증한다. PrepareRestart의 새 epoch와 같은 세대의 clearance/Arm 확인 및 operator RestartRun으로 진행한다. 일반적인 torque-off, 자동 재시작 또는 정상 production을 I12 예외에 넣지 않는다. | [공통 02 §8](../contracts/semantic/v1.0/02_identity_durability_recovery.md) · [셀 02 §2·8](../contracts/cell-operations/v1.0/02_authorization_invalidation.md) · [셀 04 §6](../contracts/cell-operations/v1.0/04_protocol_integration_ui.md) |
 
 ### 5.4 답과 남는 결손
 
@@ -247,11 +247,11 @@ S2는 [셀 01 §2](cell_operations/v1.0/01_scope_conditions_functions.md)의 설
 
 > Already-SEND_ENTERED calls, native queues, movement, and support require separate reconciliation; fence acknowledgement does not mean they have ended or that access is allowed.
 
-[셀 02 §6](cell_operations/v1.0/02_authorization_invalidation.md)
+[셀 02 §6](../contracts/cell-operations/v1.0/02_authorization_invalidation.md)
 
 > RX does not guarantee that all physical actions disappear immediately at P's DB update.
 
-[셀 02 §6](cell_operations/v1.0/02_authorization_invalidation.md)
+[셀 02 §6](../contracts/cell-operations/v1.0/02_authorization_invalidation.md)
 
 **미확정: 고장 검출, 지연 구간의 local 반응, 잔여 효과의 실제 근거.** 검출 범위·silent reboot 한계, 실제 stop/hold·지지 성능과 잔여 command 확인이 없다. [문서 22의 M-08 및 §4 상실 반응 결손](22_open_items_boundary.md#4-open-mobile-support-판정), 문서 21의 P34/P35/P42/P43/P45/P47로 연결한다. profile/현장 검증 없이 보호 성능을 보증할 수 없다.
 
@@ -289,8 +289,8 @@ P43/P44/P45/P47은 이번 반례에서 문서 21의 고정77 목록을 직접 �
 | 인계 불명 | 응답 유실, 인계 지연, 받는 로봇 고장 | 원 native 효과 또는 현재 지지/관측 연속성을 확정하지 못하는 분기다. 정상 WAIT_TARGET 미달만을 원 호출의 UNKNOWN으로 바꾸지는 않는다. |
 
 **다섯 번째 반례는 추가하지 않았다.** “거부”는 기존 경합/고장 후보 안에서
-예약 실패 및 stale permit 차단으로 드러난다. 이는 [공통 02 §4](contracts/v1.0/02_identity_durability_recovery.md)와
-[셀 02 §§5–6](cell_operations/v1.0/02_authorization_invalidation.md)의 직접 근거가 있다.
+예약 실패 및 stale permit 차단으로 드러난다. 이는 [공통 02 §4](../contracts/semantic/v1.0/02_identity_durability_recovery.md)와
+[셀 02 §§5–6](../contracts/cell-operations/v1.0/02_authorization_invalidation.md)의 직접 근거가 있다.
 native 장치가 이미 받은 명령을 거절하는 모든 경우까지 검사했다는 뜻은 아니다.
 그 유형을 후속 범위에 넣으려면 별도로 구체화해야 하며 이번 귀속 수에 끼워 넣지 않는다.
 
@@ -361,11 +361,11 @@ for index, name in enumerate(names, 2):
             for line in section.splitlines() if line.startswith("| ")]
     rows = [row for row in rows if row[0] in axes]
     assert len(rows) == 5 and {row[0] for row in rows} == axes
-    assert all(row[1] and re.search(r"\]\((?:contracts|cell_operations)/", row[2]) for row in rows)
+    assert all(row[1] and re.search(r"\]\(\.\./contracts/(?:semantic|cell-operations)/", row[2]) for row in rows)
     assert "**판정: 막는다 — 규범상.**" in section and "**미확정:" in section
     axis_count += len(rows)
-i_ids = set(re.findall(r"^- (I\d{2}):", (root / "contracts/v1.0/01_responsibility_and_semantics.md").read_text(), re.M))
-sc_ids = set(re.findall(r"^\| (SC\d{2}(?:-[A-D])?)\b", (root / "contracts/v1.0/06_scenarios_and_validation.md").read_text(), re.M))
+i_ids = set(re.findall(r"^- (I\d{2}):", (root.parent / "contracts/semantic/v1.0/01_responsibility_and_semantics.md").read_text(), re.M))
+sc_ids = set(re.findall(r"^\| (SC\d{2}(?:-[A-D])?)\b", (root.parent / "contracts/semantic/v1.0/06_scenarios_and_validation.md").read_text(), re.M))
 used_i = set(re.findall(r"(?<![A-Za-z0-9_])I\d{2}(?![A-Za-z0-9_])", text))
 used_sc = set(re.findall(r"(?<![A-Za-z0-9_])SC\d{2}(?:-[A-D])?(?![A-Za-z0-9_-])", text))
 assert len(i_ids) == 12 and len(sc_ids) == 19

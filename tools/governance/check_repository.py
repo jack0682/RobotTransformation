@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate root governance for G0 or the frozen M2 import; no product runtime claims."""
+"""Validate stage-specific root ownership, source governance and canonical documentation."""
 from __future__ import annotations
 
 import argparse
@@ -181,14 +181,33 @@ def check_import_stage(root, files):
     return errors
 
 
+SOURCE_COMPONENTS = ("rx-platform", "rx-solutions")
+FULL_CONTENT_POLICY = {'schema': 'rx.repository-content-policy.v2', 'language': 'en', 'canonical_document_language': 'preserve-source', 'canonical_document_inventory': '.github/root-file-inventory.json#canonical_documents', 'exclude_ai_artifacts': True}
+
+
 def root_inventory(root):
     value = json.loads((root / ".github/root-file-inventory.json").read_text())
-    if value.get("schema") != "rx.current-root-file-inventory.v1" or not isinstance(value.get("files"), list):
-        raise ValueError("Invalid root file inventory")
+    if (value.get("schema") != "rx.current-root-file-inventory.v2"
+            or set(value) != {"schema", "scope", "files", "canonical_documents"}
+            or not isinstance(value.get("files"), list)
+            or not isinstance(value.get("canonical_documents"), list)):
+        raise ValueError("Invalid typed root file inventory")
     check_import.path_set(value["files"])
-    if any(name.split("/")[0] in check_import.PREFIXES for name in value["files"]):
+    check_import.path_set(value["canonical_documents"])
+    files, documents = set(value["files"]), set(value["canonical_documents"])
+    if any(name.split("/")[0] in check_import.PREFIXES for name in files):
         raise ValueError("Component source must not masquerade as root governance")
-    return set(value["files"])
+    expected = {name for name in files if name.split("/")[0] in {"docs", "contracts", "references"}}
+    if documents != expected:
+        raise ValueError("Canonical document ownership differs from exact root inventory")
+    if any(Path(name).suffix not in {".md", ".json"} for name in documents):
+        raise ValueError("Canonical language scope admits only declared Markdown and JSON documents")
+    return files
+
+
+def canonical_documents(root):
+    # root_inventory validates the exact typed set before this accessor is used.
+    return set(json.loads((root / ".github/root-file-inventory.json").read_text())["canonical_documents"])
 
 
 def job_env_runner_errors(workflow):
@@ -213,17 +232,22 @@ def check_full_ci_stage(root, files):
     try:
         required = root_inventory(root)
         check_import.load_manifest(root)
+        document_names = canonical_documents(root)
+        sys.path.insert(0, str(root / "tools/docs"))
+        import check_canonical_layout
+        import check_documents
+        check_canonical_layout.check(root)
     except (ValueError, OSError, KeyError, TypeError) as exc:
         return ["Root/import declaration: " + str(exc)]
-    if json.loads((root / ".github/repository-policy.json").read_text()) != {"schema": "rx.repository-content-policy.v1", "language": "en", "exclude_ai_artifacts": True}:
+    if json.loads((root / ".github/repository-policy.json").read_text()) != FULL_CONTENT_POLICY:
         errors.append("Unexpected root content policy")
     if "Apache License" not in (root / "LICENSE").read_text() or "Version 2.0" not in (root / "LICENSE").read_text():
         errors.append("Apache-2.0 license missing")
     relative = {p.relative_to(root).as_posix() for p in files}
-    actual_root = {name for name in relative if name.split("/")[0] not in check_import.PREFIXES}
+    actual_root = {name for name in relative if name.split("/")[0] not in SOURCE_COMPONENTS}
     for missing in sorted(required - actual_root): errors.append("Missing declared root file: " + missing)
     for extra in sorted(actual_root - required): errors.append("Undeclared root file: " + extra)
-    for prefix in check_import.PREFIXES:
+    for prefix in SOURCE_COMPONENTS:
         if not any(name.startswith(prefix + "/") for name in relative): errors.append("Missing source component: " + prefix)
     for path in files:
         name = path.relative_to(root).as_posix()
@@ -235,11 +259,15 @@ def check_full_ci_stage(root, files):
         except UnicodeDecodeError:
             if name in actual_root: errors.append("Root governance must be UTF-8 text: " + name)
             continue
-        if not name.startswith("rx_docs/") and (KOREAN.search(name) or KOREAN.search(text)):
+        if name not in document_names and (KOREAN.search(name) or KOREAN.search(text)):
             errors.append("Code and governance text must be English: " + name)
         try:
-            if path.suffix == ".json": json.loads(text)
-            if name in actual_root and path.suffix == ".md": errors.extend(name + ": " + e for e in links(root, path))
+            if path.suffix == ".json":
+                check_documents.decode(text) if name in document_names else json.loads(text)
+            if name in document_names and path.suffix == ".md":
+                check_documents.check_local_links(root, name, text)
+            elif name in actual_root and path.suffix == ".md":
+                errors.extend(name + ": " + e for e in links(root, path))
         except (ValueError, OSError) as exc: errors.append(f"{name}: {exc}")
     workflow = (root / ".github/workflows/ci.yml").read_text()
     errors.extend(job_env_runner_errors(workflow))
@@ -251,6 +279,7 @@ def check_full_ci_stage(root, files):
     for token in (expected_needs, "if: ${{ always() }}", "contents: read", "CARGO_BUILD_JOBS: '2'",
                   "tools/migration/check_origin.py", "tools/governance/check_ci.py",
                   "tools/docs/check_documents.py --run-tables", "python3 -B .github/test_documents.py",
+                  "python3 -B .github/test_canonical_layout.py", "python3 -B .github/test_canonical_root.py",
                   "python3 -B .github/test_root_signing.py",
                   "source/rx-solutions/apps/operator/package-lock.json", "path: compat-platform",
                   "ref: e08fd1a45e2782d10f222d00ef1962a675463609"):

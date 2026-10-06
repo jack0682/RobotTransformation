@@ -54,7 +54,7 @@ rx-platform `crates/rx-api/HOST_READMISSION.md`에는 "별도 재개·재자격�
 |---|---|---|
 | executor 교체 시 자격 batch를 같은 트랜잭션에서 중지하고 제한 소유권을 기록(버그 수정) | 흡수 | Phase 0.4 |
 | program-inputs 정책 primitive. admission·Host 구성·자격 연결은 미구현으로 명시 | 흡수 | Phase 0.4 |
-| settlement v1: 유지된 Host에서 결과를 아는 작업을 명시 승인으로 정산. host-rejoin 참조 필드 제거. 후보 계약: [settlement v1](../contracts/settlement/v1/README.md) | 흡수 | Phase 0.4 |
+| settlement v1: 유지된 Host에서 결과를 아는 작업을 명시 승인으로 정산. host-rejoin 참조 필드 제거. 후보 계약: [settlement v1](../../contracts/semantic/settlement/v1/README.md) | 흡수 | Phase 0.4 |
 | Host 무효화 origin 기록. 재수용 기록과 교차 참조하도록 확장 | 흡수 | Phase 2 코어 보강 — **구현(#48)** |
 | DeviceRestart 해제. origin·재수용 기록·link receipt 기준으로 재작성 | 흡수(재설계) | Phase 2 코어 보강 — **구현(#48)**, bound link 기준 |
 | observation-only binding(P와 Host). commit 경로에도 제어 거절 가드 추가 | 흡수 | Phase 2 코어 보강 |

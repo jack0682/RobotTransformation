@@ -17,7 +17,7 @@
 | 2026-09-29 | 모든 작업은 `feature/*` → `develop` PR, `main`은 별도 릴리스 | 사전 연구의 "기존 rx_ws를 새 설계 기준에서 제외" 조항은 폐기 |
 | 2026-09-29 | 코어 헌장([43](43_core_charter.md))과 상주 프레임워크 개념 명세([44](44_resident_framework_concept.md)) 채택. OD01–OD06 확정 | OD07(첫 지원 범위)과 OD08(구성요소 등록 소유자)은 미결 |
 
-Rust 코어와 platform/solutions 경계는 유지한다. 제조사별 driver·설치 정책의 변경과 작업 계약의 wire 의미 변경을 구별한다. 이번 문서 개정은 [공통 revision](contracts/v1.0/revision_2026-09-14.md), [셀 revision](cell_operations/v1.0/revision_2026-09-14.md)에 기록한다.
+Rust 코어와 platform/solutions 경계는 유지한다. 제조사별 driver·설치 정책의 변경과 작업 계약의 wire 의미 변경을 구별한다. 이번 문서 개정은 [공통 revision](../contracts/semantic/v1.0/revision_2026-09-14.md), [셀 revision](../contracts/cell-operations/v1.0/revision_2026-09-14.md)에 기록한다.
 
 ## 문서 적용 순서
 

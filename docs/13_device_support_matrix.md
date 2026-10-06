@@ -25,4 +25,4 @@ RX는 개인 프로젝트이며 공통 계약은 제조사 중립으로 유지�
 - 기동·모드·정상 종료·강제 종료가 토크·지지·잔류 명령에 미치는 효과.
 - source commit·전이 의존성·license·플랫폼 제약과 실제 시험 증거.
 
-빠진 근거를 `READY=true`로 채우지 않는다. 공통 요구는 [binding/admission 규범](contracts/v1.0/04_binding_and_admission.md)을 따른다. SDK와 driver를 제거하거나 바꿀 때에도 제삼자의 저작권·라이선스·출처는 보존한다.
+빠진 근거를 `READY=true`로 채우지 않는다. 공통 요구는 [binding/admission 규범](../contracts/semantic/v1.0/04_binding_and_admission.md)을 따른다. SDK와 driver를 제거하거나 바꿀 때에도 제삼자의 저작권·라이선스·출처는 보존한다.

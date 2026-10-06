@@ -21,8 +21,8 @@
 현장에 맞는지 판단하는 노동, 동일 정보가 다른 기록에 다시 쓰이는 노동은 서로 같지
 않다. 이 표의 행 수를 사람의 독립 판단 횟수나 시간으로 환산하지 않는다.
 
-- **S2** = [cell_operations/v1.0/01_scope_conditions_functions.md §2](cell_operations/v1.0/01_scope_conditions_functions.md), `Per-installation operating-scope record`의 `Inputs required for execution admission`. 원문 Item 6개를 입력 주제 21개로 분해한다.
-- **B1** = [contracts/v1.0/04_binding_and_admission.md §1](contracts/v1.0/04_binding_and_admission.md), `BindingProfile`의 `Required item` / `Details`. 원문 그룹 13개를 입력 주제 56개로 분해한다.
+- **S2** = [cell_operations/v1.0/01_scope_conditions_functions.md §2](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md), `Per-installation operating-scope record`의 `Inputs required for execution admission`. 원문 Item 6개를 입력 주제 21개로 분해한다.
+- **B1** = [contracts/v1.0/04_binding_and_admission.md §1](../contracts/semantic/v1.0/04_binding_and_admission.md), `BindingProfile`의 `Required item` / `Details`. 원문 그룹 13개를 입력 주제 56개로 분해한다.
 
 모든 표 행의 출처 셀은 위 파일·절과 원문 행 이름을 함께 지정한다. 원문의 `such as`
 뒤 예시를 필수 슬롯으로 늘리지 않는다. 슬래시로 연결된 종류·조합 목록은 한 입력 주제로
@@ -43,7 +43,7 @@ validation 그룹을 다시 이중 분할하지 않는다. 나머지 항목에 �
 이유만으로 타당성 판단이 자동화됐다고 간주하지 않는다.
 
 재사용 가능성은 형식·문자열·digest 동일성과 다르다.
-[셀 프로토콜 §3](cell_operations/v1.0/04_protocol_integration_ui.md)은 artifact digest가
+[셀 프로토콜 §3](../contracts/cell-operations/v1.0/04_protocol_integration_ui.md)은 artifact digest가
 맞아도 schema 의미를 이해하지 못하면 업무 판정에 사용할 수 없으며 ID나 자유 서술이
 machine decision rule을 대체할 수 없다고 규정한다. 미확정 입력을 default true나
 `not applicable`로 채우지 않는 S2의 제한도 적용한다.
@@ -467,8 +467,8 @@ profile 값은 만들어 넣지 않는다. 고정 설비라고 receiver support 
   timeout 전략 자리여서 별도 timing 숫자 P40과 합치지 않는다.
 
 시간값의 표현이 고정돼 있어도 검증 의무가 사라지는 것은 아니다.
-[공통 03 §8](contracts/v1.0/03_data_and_protocol.md)은 시간값이 없거나 서로 양립하지
-않으면 admission을 거부하도록 요구하고, [공통 05 §1 D09](contracts/v1.0/05_decisions.md)는
+[공통 03 §8](../contracts/semantic/v1.0/03_data_and_protocol.md)은 시간값이 없거나 서로 양립하지
+않으면 admission을 거부하도록 요구하고, [공통 05 §1 D09](../contracts/semantic/v1.0/05_decisions.md)는
 operation별 expiry 값 검증과 일부 binding의 timing 시험을 요구한다. 그 양립성·현장
 적정성 의무는 **P42에서 한 번만 센다.** B1 timing 문장은 observation age의 basis 뒤
 세미콜론 다음에 다섯 종류의 `values with supporting evidence`를 묶는다. §1에서 고정한
@@ -480,13 +480,13 @@ declared는 검증을 면제한다는 뜻이 아니라 별도 P42가 검증 판�
 
 | 별칭 | 규범 파일·절 |
 |---|---|
-| S1/S3/S4/S5/S6 | [셀 01](cell_operations/v1.0/01_scope_conditions_functions.md)의 각각 §§1/3/4/5/6 |
-| B2/B3/B4/B5/B6 | [공통 04](contracts/v1.0/04_binding_and_admission.md)의 각각 §§2/3/4/5/6 |
-| M1 | [공통 01](contracts/v1.0/01_responsibility_and_semantics.md), 표 안에서 절 지정 |
-| T2 | [공통 02](contracts/v1.0/02_identity_durability_recovery.md), 표 안에서 절 지정 |
-| D3 | [공통 03](contracts/v1.0/03_data_and_protocol.md), 표 안에서 절 지정 |
-| C4 | [셀 04](cell_operations/v1.0/04_protocol_integration_ui.md), 표 안에서 절 지정 |
-| V7 | [공통 06 §7](contracts/v1.0/06_scenarios_and_validation.md), slash 뒤는 validation ID |
+| S1/S3/S4/S5/S6 | [셀 01](../contracts/cell-operations/v1.0/01_scope_conditions_functions.md)의 각각 §§1/3/4/5/6 |
+| B2/B3/B4/B5/B6 | [공통 04](../contracts/semantic/v1.0/04_binding_and_admission.md)의 각각 §§2/3/4/5/6 |
+| M1 | [공통 01](../contracts/semantic/v1.0/01_responsibility_and_semantics.md), 표 안에서 절 지정 |
+| T2 | [공통 02](../contracts/semantic/v1.0/02_identity_durability_recovery.md), 표 안에서 절 지정 |
+| D3 | [공통 03](../contracts/semantic/v1.0/03_data_and_protocol.md), 표 안에서 절 지정 |
+| C4 | [셀 04](../contracts/cell-operations/v1.0/04_protocol_integration_ui.md), 표 안에서 절 지정 |
+| V7 | [공통 06 §7](../contracts/semantic/v1.0/06_scenarios_and_validation.md), slash 뒤는 validation ID |
 
 ### 8.2 라벨 원자료
 

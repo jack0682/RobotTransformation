@@ -22,4 +22,4 @@ platform은 장비 SDK나 ROS 타입에 의존하지 않는다. Host는 물리 �
 
 여러 운영 영역으로 확장하려면 권한 위임·신뢰·공유 자원·인계·통신 단절을 추가로 명세해야 한다. 기존 단일 writer나 CLOCK_BOOTTIME 가정을 검토 없이 여러 컴퓨터에 적용하지 않는다.
 
-[구현 모듈 안내](implementation/architecture.md) · [작업 계약](contracts/v1.0/README.md) · [셀 운영 계약](cell_operations/v1.0/README.md)
+[구현 모듈 안내](implementation/architecture.md) · [작업 계약](../contracts/semantic/v1.0/README.md) · [셀 운영 계약](../contracts/cell-operations/v1.0/README.md)

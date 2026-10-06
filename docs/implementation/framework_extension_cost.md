@@ -287,8 +287,8 @@ P/CLI에서 UNKNOWN과 operation 자원·slot 보유, 다음 Part 미시작을 �
 
 완료 근거가 없거나 상충하면 UNKNOWN/보유를 유지한다. 운영자의 확인 버튼·idle 상태·timeout만으로
 완료나 미실행을 만들지 않는다. 정산을 임의의 같은-slot 재시도 또는 다음-slot 이동 허가로
-간주하지 않으며, 기존 [operation 계약](../contracts/workflow-execution/v2/operation-admission.md)과
-[retry 계약](../contracts/workflow-execution/v2/retry-admission.md)의 증거/권한 경계를 유지한다.
+간주하지 않으며, 기존 [operation 계약](../../contracts/semantic/workflow-execution/v2/operation-admission.md)과
+[retry 계약](../../contracts/semantic/workflow-execution/v2/retry-admission.md)의 증거/권한 경계를 유지한다.
 
 ### 수락과 중단 기준
 
@@ -360,8 +360,8 @@ qualification acknowledgement에 연결된 승인 집합에 속하는지 직접 
 binding·집합 대조는 공통 execution-v2 계약에 두며 Python profile에는 환경/program pin만 둔다.
 F2′ adapter가 같은 의미를 재개정 없이 사용해야 한다. 추가 범위는 없다.
 
-[공통 Host 입력 대조](../contracts/workflow-execution/v2/host-input-membership.md)와
-[Python 고유 profile](../contracts/workflow-execution/v2/python-execution-profile.md)을 분리하고
+[공통 Host 입력 대조](../../contracts/semantic/workflow-execution/v2/host-input-membership.md)와
+[Python 고유 profile](../../contracts/semantic/workflow-execution/v2/python-execution-profile.md)을 분리하고
 v1.1 절차의 revision `2026-10-03.2` 및 파일 해시를 고정한다. F0 scratch는 merge하지 않고,
 승인된 측정/계획 문서만 현재 develop 기반 구현 문서 브랜치로 복사해 이어 쓴다.
 현재 구현 범위는 **체크포인트 1(N=1, S2 9단계, SIMULATION)**뿐이다. 정확한 head CI·DCO 후
@@ -388,10 +388,10 @@ arm64 native에서는 RECOVERY_REQUIRED 상태의 같은 읽기 RPC가 5.581584/
 두 측정은 Run 상태/부하가 달라 동등 부하 비교가 아니다. 이 수치는 정상 5초 호출의
 RPC timeout과 별도 관측이며, 그 원인을 단독으로 입증하지 않는다.
 
-현재 [Host gate 계약](../contracts/v1.0/02_identity_durability_recovery.md)은 gate 안의
+현재 [Host gate 계약](../../contracts/semantic/v1.0/02_identity_durability_recovery.md)은 gate 안의
 검사와 native 진입 사이에 fence/취소가 끼어드는 것을 금지하며, 진입한 호출이 반환하지
 않으면 자원을 새 소유자에게 넘기지 못하게 한다. 승인된
-[입력 경계](../contracts/workflow-execution/v2/host-input-membership.md)는 기존 freshness·epoch·
+[입력 경계](../../contracts/semantic/workflow-execution/v2/host-input-membership.md)는 기존 freshness·epoch·
 자격·admission 상한을 늘리지 못하게 한다.
 
 **검토할 권고안 하나:** 공통 execution-v2에 기존 runner의 native 진입 확인과 완료 회수를

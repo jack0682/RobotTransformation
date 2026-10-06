@@ -314,7 +314,7 @@ P/Executor 연결, 실제 품목 바인딩과 N개 슬롯별 선택, 무응답/�
 ## M3 실행 v2 개정 결정 — 2026-10-02
 
 사용자가 명시적 실행 v2 계약 개정을 승인했다. 구현 전 결정은
-[공통 실행 v2 계약](../contracts/workflow-execution/v2/README.md)에 고정한다.
+[공통 실행 v2 계약](../../contracts/semantic/workflow-execution/v2/README.md)에 고정한다.
 **v2는 계약 버전**, **v1.1은 기존 계약 개정 절차의 이름**이다. 기존 v1 bytes와
 exact-Intent 의미를 유지하며 새 형식을 명시적으로 협상한다. 이 절은 구현/수락 완료가 아니다.
 
@@ -476,7 +476,7 @@ P → S 순서로 merge한다. merge된 head로 환경을 재생성하여 사용
 운전/복구/RC 내용은 이관 대상의 기록이다. 신규 아이디어는 parking으로 보낸다.
 
 고정 v1 UI 주입에서 검토한 v2 참조와 실제 v1 Start 사이의 불일치가 관측됐다. 사용자는
-[설치 격리 및 명시적 거절](../contracts/workflow-execution/v2/legacy-isolation.md)을 승인했다.
+[설치 격리 및 명시적 거절](../../contracts/semantic/workflow-execution/v2/legacy-isolation.md)을 승인했다.
 고정 원본의 FAIL은 보존하며, 승인된 격리 검증 전에는 첫 관문을 통과로 표시하지 않는다.
 
 기존 첫 관문의 구현 검증은 [M3a 첫 관문 기록](m3a_first_gate.md)에 모았다. 고정 UI FAIL과
