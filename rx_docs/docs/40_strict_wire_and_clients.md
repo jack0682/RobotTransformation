@@ -145,7 +145,7 @@ PERMISSION_DENIED(`certificate is not registered`)이고, 위조 mandate도 거�
 
 macOS 전체 workspace는 platform408/0/16, solutions388/0/17이며 기존 시험은 줄지 않았다.
 새 Client libraries CI는 profile 누락/변조 거절, 설치 wheel, 외부 CMake 소비자와82개 corpus를
-필수 작업으로 실행한다. [원시 증거](../references/strict_wire_clients_2026-09-25/README.md)가
+필수 작업으로 실행한다. [원시 증거](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/strict_wire_clients_2026-09-25/README.md)가
 성공뿐 아니라 생성기 누락·두 변형·이미지 조립 환경·실패한 최초 테스트 기대값도 보존한다.
 
 자산 조사에서도 이름만 생략하지 않았다. AI Sapiens의 고정 소스에는 k1의 walk_default,

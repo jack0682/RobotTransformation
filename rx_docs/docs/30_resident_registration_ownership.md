@@ -46,4 +46,4 @@
 
 구현은 [rx-solutions `9fa53afe`](https://github.com/jack0682/rx-solutions/commit/9fa53afe308f0df89b09d2fa01e92a2e753181cb)에 고정된다. 데몬 소유와 실제 Linux 시험 절차를 포함하며 기존 SDK·계약·native 및 실행 관리자/OS 수명 본문은 보존했다.
 
-재현 명령, 실제 출력, 최초 실패와 수정된 시험 배치는 [근거 묶음](../references/resident_registration_2026-09-24/README.md)에 기록한다. 개별 시험 수와 32단계 관측 통과선은 전체 상주 프레임워크 완성의 기준으로 확대하지 않는다.
+재현 명령, 실제 출력, 최초 실패와 수정된 시험 배치는 [근거 묶음](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_registration_2026-09-24/README.md)에 기록한다. 개별 시험 수와 32단계 관측 통과선은 전체 상주 프레임워크 완성의 기준으로 확대하지 않는다.

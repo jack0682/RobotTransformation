@@ -61,7 +61,7 @@ F9의 원 결과 UNKNOWN/Unresolved, 소유 인수 금지와 명시적 recovery�
 
 Rust API에는 추가 변형과 close/guard API가 생겼다. SQLite schema/version, 영속 Document와 wire/protobuf 표현은 바꾸지 않았다. 규범 본문·manifest와 SDK 사본의 동기화를 별도로 대조한다. 지원 근거는 실제로 실행한 로컬 Linux/파일시스템과 macOS 회귀에 한정하며, 원격 파일시스템·다른 PID namespace로 객체 이동·물리 장비를 포괄하지 않는다.
 
-[명령·출력·반례·반복 결과](../references/storage_lock_2026-09-24/README.md)에 실행 환경과 바이너리 hash를 고정한다. Linux11개 겹침 장면과 SQLite 실제 close 실패 검사를 구별해 기록한다. Host stress는 정해 둔50회 전체를 `--test-threads=16`으로 실행하며, 어떤 실패도 다음 성공으로 덮지 않는다. 현재 관측에서는50/50 통과했고 추가 실패가 없었다. 이 결과만으로 역사적 F9 한 건의 원인을 확정하거나 모든 미래 실패를 같은 원인으로 단정하지 않는다.
+[명령·출력·반례·반복 결과](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/storage_lock_2026-09-24/README.md)에 실행 환경과 바이너리 hash를 고정한다. Linux11개 겹침 장면과 SQLite 실제 close 실패 검사를 구별해 기록한다. Host stress는 정해 둔50회 전체를 `--test-threads=16`으로 실행하며, 어떤 실패도 다음 성공으로 덮지 않는다. 현재 관측에서는50/50 통과했고 추가 실패가 없었다. 이 결과만으로 역사적 F9 한 건의 원인을 확정하거나 모든 미래 실패를 같은 원인으로 단정하지 않는다.
 
 F12의 원 실패와 격리 원형은 이전 근거로 유지한다. 이번 제품 구현은 생성자 검사, 연결 close 확인, 실패 시 자원 보존, 상속 transaction 정리를 추가한 별도 구현이다. 실험용 raw fork와 pre_exec unsafe 코드는 standalone 측정 fixture에만 있고 제품 crate의 unsafe 금지는 유지한다.
 

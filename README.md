@@ -2,7 +2,9 @@
 
 RobotTransformation is the product monorepo being prepared for RX: a vendor-neutral resident platform connecting heterogeneous robots, equipment, and services through common task, authority, state, result, and recovery contracts.
 
-**Status: M2 / SOURCE_IMPORTED_UNVALIDATED.** Frozen source snapshots are imported under their original component layouts. Required checks cover source bytes, Git modes and tree identities, SDK producer parity, named static identities, and repository governance. Product builds, runtime conformance, qualification, deployment readiness, physical completion, and functional safety are **NOT_RUN** at this stage.
+**Status: M3 / CI_SCOPE_DECLARED_NOT_YET_RUN.** This change declares the full required CI union. Local staging checks do not establish a successful hosted run. The exact candidate CI run is the evidence for executed checks; product acceptance, shipping-binary identity, and physical qualification remain separate.
+
+The immutable M2 import is audited at signed ancestor `0cecec7516879584c4bd6d2ba24cbe5b3c8e54a0`. Current source is validated by the full Platform/Solutions gate union, same-candidate SDK and installed-skills checks, frozen compatibility tests, current-document integrity, and bounded compiled identity probes.
 
 ## Work and contribution
 
@@ -18,25 +20,29 @@ Current product direction remains in the pinned [product definition](https://git
 
 The preserved CP2 acceptance failure remains separate from migration work. This bootstrap neither accepts it nor authorizes retry, settlement, resource release, environment changes, or physical operation.
 
-## Validate this import stage
+## Validate this CI declaration
 
-Python 3.10 or newer is sufficient for these static checks. No original source checkout or old-repository network access is needed:
+Python 3.10 or newer is sufficient for these root fixtures. Full Rust, native, installed-client, and simulation checks run on isolated GitHub-hosted Linux runners:
 
 ```sh
 python3 -B .github/test_governance.py
 python3 -B .github/test_import.py
+python3 -B .github/test_full_ci.py
+python3 -B .github/test_documents.py
 python3 -B tools/governance/check_repository.py
-python3 -B tools/migration/check_import.py --git
+python3 -B tools/migration/check_origin.py
 python3 -B rx-platform/tools/check_host_sdk.py rx-solutions/sdk
 ```
 
 The repository check requires a Git checkout whose origin is this repository. A preparatory file tree can use `--filesystem` for an explicitly uncommitted content check; this is not a commit or signature audit. The fixtures retain G0 refusals and add M2 import/CI negatives; Git index/HEAD fixtures, remote services, and cryptographic verifier results are mocked. Actual commit signatures are verified separately by the full-head audit and GitHub checks.
 
-The validation scope is recorded in [.github/validation-scope.json](.github/validation-scope.json). The required aggregate includes governance, full-head DCO/signatures, import fidelity, same-candidate SDK parity, and static identity comparison. The source identity baseline is `provenance/import/M2-source-identities.json`; its checker refuses a different baseline hash. A source-derived identity result does not establish the identity of a compiled binary.
+The validation scope and exact required job set are recorded in [.github/validation-scope.json](.github/validation-scope.json). Missing, failed, cancelled, or skipped jobs cannot yield a successful aggregate. Full-head signing/DCO, the immutable origin, SDK parity, and static identity jobs remain required.
 
-Only first-party root-document links are checked here. Frozen imported documents keep their original bytes; their historical relative evidence links are not declared resolved before M4. Current-document normalization is not part of M2.
+The origin audit reads original Git objects and verifies ancestry; it does not force current product bytes to remain equal to the original import. The source-identity baseline and its evaluator remain pinned while this migration changes governance and documentation rather than the protected Rust/Cargo context.
 
-M3 must add the full union of product checks through a reviewed scope transition. At that transition, immutable import fidelity is anchored to the recorded M2 import commit; it must not permanently prohibit legitimate later source changes or be weakened by regenerating the frozen manifest from a changed tree. See [governance](GOVERNANCE.md).
+Current copied-document links are resolved before this gate can merge. Immutable evidence URLs are checked against a pinned index verified from the original source objects; live remote availability is not inferred. Canonical document relocation remains the separate M4 phase.
+
+The compiled probe invokes applicable public identity functions from existing packages in isolated raw candidate source copies. It records inputs, compilation and output identity. Private transport consumers, shipping daemons, the non-Unix validator variant, and physical effects are outside that probe's observation scope. Source-only calculations and previous CI results are not substituted for a current run.
 
 ## License
 

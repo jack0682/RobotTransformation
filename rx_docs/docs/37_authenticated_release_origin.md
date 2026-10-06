@@ -59,7 +59,7 @@ G1의 정상 close 수정과 SIGKILL/abort 뒤 상속 description 잔여는 [G1 
 
 ## 재현·검증·호환 기록
 
-[명령과 원시 결과](../references/release_origin_2026-09-24/README.md)는 구현 전/후 키 주입, 최초 진단 실패, 정상 수락, 여섯 거절, 서명 이미지 파생, 전체 회귀와 개인키 부재 검사를 구분한다. 서명 파생은 기존 이미지의 inventory를 고정하고 public `release.json`/`revocations.json`만 더한다. 개인키는 build context에 넣지 않는다. 기존 여덟 passage 스크립트와 단언은 수정하지 않고 `--image`만 서명 파생 이미지로 바꾼다.
+[명령과 원시 결과](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/release_origin_2026-09-24/README.md)는 구현 전/후 키 주입, 최초 진단 실패, 정상 수락, 여섯 거절, 서명 이미지 파생, 전체 회귀와 개인키 부재 검사를 구분한다. 서명 파생은 기존 이미지의 inventory를 고정하고 public `release.json`/`revocations.json`만 더한다. 개인키는 build context에 넣지 않는다. 기존 여덟 passage 스크립트와 단언은 수정하지 않고 `--image`만 서명 파생 이미지로 바꾼다.
 
 검증 이미지는 고정된 기존 native runtime에 공개 서명 metadata만 더한 것이다. 기존 passage가 현재 checkout에서 빌드한 verifier/시험 바이너리를 별도 mount하여 실행한다. 기존 이미지 안 Rust 실행 파일의 내용도 서명 inventory에 결속되지만, 이번 작업이 전체 native image를 새 소스로 재빌드·배포했다는 뜻은 아니다. verifier 자신과 OS의 인증 제외를 이 차이로 가리지 않는다.
 

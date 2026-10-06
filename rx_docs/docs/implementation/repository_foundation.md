@@ -4,10 +4,10 @@
 
 ## 검증 근거
 
-- [솔루션 검증 요약](../../references/repository_foundation_2026-09-14/summary.json): 소스 e81825b2e440ded36e25c5cb8125f7d68281f6da, Linux arm64 이미지와 Rust/UI/ROS 모의 검증 범위.
-- [이미지 smoke](../../references/repository_foundation_2026-09-14/image-smoke.json).
-- [Supervisor 수명주기·변조 거부](../../references/repository_foundation_2026-09-14/supervisor-smoke.json).
-- [실제 C++ ROS 브리지와 모의 action](../../references/repository_foundation_2026-09-14/ros-jtc-bridge-final.json).
+- [솔루션 검증 요약](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/repository_foundation_2026-09-14/summary.json): 소스 e81825b2e440ded36e25c5cb8125f7d68281f6da, Linux arm64 이미지와 Rust/UI/ROS 모의 검증 범위.
+- [이미지 smoke](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/repository_foundation_2026-09-14/image-smoke.json).
+- [Supervisor 수명주기·변조 거부](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/repository_foundation_2026-09-14/supervisor-smoke.json).
+- [실제 C++ ROS 브리지와 모의 action](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/repository_foundation_2026-09-14/ros-jtc-bridge-final.json).
 
 이 검증은 소프트웨어와 모의 장비 범위다. 실장비 commissioning, production JTC Authority, Linux arm64 이외의 이미지, APT snapshot 고정은 검증 완료로 주장하지 않는다. Rust 환경 의존 시험 14개는 로컬 실행에서 ignored다.
 

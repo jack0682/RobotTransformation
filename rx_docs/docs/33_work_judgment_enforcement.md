@@ -64,4 +64,4 @@ Report나 과거 WorkUseAssessment에서 Prepared를 만들 수 없고, Prepared
 
 새 네트워크 API·daemon·서비스·DB 파일은 없다. `registration.db` 안의 결과·소비 문서 schema와 로컬 Rust API가 추가됐다. Program의 Deserialize 부재, F5 진단 의미, F6 기본 앵커 부재, F7 등록 소유/digest 거절, F8 자원 집행, F9 관리자 상실 경계는 보존한다. 공유 SDK·wire/proto·규범 본문·rx-platform·rx_ws/linux는 변경하지 않는다. 예전 writer가 새 업무 schema를 집행한다는 downgrade 호환성은 주장하지 않는다.
 
-원시 명령·성공과 실패·이미지 및 바이너리 해시·검사 집계는 [검증 근거](../references/work_judgment_2026-09-24/README.md)에 남긴다. 이 칸은 비구동 업무의 수신 관문이다. 실제 운영 영역 정책 서비스, 물리 동작, 다중 호스트 및 전체 프레임워크 적격은 별도 범위다.
+원시 명령·성공과 실패·이미지 및 바이너리 해시·검사 집계는 [검증 근거](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/work_judgment_2026-09-24/README.md)에 남긴다. 이 칸은 비구동 업무의 수신 관문이다. 실제 운영 영역 정책 서비스, 물리 동작, 다중 호스트 및 전체 프레임워크 적격은 별도 범위다.

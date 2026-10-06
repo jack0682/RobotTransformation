@@ -10,7 +10,7 @@ import sys
 from urllib.parse import unquote, urlsplit
 
 from common import ROOT, branch_error, git, require_checkout, settings
-from check_ci import BOOTSTRAP_SCOPE, IMPORT_SCOPE, stage
+from check_ci import BOOTSTRAP_SCOPE, IMPORT_SCOPE, FULL_SCOPE, stage
 sys.path.insert(0, str(ROOT / "tools/migration"))
 import check_import
 
@@ -181,12 +181,88 @@ def check_import_stage(root, files):
     return errors
 
 
+def root_inventory(root):
+    value = json.loads((root / ".github/root-file-inventory.json").read_text())
+    if value.get("schema") != "rx.current-root-file-inventory.v1" or not isinstance(value.get("files"), list):
+        raise ValueError("Invalid root file inventory")
+    check_import.path_set(value["files"])
+    if any(name.split("/")[0] in check_import.PREFIXES for name in value["files"]):
+        raise ValueError("Component source must not masquerade as root governance")
+    return set(value["files"])
+
+
+def check_full_ci_stage(root, files):
+    errors = []
+    try:
+        required = root_inventory(root)
+        check_import.load_manifest(root)
+    except (ValueError, OSError, KeyError, TypeError) as exc:
+        return ["Root/import declaration: " + str(exc)]
+    if json.loads((root / ".github/repository-policy.json").read_text()) != {"schema": "rx.repository-content-policy.v1", "language": "en", "exclude_ai_artifacts": True}:
+        errors.append("Unexpected root content policy")
+    if "Apache License" not in (root / "LICENSE").read_text() or "Version 2.0" not in (root / "LICENSE").read_text():
+        errors.append("Apache-2.0 license missing")
+    relative = {p.relative_to(root).as_posix() for p in files}
+    actual_root = {name for name in relative if name.split("/")[0] not in check_import.PREFIXES}
+    for missing in sorted(required - actual_root): errors.append("Missing declared root file: " + missing)
+    for extra in sorted(actual_root - required): errors.append("Undeclared root file: " + extra)
+    for prefix in check_import.PREFIXES:
+        if not any(name.startswith(prefix + "/") for name in relative): errors.append("Missing source component: " + prefix)
+    for path in files:
+        name = path.relative_to(root).as_posix()
+        if ai_artifact(Path(name)): errors.append("Local assistant/harness artifact must not be published: " + name)
+        if path.is_symlink() or not path.is_file():
+            errors.append("Source entries must be regular files: " + name); continue
+        try:
+            text = path.read_text()
+        except UnicodeDecodeError:
+            if name in actual_root: errors.append("Root governance must be UTF-8 text: " + name)
+            continue
+        if not name.startswith("rx_docs/") and (KOREAN.search(name) or KOREAN.search(text)):
+            errors.append("Code and governance text must be English: " + name)
+        try:
+            if path.suffix == ".json": json.loads(text)
+            if name in actual_root and path.suffix == ".md": errors.extend(name + ": " + e for e in links(root, path))
+        except (ValueError, OSError) as exc: errors.append(f"{name}: {exc}")
+    workflow = (root / ".github/workflows/ci.yml").read_text()
+    if "pull_request_target" in workflow or re.search(r"(?m)^\s*(?:-\s*)?[\"']?continue-on-error[\"']?\s*:", workflow):
+        errors.append("Privileged trigger or tolerated child failure is forbidden")
+    for action in re.findall(r"(?m)^\s*- uses:\s*(\S+)", workflow):
+        if not re.fullmatch(r"[^@\s]+@[0-9a-f]{40}", action): errors.append("Action must be SHA-pinned: " + action)
+    expected_needs = "needs: [" + ", ".join(FULL_SCOPE["required_jobs"]) + "]"
+    for token in (expected_needs, "if: ${{ always() }}", "contents: read", "CARGO_BUILD_JOBS: '2'",
+                  "tools/migration/check_origin.py", "tools/governance/check_ci.py",
+                  "tools/docs/check_documents.py --run-tables", "python3 -B .github/test_documents.py",
+                  "python3 -B .github/test_root_signing.py",
+                  "source/rx-solutions/apps/operator/package-lock.json", "path: compat-platform",
+                  "ref: e08fd1a45e2782d10f222d00ef1962a675463609"):
+        if token not in workflow: errors.append("Missing M3 workflow boundary: " + token)
+    # The only conditional steps are PR routing and diagnostic artifact upload.
+    allowed_conditions = {"${{ always() }}", "always()", "github.event_name == 'pull_request'"}
+    for line in workflow.splitlines():
+        condition = re.match(r"^\s*(?:-\s*)?[\"']?if[\"']?\s*:\s*(.+)$", line)
+        if condition and condition.group(1).strip() not in allowed_conditions:
+            errors.append("Unapproved workflow condition can skip a required check")
+    for job in ("skills", "skills_compatibility"):
+        match = re.search(r"(?ms)^  " + job + r":\n(.*?)(?=^  [a-z_]+:|\Z)", workflow)
+        if not match or match.group(1).count("arch: amd64") != 1 or match.group(1).count("arch: arm64") != 1:
+            errors.append("Installed-skills matrix must retain amd64 and arm64: " + job)
+    job_names = set(re.findall(r"(?m)^  ([a-z_]+):$", workflow[workflow.index("jobs:"):]))
+    if job_names != set(FULL_SCOPE["required_jobs"]) | {"ci"}: errors.append("Workflow job set differs from declaration")
+    candidate_checkouts = workflow.count("ref: ${{ github.event.pull_request.head.sha || github.sha }}")
+    if candidate_checkouts != len(FULL_SCOPE["required_jobs"]) + 1 or workflow.count("uses: actions/checkout@") != candidate_checkouts + 1:
+        errors.append("Same-candidate checkouts or sole frozen compatibility checkout differ")
+    return errors
+
+
 def check(root, files):
     try:
         scope = stage(json.loads((root / ".github/validation-scope.json").read_text()))
     except (ValueError, OSError, TypeError) as exc:
         return ["Validation scope: " + str(exc)]
-    return check_bootstrap(root, files) if scope == BOOTSTRAP_SCOPE else check_import_stage(root, files)
+    if scope == BOOTSTRAP_SCOPE: return check_bootstrap(root, files)
+    if scope == IMPORT_SCOPE: return check_import_stage(root, files)
+    return check_full_ci_stage(root, files)
 
 
 def main():
@@ -214,7 +290,7 @@ def main():
         return 1
     mode = "UNCOMMITTED_SCAFFOLD" if args.filesystem else "GIT_CHECKOUT"
     scope = stage(json.loads((ROOT / ".github/validation-scope.json").read_text()))
-    print(f"OK: {mode}; {scope['scope']}; {len(files)} files; root links checked; imported historical links NOT_VALIDATED_UNTIL_M4; product runtime NOT_RUN")
+    print(f"OK: {mode}; {scope['scope']}; {len(files)} files; declared scope checked; document integrity and actual product results have separate required jobs")
     return 0
 
 

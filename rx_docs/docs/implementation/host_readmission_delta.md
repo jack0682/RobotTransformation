@@ -85,8 +85,8 @@ develop에서 P만 재시작하면 다음과 같이 된다.
 - link 준비는 같은 boot의 다른 세션을 `ContinuityUnproven`으로 거절한다.
 - 결과적으로 셀은 운영 link를 되찾지 못한다.
 
-실제 이미지 실행에서 확인했다. 재시작 인수 A안 뒤 인수는 수락됐지만, Host 운영 context가 `IDENTITY_UNAVAILABLE`에 머물렀다([기록](../../references/p_restart_adoption_2026-09-29/README.md)).
+실제 이미지 실행에서 확인했다. 재시작 인수 A안 뒤 인수는 수락됐지만, Host 운영 context가 `IDENTITY_UNAVAILABLE`에 머물렀다([기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_adoption_2026-09-29/README.md)).
 
 이 rebind는 Phase 2에서 기존 Host 복구 승인(context → proposal → approve)과 재수용 기록을 기준으로 재설계해 흡수한다. link 경로는 하나로 유지한다.
 
-구현(2026-09-29): 별도 rebind API 대신 **재수용 승인이 세션이 만료된 같은 boot도 교체**하도록 넓혔다. 이전 runtime의 grant가 끝나야 link되며, 승인 소비 시 Run·work 조건을 다시 검사한다. 실제 이미지 3회 연속 통과([기록](../../references/p_restart_rebind_2026-09-29/README.md)).
+구현(2026-09-29): 별도 rebind API 대신 **재수용 승인이 세션이 만료된 같은 boot도 교체**하도록 넓혔다. 이전 runtime의 grant가 끝나야 link되며, 승인 소비 시 Run·work 조건을 다시 검사한다. 실제 이미지 3회 연속 통과([기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_rebind_2026-09-29/README.md)).

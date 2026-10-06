@@ -91,8 +91,8 @@ M1 사용자 실행 준비·SDK 동기화·UI 연결·사용자 수락은 계속
 - Platform 소스: `aee48699acd879c8f6bf84dd38c994909a7d7d66`.
 - Solutions 소스: `dca80d659f5b2fa036fa3eb49ea3d23cafa18a8e`.
 - [셀 패키지와 CLI 순서](https://github.com/jack0682/rx-solutions/blob/dca80d659f5b2fa036fa3eb49ea3d23cafa18a8e/examples/definitions/0f-laser-simulation/README.md).
-- [API 실행 검증 결과](../../references/cell_model_m1_2026-10-01/api-acceptance.json).
-- [CLI와 UI의 동일 revision·행 대조](../../references/cell_model_m1_2026-10-01/ui-cli-match.json).
+- [API 실행 검증 결과](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/cell_model_m1_2026-10-01/api-acceptance.json).
+- [CLI와 UI의 동일 revision·행 대조](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/cell_model_m1_2026-10-01/ui-cli-match.json).
 
 셀 패키지는 58개 정의이며 0F 품목 ECC_51-14/ECC_99-14, 일반/고밀도 트레이,
 척, PART1/14 지그, 단일 그리퍼, 문, pick/place station과 품목별 Property Set을 제공한다.
@@ -338,7 +338,7 @@ node parameter 64 KiB, 정책 envelope 128 KiB다. 정의 closure는 512개/16 M
 전체 자격 의존성은 1024개 이하다. 기존 64-choice 순수 정책과 Python package 32-asset
 상한을 임의로 올리지 않고 v2 파생 의존성을 명시한다.
 
-[크기 산출 근거](../../references/execution_v2_design_2026-10-02/sizing.json): A/B × 2400 × 8에서
+[크기 산출 근거](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/sizing.json): A/B × 2400 × 8에서
 concrete parameter는 38,400개, reference 배열만 5,284,801 bytes다. 현재 v1 payload를
 외삽하면 parameter 48,499,200 bytes, report 929,577,600 bytes다. 선택한 report index는
 362,633 bytes이고 8개 후보 상한에서는 1,450,373 bytes다. 이는 직렬화 크기 산출이며
@@ -347,7 +347,7 @@ dense 실제 해석/성능 시험이 아니다. 기존 dense geometry는 계속 
 전체 입력 closure를 검사하고 4800회 해석·제약 검사, 최대 38,400개 parameter 생성을
 수행해 index를 대조한다.
 
-2026-10-02 [2400-slot 실측](../../references/execution_v2_design_2026-10-02/dense-performance.json)은
+2026-10-02 [2400-slot 실측](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/dense-performance.json)은
 M2의 A/B 품목·8개 Task·해석 규칙을 그대로 사용했다. 원본 dense는 두 품목 모두 pitch
 위반으로 BLOCKED임을 확인했다. 성공 경로 측정은 별도 임시 DB에서 **새 model/instance**를
 만들어 40×60개 슬롯을 유지하고 pitch를 80 mm, 외곽을 4800×3200 mm로 설정한
@@ -444,7 +444,7 @@ advisory read가 다시 projection하는 중복을 제거했다. read는 현재 
 reference/model·Run·ordinal·slot·pool 소유를 검사한다. 새 효과의 전체 projection/currentness
 검사는 기존대로 남긴다. 이 변경은 M3a의 필수 반복 검증을 막는 read 경로에만 적용했다.
 
-수정 뒤 동일한 등록 mTLS 시나리오는 [20회 연속, 실패 0회](../../references/execution_v2_design_2026-10-02/m3a-handover-repeat.json)를 기록했다.
+수정 뒤 동일한 등록 mTLS 시나리오는 [20회 연속, 실패 0회](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/m3a-handover-repeat.json)를 기록했다.
 매 회 2 Part/2 operation, budget 소비 2, 두 번째 실제 object를 기다린 뒤 바인딩하여 완료했다.
 이 결과는 frozen clock·합성 Host 완료/인계 증거를 사용한 P/S integration precheck다.
 고정 v1 주입 관문, exact-head CI/commit-range 요약/merge, merge 후 제품 smoke는 아직 남아 있다.

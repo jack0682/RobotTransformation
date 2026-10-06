@@ -382,7 +382,7 @@ ready source의 2초 freshness를 초과하여 P가 UNKNOWN/QUARANTINED,
 Run을 RECOVERY_REQUIRED로 유지했다. 실제 장치 기록은 process까지 6건이다.
 완료/해제를 강제하거나 원 호출을 재발행하지 않았으며, CP1 완료나 CP3 수락으로 세지 않는다.
 
-실행 snapshot의 100ms 경계는 변경하지 않는다. [중간 CP1 receipt](../../references/2026-10-03-f1-checkpoint1/interim-receipt.json)는 NOT_READY를 명시한다. amd64 에뮬레이션의 GetSnapshot 왕복
+실행 snapshot의 100ms 경계는 변경하지 않는다. [중간 CP1 receipt](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/interim-receipt.json)는 NOT_READY를 명시한다. amd64 에뮬레이션의 GetSnapshot 왕복
 111.306791/114.148750ms는 arch와 실제 관측 상태를 구분해 CP1 receipt에 기록한다.
 arm64 native에서는 RECOVERY_REQUIRED 상태의 같은 읽기 RPC가 5.581584/4.788416ms였다.
 두 측정은 Run 상태/부하가 달라 동등 부하 비교가 아니다. 이 수치는 정상 5초 호출의
@@ -421,7 +421,7 @@ CI·DCO 후 P→S develop 병합과 제품 CLI 인계까지다. CP2/3은 시작�
 commit한 뒤 자원 보유를 해제할 수 있다. v2 전송 전 내부 reader marker 3을 기록하여
 이 의무를 모르는 reader 2의 재개를 거절한다.
 
-병합 전 제품 CLI Run은 [premerge summary](../../references/2026-10-03-f1-checkpoint1/premerge-product-summary.json)에
+병합 전 제품 CLI Run은 [premerge summary](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/premerge-product-summary.json)에
 기록했다. S2 9단계 모두 SUCCEEDED/RELEASED, FILE_SIMULATION 효과 9건, rotation
 95°/0.5°, process 요청 5초·실측 5.000141초다. 저장 보고서 재열기는 동일 승인 bytes와
 일치했고 원 request ID 재조회는 추가 효과를 만들지 않았다. 이 정상 실행 증거는
@@ -448,9 +448,9 @@ arch·관측 상태를 분리해 보존한다. 두 관측을 동등 부하 성�
 SUCCEEDED/RELEASED, SIM 효과 9건, process 실측 5.004813초로 완료됐다.
 원 request 재조회는 효과를 추가하지 않았고 inspect --reports는 같은 승인 보고서를 열었다.
 
-[최종 receipt](../../references/2026-10-03-f1-checkpoint1/receipt.json),
-[제품 CLI 원문 receipt](../../references/2026-10-03-f1-checkpoint1/product-receipt.json),
-[직접 실행·재열기 명령](../../references/2026-10-03-f1-checkpoint1/RUN_CP1.md)에 head·arch·보고서 참조를 고정했다.
+[최종 receipt](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/receipt.json),
+[제품 CLI 원문 receipt](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/product-receipt.json),
+[직접 실행·재열기 명령](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/RUN_CP1.md)에 head·arch·보고서 참조를 고정했다.
 P/Host/Executor는 Docker daemon에 분리되어 실행 중이다. 사용자용 별도 object instance는
 미사용으로 남겨 두었다. **사용자 CP1 수락은 아직 받지 않았으며 여기서 멈춘다.**
 CP2/3, F2′/F3′는 시작하지 않았다.
@@ -478,7 +478,7 @@ CP3의 무응답 주입·UNKNOWN·정산 구현은 아직 시작하지 않는다
 
 병합 전 실제 제품 CLI Run 01a1042c-247a-71ab-be6c-f30ce8768a41에서 3개 Part가
 CONFIRMED_COMPLETED, 27개 operation이 SUCCEEDED/RELEASED로 완료됐다.
-[병합 전 요약](../../references/2026-10-04-f1-checkpoint2/premerge-summary.json)은
+[병합 전 요약](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/premerge-summary.json)은
 각 Part의 실제 object·slot·parameter·report 참조와 원 operation/invocation을 기록한다.
 각 Part의 장치 순서는 S2 9단계와 같고 rotation은 95°/0.5°를 소비했다.
 process의 선택값은 각각 5초다. inspect --reports는 같은 보고서를 열었고
@@ -502,10 +502,10 @@ P는 변경 없이 이미 병합·검증된 00fd6599bd3be983ff3cdbead5ef9e5e2e02
 27/27 SUCCEEDED/RELEASED, Part별 순서 및 27개의 고유 operation/invocation 쌍 일치를
 확인했다. 저장 보고서 재열기와 원 요청 재조회도 일치했고 추가 효과는 0건이었다.
 
-[최종 CP2 receipt](../../references/2026-10-04-f1-checkpoint2/receipt.json),
-[제품 receipt](../../references/2026-10-04-f1-checkpoint2/product-receipt.json),
-[장치 기록](../../references/2026-10-04-f1-checkpoint2/effects.jsonl),
-[직접 실행·조회 명령](../../references/2026-10-04-f1-checkpoint2/RUN_CP2.md)을 남겼다.
+[최종 CP2 receipt](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/receipt.json),
+[제품 receipt](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/product-receipt.json),
+[장치 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/effects.jsonl),
+[직접 실행·조회 명령](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/RUN_CP2.md)을 남겼다.
 사용자용 세 객체는 미사용이며 서비스는 Docker daemon에 분리되어 실행 중이다.
 **CP2 사용자 수락 대기에서 멈춘다. CP3는 시작하지 않았다.**
 
@@ -539,7 +539,7 @@ qualification·fence·grant 경로는 유지하며 결과나 P/Host DB 상태를
 
 첫 시도에서는 원 rotate-align의 UNKNOWN→동일 invocation 성공·해제·정산 COMPLETE까지
 성립했으나 다음 clamp가 native 진입 확인 응답을 받기 전에 permit 시간을 소진했다.
-[보존한 첫 시도](../../references/2026-10-04-f1-checkpoint3/preserved-first-attempt.json)에
+[보존한 첫 시도](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/preserved-first-attempt.json)에
 1초 permit, Host Prepare 시점, 파일 wall time을 현재 boottime offset으로 변환한
 약 3ms 잔여 시간 추정과 그 가정을 분리해 기록했다. 이 실패를 완료 처리하거나 재발행하지 않았다.
 기존 sender가 Prepare와 Authorize를 다른 순회에서 처리하던 대기를 제거하여,
@@ -547,7 +547,7 @@ qualification·fence·grant 경로는 유지하며 결과나 P/Host DB 상태를
 두 단계 모두 writer의 현재 권한 검사를 새로 거치며, 불확실한 전송은 계속 원 receipt만 조회한다.
 permit/freshness/100ms 상한과 공통 계약·wire 의미는 변경하지 않았다.
 
-수정 후 [병합 전 제품 검증](../../references/2026-10-04-f1-checkpoint3/premerge-summary.json)에서
+수정 후 [병합 전 제품 검증](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/premerge-summary.json)에서
 같은 Run의 ECC_51/ECC_99/ECC_51 순서로 Part 2 rotate-align이 UNKNOWN·보유 상태가 됐고
 Part 3은 생성되지 않았으며 장치 기록은 12행이었다. 통신 복구 후 동일 operation/invocation이
 SUCCEEDED/RELEASED 및 reconciliation COMPLETE가 되었고 잔여 단계와 Part 3까지
@@ -579,11 +579,11 @@ SUCCEEDED/RELEASED 및 reconciliation COMPLETE가 됐다. Part 3은 UNKNOWN 중
 시작하지 않았고, 복구 후 3개 Part와 27개 효과가 완료됐다.
 원 Authorize 전달 1회, 고유 ID 쌍 27개, 혼합 선택값 일치 및 Run/report 재열기를 확인했다.
 
-[최종 receipt](../../references/2026-10-04-f1-checkpoint3/receipt.json),
-[UNKNOWN 제품 기록](../../references/2026-10-04-f1-checkpoint3/unknown-product-receipt.json),
-[완료 제품 기록](../../references/2026-10-04-f1-checkpoint3/completed-product-receipt.json),
-[장치 기록](../../references/2026-10-04-f1-checkpoint3/effects.jsonl),
-[사용자 실행·조회 절차](../../references/2026-10-04-f1-checkpoint3/RUN_CP3.md)를 남겼다.
+[최종 receipt](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/receipt.json),
+[UNKNOWN 제품 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/unknown-product-receipt.json),
+[완료 제품 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/completed-product-receipt.json),
+[장치 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/effects.jsonl),
+[사용자 실행·조회 절차](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/RUN_CP3.md)를 남겼다.
 사용자용 혼합 세 객체는 미사용이며 네 서비스는 Docker daemon에 분리 실행 중이다.
 **CP3 사용자 수락 대기에서 멈춘다. F1′ 전체 수락은 아직 주장하지 않는다.
 F2′/F3′는 미착수다.**
@@ -597,7 +597,7 @@ CP3 명령은 **사용자의 요청으로 Claude가 사용자 Mac에서 같은 r
 F1′을 닫는다.** 자동 검증 결과를 사용자 수락으로 대체한 것이 아니다.
 
 사용자 산출물은 로컬 `rx_ws/.build/framework-f1-checkpoint3/live3/claude-check/`에 있다.
-[수락 기록](../../references/2026-10-04-f1-checkpoint3/user-acceptance.json)에 사용자 보고,
+[수락 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/user-acceptance.json)에 사용자 보고,
 읽기 전용으로 대조한 결과, 원 파일별 SHA-256을 구분해 남겼다.
 사용자 Run은 `01a106b4-968e-752f-897a-7a2f0294f165`, request는
 `f071c378-3f18-4bfc-a1f0-4a4d42d6a026`이다.
@@ -640,8 +640,8 @@ F0의 6파일/63행/12명령과 비교한다. 아직 registry 구현량·S1 확�
 현재 제안은 common execution-v2의 provider별 증거 확장점을 사용하고 기존 Python v2는
 다른 finite skill에 그대로 사용한다. 기존 계약/manifest/trait·P/S 제품 코드 변경은 없다.
 새 ledger/권한/상태기계 또는 seam 증가가 필요해지면 구현하지 않고 중단·질문한다.
-[RUN_CP1](../../references/2026-10-04-f2-checkpoint1/RUN_CP1.md)과
-[기준선 receipt](../../references/2026-10-04-f2-checkpoint1/baseline.json)를 남긴다.
+[RUN_CP1](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f2-checkpoint1/RUN_CP1.md)과
+[기준선 receipt](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f2-checkpoint1/baseline.json)를 남긴다.
 **CP1 사용자 수락 전 CP2를 시작하지 않는다. 자동 검증 PASS는 수락이 아니다.**
 
 ## 20. F2′ CP1 조건부 수락·CP2 선행 점검 — 2026-10-05
@@ -691,7 +691,7 @@ Codex가 기존 F1 P `4fd1c16` / S runtime `45dc6ea` 이미지로 새로운 SIM 
 9개 SETTLED/SUCCEEDED/RELEASED operation이다. 실제 effect 순서 A 3 → B clamp → A 5와
 고유 operation/invocation 9쌍이 Run 기록에 일치했다. 제품 CLI inspect --reports 재열기도 같다.
 두 Host 바이너리 SHA-256은 동일하고 P/Host/Executor source 변경은 0줄이다.
-[명령·receipt·제한](../../references/2026-10-05-f2-two-host/RUN.md)을 남겼다.
+[명령·receipt·제한](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-two-host/RUN.md)을 남겼다.
 이 검증은 split-support 11단계·registry·S1·UNKNOWN/CP3의 수락을 뜻하지 않는다.
 fresh support observation은 없고, 이후 SIM unclamp에는 같은 Part의 완료 순서만 사용한다.
 사용자 CP2 수락은 아직이며 다음 작업은 공통 registry 구현이다.
@@ -699,7 +699,7 @@ fresh support observation은 없고, 이후 SIM unclamp에는 같은 Part의 완
 ## 23. F2′ CP2 — 외부 S1 등록·혼합 N=3 정상 운전
 
 **사용자 수락 대기에서 멈춘다.** Codex가 명령을 실행했고 아직 사용자는 CP2를 수락하지 않았다.
-[RUN_CP2](../../references/2026-10-05-f2-checkpoint2/RUN_CP2.md)에 사용하지 않은 수락용
+[RUN_CP2](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/RUN_CP2.md)에 사용하지 않은 수락용
 ECC_51/ECC_99/ECC_51 객체와 제품 CLI 명령을 제공한다. SIM이며 fresh gripper support
 observation은 없다. 같은 Part의 acquire-support SETTLED/SUCCEEDED 이후 unclamp 순서만 사용한다.
 실제 셀에 필요한 보장보다 약하며, 기존 parking의 registry observation/guard 후속은 유지한다.
@@ -712,7 +712,7 @@ S #92의 공통 registry를 `54ddf257`에 병합했다. 설치 CLI에 없던 기
 공유 SDK 162개 파일은 P export와 같은 바이트이며 engine seam은 18쌍/31참조 그대로다.
 S2 예제 분리 S #91은 이 비용에서 별도다.
 
-[B1](../../references/2026-10-05-f2-checkpoint2/B1.json)에 merged source, 설치 이미지,
+[B1](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/B1.json)에 merged source, 설치 이미지,
 SDK/client/Host 해시를 동결한 뒤 S1 저작을 시작했다. 외부 디렉터리에서 설치된 package tool,
 SDK/client, 공개 export 데이터와 OpenSSL만 사용했다. P/S source checkout을 mount하거나
 import하지 않았고 Cargo/test signer를 호출하지 않았다. 설치 API의 낮은 수준 JSON 조립과
@@ -733,8 +733,8 @@ SETTLED/SUCCEEDED/RELEASED operation으로 COMPLETED다. 장치 33행의 고유 
 
 두 Host의 SHA-256은 B1과 같은 `1332000944c7d4b4fc1c615c117cedb77d9c8c4d0291e6f54f05282b140538b7`이다.
 **S1 저작 구간의 P/S diff는 각각 0파일/+0 −0행**이다. 아래 공통 개발 비용을 숨겨서 0이라고
-부르는 것이 아니다. [제품 요약](../../references/2026-10-05-f2-checkpoint2/summary.json)과
-[원문·파일 해시](../../references/2026-10-05-f2-checkpoint2/sha256.json)를 보존했다.
+부르는 것이 아니다. [제품 요약](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/summary.json)과
+[원문·파일 해시](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/sha256.json)를 보존했다.
 
 ### 비용 — 공통 구현과 외부 작성 분리
 
@@ -749,7 +749,7 @@ SETTLED/SUCCEEDED/RELEASED operation으로 COMPLETED다. 장치 33행의 고유 
 | 외부 시도 전체의 기록된 leaf 명령 | 725회 | setup 328회와 나머지 397회를 포함. 최종 설치 시도 157회(setup 80/나머지 77) |
 | S1 고유 core diff | P/S 각각 0파일 / +0 −0 | B1 이후 core 수정·binary 교체 없음 |
 
-[세부 cost](../../references/2026-10-05-f2-checkpoint2/cost.json)는 파일별 행 수와 네 시도별
+[세부 cost](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/cost.json)는 파일별 행 수와 네 시도별
 명령·rc를 남긴다. 중첩 helper 실행은 leaf와 중복 합산하지 않고 따로 표시했다. 임의의 읽기 전용
 진단·검색·편집·Git/문서 검사 호출은 이 명령 계수에 포함하지 않아 총 사람 작업량의 하한이다.
 nonzero에는 의도한 거절도 있으므로 모두 오류라고 세지 않는다. 제공/복사 SDK·client·S2 환경과
@@ -764,7 +764,7 @@ verifier가 환경을 거절했고, 또 다른 Run은 Part 2 Python 진입 대�
 각 UNKNOWN operation과 장치·원장을 보존하고 Docker pause로 메모리/상태를 남긴 채 부하를
 분리했다. 권한 시간 경계, 결과, 자원 소유, core 코드는 수정하지 않았다. 마지막 정상 검증은
 별도 SIM 장치/설치이며 앞선 UNKNOWN을 정산했다고 주장하지 않는다.
-[보존 기록](../../references/2026-10-05-f2-checkpoint2/preserved-attempts.json)을 확인한다.
+[보존 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/preserved-attempts.json)을 확인한다.
 
 수동 API 응답 형태·서명 policy·환경 복사·호출 pacing의 저작 마찰은 F3′ 근거다. 이 사전 검증은
 독립 외부 개발자의 시연, physical support, 임의 부하 성능, S1 failure/restart 검증이 아니다.

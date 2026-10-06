@@ -65,10 +65,10 @@ source 조사만으로 R7·RF02·RF07을 완료하지 않는다. 다음 변경�
 연결하고 같은 설치에서 새 승인 실행이 실제로 가능한지 검증하는 것**이다. 다른 자원·기능 의존·업무·확장·
 설치·현장 게이트도 완료 원장에 계속 남긴다.
 
-[현재 실행 근거](../../references/resident_recovery_source_2026-10-01/README.md)는 깨끗한 소스에서 수행한
+[현재 실행 근거](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_recovery_source_2026-10-01/README.md)는 깨끗한 소스에서 수행한
 정상 종료·통신 단절·관리자 상실의 Linux 장면과 로컬 검사를 담는다. 관련 코드 PR은
 [Platform #69](https://github.com/jack0682/rx-platform/pull/69),
 [Solutions #78](https://github.com/jack0682/rx-solutions/pull/78)이다. 문서 #86 → P #69 → S #78 순서로
-필수 CI·DCO를 확인해 develop에 통합했다. [통합 기록](../../references/resident_recovery_source_2026-10-01/integration.json)은
+필수 CI·DCO를 확인해 develop에 통합했다. [통합 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_recovery_source_2026-10-01/integration.json)은
 시험/병합 트리 동일성·서명·DCO·SDK 130개 일치를 담는다. Linux CI는 P 530/0/22, S 475/0/22
 (passed/failed/ignored)이고 S amd64·arm64 설치 검사도 통과했다. 정산 승인·원 처분·새 실행의 연결은 여전히 미완이다.

@@ -82,7 +82,7 @@ S3–S5 실시간 시험을 준비하며 코드로 확인한 사실이다.
 1. 서명된 package의 profile이 Python 환경을 절대 경로(`/fixture/environment`)로 고정하는데, Host 컨테이너에 그 경로가 없었다. 설치 요구이며 시험 도구가 그 경로에 환경을 마운트한다. P 검증 정책의 asset 절대 경로도 같은 방식으로 Host 볼륨에 둔다.
 2. 연결된 Host가 재기동하면 P 전체가 종료됐다. 새 producer 세션 때문에 link worker가 인증 거절을 받으면 service 실패로 처리됐다. 이제 producer 세션 교체를 구별해 오래된 worker만 내리고 재수용이 필요한 link 단계로 돌아간다(rx-platform cb45bb4). 다른 worker 실패는 여전히 runtime을 멈춘다.
 
-이후 S3–S5와 재기동 반례가 실제 이미지에서 통과했다([검증 기록](../references/host_binding_commit_live_2026-09-29/README.md)).
+이후 S3–S5와 재기동 반례가 실제 이미지에서 통과했다([검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_commit_live_2026-09-29/README.md)).
 
 ## S6·S7 연결 (2026-09-29)
 
@@ -90,7 +90,7 @@ S3–S5 실시간 시험을 준비하며 코드로 확인한 사실이다.
 
 실패하거나 모순되는 읽기가 확인된 교체 기록을 BASELINE_RECORDED로 되돌리던 동작을 없앴다. 이유만 기록하고, standing은 transport 유실 외의 모순이면 확인을 철회한다. 이 되돌림 때문에 확인 뒤 재기동한 Host의 재수용이 간헐적으로 409로 실패했다(수정 전 3회 중 1회 관측). 재수용은 확인된 commit 세대도 교체 대상으로 받는다.
 
-실제 이미지에서 확인 → 재기동 하강(refresh `CONTINUITY_UNPROVEN`, configure `CAPABILITY_MISSING`) → 확인된 세대 재수용 → 재확인 → refresh·fence → configure-hosts(Host `APPLIED_UNQUALIFIED`) → apply(`APPLIED_UNQUALIFIED`, 셀 구성 = 변경 후 구성, 남은 blocker `REQUALIFICATION_REQUIRED`)를 5회 연속 통과했다. [검증 기록](../references/host_binding_apply_live_2026-09-29/README.md).
+실제 이미지에서 확인 → 재기동 하강(refresh `CONTINUITY_UNPROVEN`, configure `CAPABILITY_MISSING`) → 확인된 세대 재수용 → 재확인 → refresh·fence → configure-hosts(Host `APPLIED_UNQUALIFIED`) → apply(`APPLIED_UNQUALIFIED`, 셀 구성 = 변경 후 구성, 남은 blocker `REQUALIFICATION_REQUIRED`)를 5회 연속 통과했다. [검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_apply_live_2026-09-29/README.md).
 
 남은 것: P 재시작 뒤 요청 인수(현재는 RUNTIME_CHANGED로 진행 불가), 자격 활성화와 Python 스킬 실행 연결, commit 전 교체 없는 재시작의 단독 시험.
 
@@ -109,7 +109,7 @@ S3–S5 실시간 시험을 준비하며 코드로 확인한 사실이다.
 - 소유자·정책 fingerprint·정책 파일이 모두 같으면 generation을 재사용한다.
 - 중간에 다른 값이나 비활성화가 있었으면 새 generation을 발급한다.
 
-**실제 이미지 재실행 결과** ([기록](../references/p_restart_adoption_2026-09-29/README.md))
+**실제 이미지 재실행 결과** ([기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_adoption_2026-09-29/README.md))
 - 인수가 두 번 모두 수락됐다.
 - 그러나 다음 단계에서 막혔다. P만 재시작하고 Host는 그대로인 경우, 운영 HostRegistration이 옛 세션에 묶여 있다.
 - link 준비는 같은 boot의 새 세션을 `ContinuityUnproven`으로 거절한다.
@@ -118,7 +118,7 @@ S3–S5 실시간 시험을 준비하며 코드로 확인한 사실이다.
 
 이 rebind 공백은 binding 변경과 무관하게 모든 P 재시작에 해당한다. 마스터 플랜 Phase 2의 우선 항목으로 둔다([비교표 정정](implementation/host_readmission_delta.md)).
 
-**rebind 구현 (2026-09-29, rx-platform `feature/retained-host-rebind`).** 재수용이 세션이 만료된 같은 boot도 교체할 수 있게 하고, 이전 runtime의 grant가 끝날 때까지 link를 Busy로 두며, 승인 소비 시 Run·work 조건을 다시 검사한다. 첫 실제 이미지 실행은 등록 이력 키 충돌(`COMMIT_LINK REVISION_CONFLICT`)로 멈췄고, 키에 세션을 넣은 뒤 `--binding-commit --restart-platform`이 3회 연속 `APPLIED_UNQUALIFIED`까지 통과했다([기록](../references/p_restart_rebind_2026-09-29/README.md)). P 재시작 인수 경로는 이로써 끝까지 이어진다. 재자격 연결(2번 경로)은 남는다.
+**rebind 구현 (2026-09-29, rx-platform `feature/retained-host-rebind`).** 재수용이 세션이 만료된 같은 boot도 교체할 수 있게 하고, 이전 runtime의 grant가 끝날 때까지 link를 Busy로 두며, 승인 소비 시 Run·work 조건을 다시 검사한다. 첫 실제 이미지 실행은 등록 이력 키 충돌(`COMMIT_LINK REVISION_CONFLICT`)로 멈췄고, 키에 세션을 넣은 뒤 `--binding-commit --restart-platform`이 3회 연속 `APPLIED_UNQUALIFIED`까지 통과했다([기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_rebind_2026-09-29/README.md)). P 재시작 인수 경로는 이로써 끝까지 이어진다. 재자격 연결(2번 경로)은 남는다.
 
 ## 커밋 전 무계획 재시작 (2026-09-29)
 
@@ -129,7 +129,7 @@ S3–S5 실시간 시험을 준비하며 코드로 확인한 사실이다.
 
 수정(rx-platform 82cee39): commit 확인 전(BASELINE_RECORDED)에는 교체될 세대가 기준과 같은 delivery·evidence 저널을 가진 현재 등록 세대면 된다. boot 일치는 확인된 commit 세대(METADATA_MATCHED)에만 요구한다. 근거: 중간 세대는 이미 별도 재수용(ReleaseManager 승인, 두 저널 연속성)을 거쳤고, commit 확인은 여전히 commit 기록의 이전 installation identity가 기준과 같을 것을 요구하므로 중간에 다른 교체가 끼었다면 `INSTALLATION_CHANGED`로 거절된다(코드로 확인, 시험하지 않음).
 
-실제 이미지 `--host-restart-before-commit`: 재시작 → 일반 재수용(binding 없음) → `MISSING_COMMIT`, 기준 유지 → refresh `CONTINUITY_UNPROVEN` → 기준 boot를 명명한 binding 재수용 409 → 재시작 세대를 명명한 binding 재수용 → Host commit → `METADATA_MATCHED` → S5–S7 → `APPLIED_UNQUALIFIED`. 5회 연속 통과, 수정 전 코드의 이미지는 마지막 재수용을 `CONTINUITY_UNPROVEN`으로 거절([검증 기록](../references/host_restart_before_commit_2026-09-29/README.md)).
+실제 이미지 `--host-restart-before-commit`: 재시작 → 일반 재수용(binding 없음) → `MISSING_COMMIT`, 기준 유지 → refresh `CONTINUITY_UNPROVEN` → 기준 boot를 명명한 binding 재수용 409 → 재시작 세대를 명명한 binding 재수용 → Host commit → `METADATA_MATCHED` → S5–S7 → `APPLIED_UNQUALIFIED`. 5회 연속 통과, 수정 전 코드의 이미지는 마지막 재수용을 `CONTINUITY_UNPROVEN`으로 거절([검증 기록](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_restart_before_commit_2026-09-29/README.md)).
 
 ## 재자격 연결의 설계 제약 (2026-09-29, 결정 필요)
 

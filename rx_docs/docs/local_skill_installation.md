@@ -45,7 +45,7 @@ curl -fsSL https://github.com/jack0682/rx-solutions/releases/download/v0.3.0-rc.
 
 ## 검증과 배포
 
-로컬 arm64 Docker 설치에서 새 설치·외부 Python 함수·원 요청 중복·실제 응답 본문 유실·입출력 오류·시간 초과·worker 강제 종료·재기동·물리 manifest 거절을 검증했다. [고정 소스의 로컬 인수 결과](../references/local_skills_2026-09-28/arm64-local.json)
+로컬 arm64 Docker 설치에서 새 설치·외부 Python 함수·원 요청 중복·실제 응답 본문 유실·입출력 오류·시간 초과·worker 강제 종료·재기동·물리 manifest 거절을 검증했다. [고정 소스의 로컬 인수 결과](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/local_skills_2026-09-28/arm64-local.json)
 
 solutions CI의 필수 `skills` job은 amd64와 arm64의 네이티브 runner에서 이미지를 빌드하고 동일한 설치 인수 시험을 수행한다. 릴리스에는 그 산출물, 소스 커밋·이미지 ID, 체크섬 및 서명을 함께 보관한다. 로컬 결과만으로 다른 아키텍처 통과를 선언하지 않는다.
 
@@ -53,6 +53,6 @@ solutions CI의 필수 `skills` job은 amd64와 arm64의 네이티브 runner에�
 
 ## Docker 엔진 간 설치 호환 수정
 
-설치 배포물 rc.1은 CI의 Docker config digest와 Docker Desktop의 OCI manifest digest를 같은 표현으로 가정해 다운로드 설치가 거절됐다. 해당 설치 릴리스를 초안으로 회수했고 기존 소스 태그는 보존했다. rc.2는 체크섬으로 고정된 아카이브의 실제 config·manifest·index 내용을 검증해 같은 이미지로 연결되는 식별자만 허용한다. 알 수 없는 ID·내용 변조·아키텍처 불일치는 계속 거절한다. [실제 아카이브 대조](../references/local_skills_2026-09-28/image-portability.json)
+설치 배포물 rc.1은 CI의 Docker config digest와 Docker Desktop의 OCI manifest digest를 같은 표현으로 가정해 다운로드 설치가 거절됐다. 해당 설치 릴리스를 초안으로 회수했고 기존 소스 태그는 보존했다. rc.2는 체크섬으로 고정된 아카이브의 실제 config·manifest·index 내용을 검증해 같은 이미지로 연결되는 식별자만 허용한다. 알 수 없는 ID·내용 변조·아키텍처 불일치는 계속 거절한다. [실제 아카이브 대조](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/local_skills_2026-09-28/image-portability.json)
 
 rc.2는 설치 배포물의 수정이며 서버 컴포넌트는 검증된 rc.1 소스를 재사용한다. 실제 장비 지원 범위는 늘어나지 않는다.

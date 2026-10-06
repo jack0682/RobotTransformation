@@ -2,7 +2,7 @@
 
 2026-10-01. [세부 개발 계획](framework_delivery_plan.md)의 W01 산출물이다. 아래 새 계약과 API는
 **구현할 설계**이며 현재 서버의 지원 선언이나 frozen v1 규범의 대체가 아니다. 현재 소스와
-[API 조사 자료](../../references/workflow_contract_design_2026-10-01/api_inventory.json)를 먼저 대조했다.
+[API 조사 자료](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/workflow_contract_design_2026-10-01/api_inventory.json)를 먼저 대조했다.
 자료의 route 존재는 종단 간 사용 가능성이나 실행 권한을 입증하지 않는다.
 
 ## 1. 기존 경로의 재사용과 확장

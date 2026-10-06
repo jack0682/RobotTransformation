@@ -6,7 +6,7 @@
 
 ## 선택을 바꾼 관측
 
-advance와 inspect는 매번 load_binding으로 공유 결속 행을 다시 읽는다. Run에는 binding ID만 있고 제공자 스냅샷이 없다. 따라서 “새 배정만 변경하면 기존 작업은 전에 읽은 제공자를 유지한다”는 시간 경계는 존재하지 않았다. 격리된 이전 소스에서 실제 HTTP 제공자 A/B를 띄우고 공유 행을 제자리 수정하자, 이미 진행 중이던 result-generation 작업이 B를 소비했다. 이 반례 개입은 제품 교체 API가 아니다. [원시 반례](../references/dependency_replacement_2026-09-24/binding-read-probe.txt)를 보존한다.
+advance와 inspect는 매번 load_binding으로 공유 결속 행을 다시 읽는다. Run에는 binding ID만 있고 제공자 스냅샷이 없다. 따라서 “새 배정만 변경하면 기존 작업은 전에 읽은 제공자를 유지한다”는 시간 경계는 존재하지 않았다. 격리된 이전 소스에서 실제 HTTP 제공자 A/B를 띄우고 공유 행을 제자리 수정하자, 이미 진행 중이던 result-generation 작업이 B를 소비했다. 이 반례 개입은 제품 교체 API가 아니다. [원시 반례](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/dependency_replacement_2026-09-24/binding-read-probe.txt)를 보존한다.
 
 선택한 D는 **불변 결속 판본과 관계별 하나의 활성 경로**다. 이전 작업은 v1 ID를 계속 읽고, 별도 명시적 적용이 활성 경로를 v2로 바꾼 뒤 새 배정은 v2를 받는다. v1의 내용이 불변이므로 고정은 호출 타이밍에 의존하지 않는다. 첫 적용 전에는 원 결속이 세대 0의 암묵적 경로이며, 첫 적용이 이전 판본도 봉인한다. 관측으로 generation이 이미 고정된 의존 결속만 교체할 수 있다. 관측하지 않은 원 제공자를 소급 확정하지 않는다.
 
@@ -57,4 +57,4 @@ Inspection, Routing, 영수증은 CheckpointPolicy를 출력한다. 정해진 �
 
 네 개의 등록 문서 schema와 로컬 Rust API, Inspection의 추가 출력이 생겼다. 기존 Catalog/TrackedBinding/Run의 저장 형식, Program 직렬화, 출하 카탈로그/digest, SDK·wire/proto·규범 원문은 바뀌지 않았다. 이전 writer는 새 경로 규칙을 모르므로 downgrade 쓰기 호환성을 주장하지 않는다. F7/F8/F9/F10 및 기존 library32/resident/resource/manager-loss/work 통과선은 별도 회귀 검증이다.
 
-[원시 명령·출력과 검증 집계](../references/dependency_replacement_2026-09-24/README.md)는 반례와 개발 중 실패도 보존한다. 실행하지 않은 범위를 테스트 개수로 대체하지 않는다.
+[원시 명령·출력과 검증 집계](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/dependency_replacement_2026-09-24/README.md)는 반례와 개발 중 실패도 보존한다. 실행하지 않은 범위를 테스트 개수로 대체하지 않는다.

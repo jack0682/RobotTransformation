@@ -11,7 +11,7 @@
 결과가 아니다. 그 문서의 독립 검토 통과는 이 한계를 없애지 않는다.
 [11번](11_first_cell_contract.md)은 첫 적용 사례의 장비·장소·최종 수령 조건이
 고정되지 않았고 이전 산업 셀은 `NOT_COMMISSIONED`라고 명시한다.
-[18번](18_cell_operations_contract.md)과 [보존 기록 안내](../references/README.md)도
+[18번](18_cell_operations_contract.md)과 [보존 기록 안내](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md)도
 새 설치의 필수 입력·검증을 대신하지 않는다. 현재 지정된 문서들에는 실행 허가 입력이
 채워진 첫 셀 기록이 없으므로, 이 점검을 실제 현장 이력의 측정으로 부르지 않는다.
 

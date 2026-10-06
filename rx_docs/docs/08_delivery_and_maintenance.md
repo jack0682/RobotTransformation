@@ -13,4 +13,4 @@
 
 이미지 기본 동작은 진단 중심이며 장비의 토크·이동을 자동 활성화하는 근거가 아니다. SDK·driver·CPU/GPU variant는 선택한 profile로 고정하고 source·license·빌드 근거를 함께 남긴다.
 
-전체 현장 복원·장기 운영·실물 종료 경로는 [현재 미결](implementation/critical_open_items.md)이다. 백업 복원을 기존 작업의 자동 재생 허가로 사용하지 않는다. 저장소 개발 흐름은 [기여 안내](../CONTRIBUTING.md)를 따른다.
+전체 현장 복원·장기 운영·실물 종료 경로는 [현재 미결](implementation/critical_open_items.md)이다. 백업 복원을 기존 작업의 자동 재생 허가로 사용하지 않는다. 저장소 개발 흐름은 [기여 안내](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/CONTRIBUTING.md)를 따른다.

@@ -16,7 +16,7 @@ The old observation-path recommendation below is historical and was explicitly N
 against a new isolated SIM installation with unchanged F1 P/Host/Executor binaries. One
 published nine-step S2 Run completed across Python Host A (8 nodes) and Python Host B (clamp).
 The earlier NOT_PERFORMED statements below preserve the original support-stop finding.
-[Product receipt, exact commands and limitations](../../references/2026-10-05-f2-two-host/RUN.md).
+[Product receipt, exact commands and limitations](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-two-host/RUN.md).
 This is not registry/S1 or CP2 acceptance evidence. S1 authoring may proceed only on the later
 frozen registry baseline; the two-Host prerequisite itself required zero runtime source changes.
 CP1 was accepted by the user with three conditions. Codex performed the checks below;
@@ -50,8 +50,8 @@ No device effect, service restart, qualification mutation or Run was performed.
 Host binary SHA-256: `f0e2792bf2e3511b93889a0e27f6dfc3d53c2856bbdb308533333c1857fa8993`.
 P baseline: `4fd1c16631d819b9eb776de92d7fc366af4439f3`.
 S baseline: `45dc6eac4befbffd38615575477152baa5361411`.
-[Recorded result](../../references/2026-10-05-f2-prerequisites/support-inspect.json) and
-[reproduction helper](../../references/2026-10-05-f2-prerequisites/inspect_support.py).
+[Recorded result](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-prerequisites/support-inspect.json) and
+[reproduction helper](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-prerequisites/inspect_support.py).
 
 This check establishes the current Python binding restriction. It does not prove that
 every possible external package design is impossible, or that multi-Host dispatch fails.

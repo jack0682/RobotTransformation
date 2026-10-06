@@ -23,6 +23,7 @@ class HookTests(unittest.TestCase):
         cls.env = {key: value for key, value in os.environ.items()
                    if not key.startswith("GIT_") and key != "GNUPGHOME"}
         cls.env.update(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull,
+                       GIT_OPTIONAL_LOCKS="0", GIT_NO_REPLACE_OBJECTS="1",
                        GNUPGHOME=cls.keys.name, GIT_TERMINAL_PROMPT="0")
         os.chmod(cls.keys.name, 0o700)
         cls.gpg = shutil.which("gpg")

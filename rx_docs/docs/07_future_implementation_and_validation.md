@@ -12,4 +12,4 @@
 
 CI 통과는 해당 자동 검사 범위의 증거다. 이를 현장 승인·기능안전 인증·도시 규모 운영 검증으로 표시하지 않는다. 결과 불명이나 거부를 집계에서 제외해 성공률을 높이지 않는다.
 
-새 증거는 기존 파일을 덮어쓰지 않고 별도 위치에 남긴다. 과거 기록은 [고정 원본](../references/README.md), 현재 미결은 [미결 목록](implementation/critical_open_items.md)을 따른다.
+새 증거는 기존 파일을 덮어쓰지 않고 별도 위치에 남긴다. 과거 기록은 [고정 원본](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md), 현재 미결은 [미결 목록](implementation/critical_open_items.md)을 따른다.

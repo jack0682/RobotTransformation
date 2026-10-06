@@ -1,0 +1,3427 @@
+{
+  "schema": "rx.document-origin-index.v1",
+  "source_repository": "jack0682/rx_docs",
+  "source_commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+  "source_tree_oid": "fc044058911df75964c2debf57afc59af812eb31",
+  "scope": "Immutable original evidence destinations and one missing original CONTRIBUTING link; original Git objects read locally",
+  "origins": [
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/CONTRIBUTING.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "CONTRIBUTING.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "c453553c9921cfcac15d10c50887219c6d9294aa",
+      "bytes": 7045,
+      "sha256": "93562af7efe59a4a5d9941467a3d3654e16c6883c7f8b0d9f74e8dd09a562cb7",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/RUN_CP1.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-03-f1-checkpoint1/RUN_CP1.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "ddba331263cc00b8013fae6ee065551d4f0d2325",
+      "bytes": 2257,
+      "sha256": "9d24908978ab9dbe55a3d48bbe4e73f5690395a87209a6f6ac4ec14d7821dff8",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/interim-receipt.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-03-f1-checkpoint1/interim-receipt.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "2d23e1ce27cae1c7753521de0241522097c313d4",
+      "bytes": 3211,
+      "sha256": "6f30823a0c01dd59aab996968ac4526196f90cd3db97b76eda0718006acd0043",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/premerge-product-summary.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-03-f1-checkpoint1/premerge-product-summary.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "8161248a15bcdcfee402db0e31371abe7133af91",
+      "bytes": 3473,
+      "sha256": "c0fd47ce755a960a400dadfc7985a912e8a9792129d18b50c1a46907a97c6a31",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/product-receipt.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-03-f1-checkpoint1/product-receipt.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "8aa412f865de2ce149dbae2428f10f00a283d5dc",
+      "bytes": 232537,
+      "sha256": "71e19aa55f2afadf168856cd15829c8bca2fbc71b6905534d70b99573f4ca494",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/receipt.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-03-f1-checkpoint1/receipt.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "cfe15d594914e7d13adb65721cf0f0d3de194114",
+      "bytes": 8266,
+      "sha256": "b07442323e4e5057927d1fd04478f2fab9e7a7a953176f3c62ffec3705df8aec",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/RUN_CP2.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint2/RUN_CP2.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "7290aafc7141f4e768a4cf1f0e824defc67abd56",
+      "bytes": 3561,
+      "sha256": "b592b663600cef471ba093fa664ebd43501d1c235c06ebbce0f3ad6086d32ece",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/effects.jsonl",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint2/effects.jsonl",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "5b5f73eecde7c8f17fc86bd57accbebe5de6895a",
+      "bytes": 41469,
+      "sha256": "2a12ceea210fa3aa65140d0ed92c203aa3791ee562f9d37064b388f2efbeb124",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/premerge-summary.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint2/premerge-summary.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "5eeda74cfd63cb182c7686fe82891189bc9fa49d",
+      "bytes": 12270,
+      "sha256": "4f53dc8f155dd073d32fc3023a6524c0cc207b2924643eadc5fd58c07fedd40d",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/product-receipt.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint2/product-receipt.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "c0ad7b7716b3789c0d5ee3d25411c23a4ef72daf",
+      "bytes": 689877,
+      "sha256": "aadb31cb58667baead2b10aaf31de56326dad9268195e53d54504c0bccf6539e",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/receipt.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint2/receipt.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "ac09700e819e5b73c31042a2bfe2f427d655346d",
+      "bytes": 15212,
+      "sha256": "e93b8753e637d3cb01ed4857a1aeb9cfee2e467f94a64fba5188a423177cd93e",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/RUN_CP3.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint3/RUN_CP3.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "fc7f10a08158b683a3aade6288ea682503981ae0",
+      "bytes": 5566,
+      "sha256": "219682cc748a20de98850525f308ef012670489f031eebe1de636b126513e39e",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/completed-product-receipt.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint3/completed-product-receipt.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "d595de4f49d8e9ff1ae9a2e542c197afd7799e3a",
+      "bytes": 699488,
+      "sha256": "ac49e6461d8515bc468b0d4d389d4f2fad069717717142abe0692d2da52b38d4",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/effects.jsonl",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint3/effects.jsonl",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "07218ac7a232c4582038c236fd5f2eb66b27ecd7",
+      "bytes": 41545,
+      "sha256": "09af97c21ddb93f4c4921b05ca6711540149013501dafdf3283a19616c230d28",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/premerge-summary.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint3/premerge-summary.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "17174af16cf0c79fb05419cf3be2efa6b69488c8",
+      "bytes": 7462,
+      "sha256": "aced2434901f503e3f5b7f4b0a6bbf69950ba7e6348ba76495fba09132059338",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/preserved-first-attempt.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint3/preserved-first-attempt.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "314eb35332da2012431d2ac1731b1b6b738578b2",
+      "bytes": 928,
+      "sha256": "b1f2fc179bb93037145848f813970b1fd816a3332b835aa744e0e473fb870cc2",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/receipt.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint3/receipt.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "dbb0865403b4af90e46d794f10cb03b7ef53af42",
+      "bytes": 11206,
+      "sha256": "f74c51bc0733d51c51d751e7ffbf5e1ffe86db92f24acc83b5de30e1862f43a1",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/unknown-product-receipt.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint3/unknown-product-receipt.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "517940bb4aa54a600f5ede67c418f53e2510bbff",
+      "bytes": 451325,
+      "sha256": "22ee4dbc03ff7b60c16c7be3e4811257174bc16d4da72b32df880c9379580f2b",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/user-acceptance.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f1-checkpoint3/user-acceptance.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "1368fd2f1791eb162f86a56d8ef455c5f37a48f5",
+      "bytes": 3119,
+      "sha256": "a9444f8649bab416e935a65b427f151999bf5fa4221c3435d07de5e505a8cda4",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f2-checkpoint1/RUN_CP1.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f2-checkpoint1/RUN_CP1.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "6e0a2679e3d764a0e01cbf70a5df58c0320ec2c9",
+      "bytes": 2682,
+      "sha256": "9a6919d7013fee0b942e9a4be6377773223d3bb5469baa7c17f82bcb7b43aeb5",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f2-checkpoint1/baseline.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-04-f2-checkpoint1/baseline.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "5ba5778a1c31763408460be2fb2d40b7141fec02",
+      "bytes": 4107,
+      "sha256": "fcad7c13a022db739925145d12a35cdb6aa7880c69e592b0dc015b86a50cfa95",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/B1.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-05-f2-checkpoint2/B1.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "d567773acef41d011154c5391cd6dc9fa23b5cb1",
+      "bytes": 4656,
+      "sha256": "0999fcec62b7bd153bdf11ec9c505d912d523e4e458c84cf0494ed94ee803fbd",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/RUN_CP2.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-05-f2-checkpoint2/RUN_CP2.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "707321a8469e4aad9c6b33e4038c5270a069a81b",
+      "bytes": 6516,
+      "sha256": "1d442d259988ee68f896d96a649b08f8c2e41e7d9cd5f158bf825b8c5adefb80",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/cost.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-05-f2-checkpoint2/cost.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "2bed7500480628a86640950df612c7a246383bc5",
+      "bytes": 6658,
+      "sha256": "9f73f9d6b6a3ffa31fe4d517a8a8458024dced0307a13a44b3b9771f211e4369",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/preserved-attempts.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-05-f2-checkpoint2/preserved-attempts.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "c17f9a219d6a60bb7a23946eef8ea1a20a9ee1e5",
+      "bytes": 2538,
+      "sha256": "9d24fe051c43a5d9e71f039d2a5c83f5a819d12d8d527a638ac21b54f19ec1c4",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/sha256.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-05-f2-checkpoint2/sha256.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "150ce41fae4a9aeb21b64b3321adac94f49d066c",
+      "bytes": 3433,
+      "sha256": "d00b58ba7b0692a36e92aedb5b2408dd9d7d94bd4da6fece8cfd2e130e80877f",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/summary.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-05-f2-checkpoint2/summary.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "abd76940bc7aa2b7417db6d7769a2da54cc2d944",
+      "bytes": 38991,
+      "sha256": "80a0580d7172bb041c3390b7b5a9c6acb90d5c556c33c7449e79a21ad8c669e9",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-prerequisites/inspect_support.py",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-05-f2-prerequisites/inspect_support.py",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "7a1799fb6a8d5d61f2a75aebd512cf45235d3bf6",
+      "bytes": 1336,
+      "sha256": "dbebe2668b81939d044f3baade8bfac442911a5bad060d1c0de8c07fe247bd05",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-prerequisites/support-inspect.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-05-f2-prerequisites/support-inspect.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "0dd4962817b62e0ce71b34cf54623a5110dc35ab",
+      "bytes": 1109,
+      "sha256": "779c1998838d99352578283c7f1e6b2f5469bad1ed8f3f605fd46cfcaf0209ab",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-two-host/RUN.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/2026-10-05-f2-two-host/RUN.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "0618ea0ca269f8ff4576f74affb1119e15a860d7",
+      "bytes": 2730,
+      "sha256": "e0b10032516eaa26ecbc9993008a96072bafda26bf5252b515e781ff21ab84c3",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "b8e89b48a3bac5ae6d168aab444b55cd38633383",
+      "bytes": 2379,
+      "sha256": "7cee2a23d2162adb29e88671a482427a8d2793b32ccd33a250f7ce72e291c37a",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/cell_model_m1_2026-10-01/api-acceptance.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/cell_model_m1_2026-10-01/api-acceptance.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "e0360c26b97ef53fe31579163e88049569d73b8c",
+      "bytes": 832,
+      "sha256": "51ce9cbbc5b6b072ab5ad6e6c2fb6be4fa1769add5e798b98a24ce0ec28f251a",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/cell_model_m1_2026-10-01/ui-cli-match.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/cell_model_m1_2026-10-01/ui-cli-match.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "6dad63cb53708231d480e2fce7126a9d96e8680d",
+      "bytes": 553,
+      "sha256": "d6b39ebeca9ce6762d89ec4b95ee1bb0c1095c8da6ead71e1a78a4165d9ff795",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/dependency_replacement_2026-09-24/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/dependency_replacement_2026-09-24/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "cca7a7017aa9481043433e2be21e8aed82f4d2ef",
+      "bytes": 2835,
+      "sha256": "e991875ab85b8aae021d02d01140e2756461798ad33a55a2a1acfa8b03bf65af",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/dependency_replacement_2026-09-24/binding-read-probe.txt",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/dependency_replacement_2026-09-24/binding-read-probe.txt",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "d279dbd821b59ad59aa219f497a8cf02bb51611e",
+      "bytes": 5500,
+      "sha256": "c365a5e01daa52ad6be1e459f983100a44ba59b7cf16f2bd34b88a9a8dc7d4b6",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/dynamixel_ping_2026-09-25/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/dynamixel_ping_2026-09-25/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "24f53db28ad39a7ed012e47a9ac7b3f91b761bef",
+      "bytes": 6090,
+      "sha256": "4c9c5abfb71a8d8bd05949d0a494a356346f75f27d269fcae9427ba33e819dfb",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/dense-performance.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/execution_v2_design_2026-10-02/dense-performance.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "ac2f68a45a811e431d90cd01ea6b13f8695901e2",
+      "bytes": 5515,
+      "sha256": "3c9a7c06b44c0ea243ef8320d25b89a4c3baaf9da42bd63448032073c8102f8b",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/legacy-runtime-injection.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/execution_v2_design_2026-10-02/legacy-runtime-injection.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "1225256b5d50401d6249080dba4098f7974cf078",
+      "bytes": 7984,
+      "sha256": "16db427ffa93cf17c9bf174564ddefafea61eb042b85580e2fcb6da84ae3d95e",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/legacy-ui-injection.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/execution_v2_design_2026-10-02/legacy-ui-injection.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "91dc78a006ec71d07bcbfc50e4d08d8235384374",
+      "bytes": 3420,
+      "sha256": "51f47fa0cef77fe8fa1d8051b5eee7f60f470f0e38966e48760e50c58b3c3a0f",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/m3a-handover-repeat.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/execution_v2_design_2026-10-02/m3a-handover-repeat.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "6ad502a64bc7c9c1e5945a9174f65c56f7e8cca6",
+      "bytes": 2500,
+      "sha256": "67aa921d6953691685d207b231bcadf4d42b9695b772c9ba5d1231d7d880b9eb",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/m3a-registered-final.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/execution_v2_design_2026-10-02/m3a-registered-final.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "7ea0772b77e0dc78a77f974f896eac1a9a6cb8a4",
+      "bytes": 3786,
+      "sha256": "612d6010b752ef1e75532ce9dd8fc3474b103bd8861a1f4ac3cd1d8e1225d3e7",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/sizing.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/execution_v2_design_2026-10-02/sizing.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "760fb06bc83b061511a63ce27ed3fea2c096e496",
+      "bytes": 551,
+      "sha256": "aeecddb8a0623b90e54e592eec23d44898c9b61d2df68445048380e60bdea1db",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_admission_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/host_binding_admission_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "ff5ff45c4832e6bf083d2fc19a43f77a41b4e6a0",
+      "bytes": 2310,
+      "sha256": "4624708b1fe6925ecf2a0736a5ffe251baa49d7e73304192690f2b89cbdafc09",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_apply_live_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/host_binding_apply_live_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "0887f4b61c063d2f548fe11582a112ac3e8573c2",
+      "bytes": 1553,
+      "sha256": "2d9a7f413cf21430518cdcd732002600e9299a0b4bc76ff3a598ffedabd1e7c6",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_commit_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/host_binding_commit_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "64f70387bbffdfd658ff4facd87d61dcd27dbf37",
+      "bytes": 1521,
+      "sha256": "8fd3d7c59fdc13b1721ebe2a33fef7eb012a3b671cf3113697ba0369e02ae134",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_commit_live_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/host_binding_commit_live_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "83ed45d53af03003b4ccbbf5e6e03c0c6312fb69",
+      "bytes": 1871,
+      "sha256": "c9e117a5bb14203b4a9bb660b7bc0a513122292560f0c8a00fa4bd225da27cba",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_observation_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/host_binding_observation_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "0b2929235bffe3665c8127718d9776a29954e642",
+      "bytes": 1786,
+      "sha256": "7351885a6882dc9fb8f9913faba85f11cf77d183858afc338498a9b8983dc221",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_restart_before_commit_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/host_restart_before_commit_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "40c6bab959d07c87642cfa7e18752573df8bdad9",
+      "bytes": 2337,
+      "sha256": "fb83572f240ff73049c1380123348381a46c3fc8f5d814901148ed4fca6e68c2",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/linux_address_space_2026-09-24/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/linux_address_space_2026-09-24/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "624faa93a02b8dcc76a56a0019afe12ee611d00d",
+      "bytes": 7903,
+      "sha256": "a50fbc682f765efb74dfe71ea7753becd5516b72c86091472459a4d59db4844e",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/local_skills_2026-09-28/arm64-local.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/local_skills_2026-09-28/arm64-local.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "c2152f43d93bbdc8334d6c35493699179deb19d4",
+      "bytes": 2170,
+      "sha256": "0b41fb3881c82847be14f1d07990e267c3915d599960c9d383a7c24a6a8e71e0",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/local_skills_2026-09-28/image-portability.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/local_skills_2026-09-28/image-portability.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "850e708e939bc5b9acb8423ba65941e2df739bee",
+      "bytes": 567,
+      "sha256": "26569765f73a23870edc4691f3d47008202105882ac365ab4a328c53a8981a90",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/manager_loss_2026-09-24/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/manager_loss_2026-09-24/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "3a43b48caacb2d417ac3656c86efef912b500302",
+      "bytes": 7189,
+      "sha256": "1bad6f52f128395f1ffb91d0ee24a2747df97854ef514d2b9754bf1f1a15a107",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/multi_operating_area_2026-09-25/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/multi_operating_area_2026-09-25/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "36aad65a5c3310f3ee2f05c42305e30672f4e01d",
+      "bytes": 4186,
+      "sha256": "c167df59e76fc5ba9819236582da878f124972adeb19b9a669a7248fc5fc3253",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/operating_area_2026-09-25/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/operating_area_2026-09-25/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "39a8ad39d08b0f178ca8faa55aabf333119d51e0",
+      "bytes": 10406,
+      "sha256": "36d555742a72ab81da367a867b22388695e71e2ddbbf6827bf2274dc35c83705",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_host_binding_intents_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/p_host_binding_intents_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "9a73c8860f7eb09ceb9f2ce19151b753664111eb",
+      "bytes": 1892,
+      "sha256": "964e93e6334c4a6d82462049487259bae7aca399ad106308f732e22c329c9079",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_host_binding_reader_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/p_host_binding_reader_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "9630d27f6c29273ec479f3c9d9b953924610595e",
+      "bytes": 2626,
+      "sha256": "972827797de1fd0d5ead46cc8eab3a20b00d4afd86b2cf9e254dff7bfd93a624",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_adoption_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/p_restart_adoption_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "aa01d545dd84f507780e4ca85e050de6186fa4fb",
+      "bytes": 2666,
+      "sha256": "7a01cfdc988f90a333362080df002f5d9212fb8d77bd141b24165dbd72fe436b",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_rebind_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/p_restart_rebind_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "9668d8ac8793ad323a912f84465c0db819bb6f50",
+      "bytes": 2468,
+      "sha256": "7281d7bcd4f6e00f13f23fc4e8d73c550f51b97da7c7566ef26c322c5b498a2d",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/platform_stop_fence_wait_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/platform_stop_fence_wait_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "dd857040e2946947e4a8a87a4868dacd672092cf",
+      "bytes": 1844,
+      "sha256": "db4e227b42bce921c971a7e797809c5debc53ab1928e692dca5aa8c27e48b14f",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_deployment_boundary_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/python_deployment_boundary_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "b0b395523726f8f1797eaee24d59f79b2610434b",
+      "bytes": 2442,
+      "sha256": "510660856de0bc44c34e076df0fab5d478a0eb11611911b5c464581433ca4acf",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_device_package_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/python_device_package_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "397a6d1e7ed36c1c271e6094b8a71047a7a12e0e",
+      "bytes": 1373,
+      "sha256": "9fd60891584c856334b22fd2e59c339e388e120d78a493d66aaf84b32e2b5354",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_host_gate_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/python_host_gate_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "c8c12875d3ba2f78535ba467cd9d74e157ec2883",
+      "bytes": 1951,
+      "sha256": "bb4b99a9ab45fad42b2502579a05c710bb3d0b4f5c3a07e69c814cf13455c203",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_host_service_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/python_host_service_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "e891b884a412904958f031b97420cd223b22ba58",
+      "bytes": 1386,
+      "sha256": "7b8e8c0963b94fb8964d6416e5f76f846192207ce7b5dec26df0716ee40dd631",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_package_p_review_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/python_package_p_review_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "ea6ef5d2bd1b11de59ece0dab0c0564e2b331246",
+      "bytes": 1980,
+      "sha256": "bf5e363dcbb69ca3b0c3076a2d34a5b99f876a69c79f45b448f269444c0febc2",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_reviewed_composition_2026-09-29/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/python_reviewed_composition_2026-09-29/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "dba2aaae3817622eea2259ed84ecd7883480ea11",
+      "bytes": 1830,
+      "sha256": "22a8466340785481c5c7c28a5c335424e2f201a4e33c02b7ae9f0cbeaf9daf47",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_intake_2026-10-01/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/registration_intake_2026-10-01/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "dbef5a45e4e650f16214a72dbbb88fae07143b4e",
+      "bytes": 4667,
+      "sha256": "8374b73148eac08b3227501b63b85b7770e8100892cbffd4f4f9a510c434e770",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_intake_2026-10-01/integration.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/registration_intake_2026-10-01/integration.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "05d43ca2ef31b1e5f0a403f8a954fe6fb7be35e6",
+      "bytes": 845,
+      "sha256": "0afe7e1eb8f19a09b3c4161d55a6922f977a00a043f7f25ae96c695fa556857c",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_reconciliation_2026-10-01/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/registration_reconciliation_2026-10-01/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "2e31cc978c41b1281d87167749a23bb9e8d02a74",
+      "bytes": 5128,
+      "sha256": "69f7a3561d3bad46348414909ae222a08c93014a4a2b1cd4ca27cae903d50a16",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_reconciliation_2026-10-01/integration.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/registration_reconciliation_2026-10-01/integration.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "914ba81349b24037403c4ff1293d269b7c0ac52a",
+      "bytes": 863,
+      "sha256": "6de5f9f15a96a8800548ed56e9395f28c84ba1ebfc9035728762637b23406683",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_transfer_source_2026-10-01/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/registration_transfer_source_2026-10-01/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "d97f21252b444e498727b9fbc4dad3b088c4d4be",
+      "bytes": 2526,
+      "sha256": "f633354233336f088fb85723e651f142e4319be8928d4ac3ea8587f9006a937a",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_transfer_source_2026-10-01/integration.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/registration_transfer_source_2026-10-01/integration.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "48302cd0f1df1d16e4616e88037cc2bf829f2105",
+      "bytes": 625,
+      "sha256": "efd1f2c9112b10dc2da68fef50361d150bf69c7a7e0fd2dd5e5345c9550b49f0",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/release_origin_2026-09-24/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/release_origin_2026-09-24/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "f5c8c2d36b88c8b0696844a27204dcdbd45e2b4b",
+      "bytes": 8034,
+      "sha256": "826fa5cd3b2a0347f28c28da72ce22c6cd00e74f522171c2db9ec327056aba8d",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/repository_foundation_2026-09-14/image-smoke.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/repository_foundation_2026-09-14/image-smoke.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "4a4cecf75b473ca74c7db728daa1b9cbf8ad14a5",
+      "bytes": 1133,
+      "sha256": "9e1d8089c9adc97397b72b0d7b93dd3f16ff6b9c6855fee5fc422a76af6232d1",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/repository_foundation_2026-09-14/ros-jtc-bridge-final.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/repository_foundation_2026-09-14/ros-jtc-bridge-final.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "0a8b6b52e9659dddaa8dedf5c4695e2dbcc87137",
+      "bytes": 1938,
+      "sha256": "6bcb319eac2bf169c544cf7c259b6ce6e2d5fbb627bcebd29144d45f06f9d5ef",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/repository_foundation_2026-09-14/summary.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/repository_foundation_2026-09-14/summary.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "152ee875c6eec294bec40e2ffe3d42a14bd8695c",
+      "bytes": 1440,
+      "sha256": "4a72205b03317b6142ffa7378f426ddc0062b7ba04d5d65860cb214ba7811a7a",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/repository_foundation_2026-09-14/supervisor-smoke.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/repository_foundation_2026-09-14/supervisor-smoke.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "f8699f65339238f0d30f96230ad9f96eb9d3d000",
+      "bytes": 1741,
+      "sha256": "f6dfe0d8087cb0c3d55054879c548637481dc1f048ebf4abbf81547317392482",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_delivery_2026-10-01/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/resident_delivery_2026-10-01/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "ca0290cc2422cee001b666b3e958e1120a249b27",
+      "bytes": 5083,
+      "sha256": "f4d022d871780958f3e567eccd141cc1ce9943104a4e0d05069be2ef99ac87f4",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_delivery_2026-10-01/integration.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/resident_delivery_2026-10-01/integration.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "40541819f27690a5bb70dc8d23c6f648d3aaf654",
+      "bytes": 851,
+      "sha256": "ad5c13d1e2f9aa5b4ee6a621342c6a83ce8f3376c18e3c993fc68abd2ca149f5",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_execution_2026-10-01/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/resident_execution_2026-10-01/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "e52817800e99034cc9e5bb1bfb8820e8ac93bfc2",
+      "bytes": 5493,
+      "sha256": "7c6681e07506207291a57494cbe81c42131ae8185617970f27d56dc25230911f",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_execution_2026-10-01/integration.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/resident_execution_2026-10-01/integration.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "ece648d04a9f1fb19c6db5a0b76ae7d46146966e",
+      "bytes": 2085,
+      "sha256": "d831c49eef96863d117b0c75f7e491880a7e8e5d2f54e8b181fbc0e5f70b5a35",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_recovery_source_2026-10-01/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/resident_recovery_source_2026-10-01/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "e5d94b80d599bfae9eb18dedbbde23ce2d049f2c",
+      "bytes": 3812,
+      "sha256": "6e0ec86c2f38075158973a011bb2f0610c2785f5ff70d33f5e7b7d2a96daeeb1",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_recovery_source_2026-10-01/integration.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/resident_recovery_source_2026-10-01/integration.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "313bba7d8dec0f25625811bc49f66007d2659707",
+      "bytes": 1396,
+      "sha256": "8ab5978138febcb85cf13301bece62f53db9a008a4ad41612d1a7eeb1f019dc0",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_registration_2026-09-24/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/resident_registration_2026-09-24/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "99b90dcfa71d564d8c5a65dc69b7c435c252873c",
+      "bytes": 5470,
+      "sha256": "76b1d58c46f4f553a084481acb9db32da6c6d09d34b7f43d2927b75344e7c0fa",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_reporting_2026-10-01/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/resident_reporting_2026-10-01/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "f4b3ae6b57838704d3220758adc205c657955af5",
+      "bytes": 3086,
+      "sha256": "135404d7435078b6e15b390243b4b89d105b106dd3a295636bcfcd1ded1af659",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/runtime_composed_execution_2026-09-28/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/runtime_composed_execution_2026-09-28/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "753098f68249d1c5b3854192a53c4ec4773d0033",
+      "bytes": 2883,
+      "sha256": "b25dc8b816b40c0ff1e0bc0cfe704f2536094309cccc802703bef85541a88bb1",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/runtime_skill_authoring_2026-09-28/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/runtime_skill_authoring_2026-09-28/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "c94f29504b7a7118f5f78adbc6a7293fbf960bde",
+      "bytes": 2307,
+      "sha256": "66b84cd87730c8fdd83bc0a136df3cef771f0047399ac0f2e04b84c6a41aec88",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/runtime_skill_bridge_2026-09-28/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/runtime_skill_bridge_2026-09-28/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "0dc15356d8c92bff6bcbeef648055bbc48603be0",
+      "bytes": 3898,
+      "sha256": "278150e6f603bd93a0aae3e20db594b6acf6ddd4bb75eb255dfa2220e1008971",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/skill_process_draft_2026-09-28/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/skill_process_draft_2026-09-28/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "be5033f00faa0894b1d44c0ae760f7e6e18f5a40",
+      "bytes": 1955,
+      "sha256": "c8f0469fbafed02b6fd8573e4376beb93fe66115fb63da669e1803504c56a258",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/storage_lock_2026-09-24/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/storage_lock_2026-09-24/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "21d40d37ff41d224e228ed49d5fe2ffa9f2bf89d",
+      "bytes": 3858,
+      "sha256": "21d109236520c182c0f20ab80e86e03ac92bb6801837dabbc18204a9e34140df",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/strict_wire_clients_2026-09-25/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/strict_wire_clients_2026-09-25/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "f148da5f47e2b64b932a45360549f2ea7d616c43",
+      "bytes": 3598,
+      "sha256": "1422b3c836773d00271a9c2b077a7339b0acd3f75ee3bb7ef22de9286e7a5927",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/support_limits_2026-09-24/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/support_limits_2026-09-24/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "35900566fc524810459035f180e6448abb06040f",
+      "bytes": 4589,
+      "sha256": "43d26686522cca614c3d7dcdf727e80f0a4d82afda342608e90872a0c2b48bb0",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/work_judgment_2026-09-24/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/work_judgment_2026-09-24/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "431aa0219639afd15bd9fa4efaef488c490d044e",
+      "bytes": 6850,
+      "sha256": "b30dedb29c682eec7df5e34dd2267ac937a4b87f109e5307dc39f7c1004e85fb",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/workflow_canvas_2026-10-01/README.md",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/workflow_canvas_2026-10-01/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "8669e280cb85dcfda2d88bae9cae15503b82e242",
+      "bytes": 2767,
+      "sha256": "2a1e179716cedfbaffb28cd3db72c3cbc4337ae5afcf8e0202c26fb907f6b349",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    },
+    {
+      "url": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/workflow_contract_design_2026-10-01/api_inventory.json",
+      "repository": "jack0682/rx_docs",
+      "commit": "4384ed49e384c53e645f71757ce597292b928eb6",
+      "path": "references/workflow_contract_design_2026-10-01/api_inventory.json",
+      "mode": "100644",
+      "kind": "blob",
+      "git_object_oid": "e638319aae02aea2dd4a2725e246eb45bd37a110",
+      "bytes": 32966,
+      "sha256": "5e924b9705d2438f462f4d16133de22e21ba130a344298e678935fc6716efd62",
+      "sha256_scope": "raw Git object payload; tree payload is not a file",
+      "fragment": "",
+      "query": "",
+      "fragment_proof": {
+        "status": "NO_FRAGMENT",
+        "fragment": ""
+      }
+    }
+  ],
+  "occurrences": [
+    {
+      "document": "rx_docs/docs/00_design_roadmap.md",
+      "line": 50,
+      "syntax": "inline_or_image",
+      "old_href": "../references/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md",
+      "old_destination": "references/README.md",
+      "origin_git_object_oid": "b8e89b48a3bac5ae6d168aab444b55cd38633383",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/01_product_definition.md",
+      "line": 64,
+      "syntax": "inline_or_image",
+      "old_href": "../references/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md",
+      "old_destination": "references/README.md",
+      "origin_git_object_oid": "b8e89b48a3bac5ae6d168aab444b55cd38633383",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/01_product_definition.md",
+      "line": 82,
+      "syntax": "inline_or_image",
+      "old_href": "../references/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md",
+      "old_destination": "references/README.md",
+      "origin_git_object_oid": "b8e89b48a3bac5ae6d168aab444b55cd38633383",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/07_future_implementation_and_validation.md",
+      "line": 15,
+      "syntax": "inline_or_image",
+      "old_href": "../references/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md",
+      "old_destination": "references/README.md",
+      "origin_git_object_oid": "b8e89b48a3bac5ae6d168aab444b55cd38633383",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/08_delivery_and_maintenance.md",
+      "line": 16,
+      "syntax": "inline_or_image",
+      "old_href": "../CONTRIBUTING.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/CONTRIBUTING.md",
+      "old_destination": "CONTRIBUTING.md",
+      "origin_git_object_oid": "c453553c9921cfcac15d10c50887219c6d9294aa",
+      "conversion_reason": "missing_original_governance_document"
+    },
+    {
+      "document": "rx_docs/docs/09_decisions_and_sources.md",
+      "line": 26,
+      "syntax": "inline_or_image",
+      "old_href": "../references/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md",
+      "old_destination": "references/README.md",
+      "origin_git_object_oid": "b8e89b48a3bac5ae6d168aab444b55cd38633383",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/11_first_cell_contract.md",
+      "line": 7,
+      "syntax": "inline_or_image",
+      "old_href": "../references/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md",
+      "old_destination": "references/README.md",
+      "origin_git_object_oid": "b8e89b48a3bac5ae6d168aab444b55cd38633383",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/13_device_support_matrix.md",
+      "line": 17,
+      "syntax": "inline_or_image",
+      "old_href": "../references/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md",
+      "old_destination": "references/README.md",
+      "origin_git_object_oid": "b8e89b48a3bac5ae6d168aab444b55cd38633383",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/14_image_support_spec.md",
+      "line": 14,
+      "syntax": "inline_or_image",
+      "old_href": "../references/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md",
+      "old_destination": "references/README.md",
+      "origin_git_object_oid": "b8e89b48a3bac5ae6d168aab444b55cd38633383",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/15_contract_protocol_design_plan.md",
+      "line": 3,
+      "syntax": "inline_or_image",
+      "old_href": "../references/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md",
+      "old_destination": "references/README.md",
+      "origin_git_object_oid": "b8e89b48a3bac5ae6d168aab444b55cd38633383",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/21_declaration_reuse_measurement.md",
+      "line": 14,
+      "syntax": "inline_or_image",
+      "old_href": "../references/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md",
+      "old_destination": "references/README.md",
+      "origin_git_object_oid": "b8e89b48a3bac5ae6d168aab444b55cd38633383",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/30_resident_registration_ownership.md",
+      "line": 49,
+      "syntax": "inline_or_image",
+      "old_href": "../references/resident_registration_2026-09-24/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_registration_2026-09-24/README.md",
+      "old_destination": "references/resident_registration_2026-09-24/README.md",
+      "origin_git_object_oid": "99b90dcfa71d564d8c5a65dc69b7c435c252873c",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/31_linux_address_space_enforcement.md",
+      "line": 64,
+      "syntax": "inline_or_image",
+      "old_href": "../references/linux_address_space_2026-09-24/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/linux_address_space_2026-09-24/README.md",
+      "old_destination": "references/linux_address_space_2026-09-24/README.md",
+      "origin_git_object_oid": "624faa93a02b8dcc76a56a0019afe12ee611d00d",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/32_total_manager_loss_recovery.md",
+      "line": 51,
+      "syntax": "inline_or_image",
+      "old_href": "../references/manager_loss_2026-09-24/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/manager_loss_2026-09-24/README.md",
+      "old_destination": "references/manager_loss_2026-09-24/README.md",
+      "origin_git_object_oid": "3a43b48caacb2d417ac3656c86efef912b500302",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/33_work_judgment_enforcement.md",
+      "line": 67,
+      "syntax": "inline_or_image",
+      "old_href": "../references/work_judgment_2026-09-24/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/work_judgment_2026-09-24/README.md",
+      "old_destination": "references/work_judgment_2026-09-24/README.md",
+      "origin_git_object_oid": "431aa0219639afd15bd9fa4efaef488c490d044e",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/34_dependency_replacement_application.md",
+      "line": 9,
+      "syntax": "inline_or_image",
+      "old_href": "../references/dependency_replacement_2026-09-24/binding-read-probe.txt",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/dependency_replacement_2026-09-24/binding-read-probe.txt",
+      "old_destination": "references/dependency_replacement_2026-09-24/binding-read-probe.txt",
+      "origin_git_object_oid": "d279dbd821b59ad59aa219f497a8cf02bb51611e",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/34_dependency_replacement_application.md",
+      "line": 60,
+      "syntax": "inline_or_image",
+      "old_href": "../references/dependency_replacement_2026-09-24/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/dependency_replacement_2026-09-24/README.md",
+      "old_destination": "references/dependency_replacement_2026-09-24/README.md",
+      "origin_git_object_oid": "cca7a7017aa9481043433e2be21e8aed82f4d2ef",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/35_open_items_and_support_limits.md",
+      "line": 62,
+      "syntax": "inline_or_image",
+      "old_href": "../references/support_limits_2026-09-24/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/support_limits_2026-09-24/README.md",
+      "old_destination": "references/support_limits_2026-09-24/README.md",
+      "origin_git_object_oid": "35900566fc524810459035f180e6448abb06040f",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/36_storage_lock_lifetime.md",
+      "line": 64,
+      "syntax": "inline_or_image",
+      "old_href": "../references/storage_lock_2026-09-24/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/storage_lock_2026-09-24/README.md",
+      "old_destination": "references/storage_lock_2026-09-24/README.md",
+      "origin_git_object_oid": "21d40d37ff41d224e228ed49d5fe2ffa9f2bf89d",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/37_authenticated_release_origin.md",
+      "line": 62,
+      "syntax": "inline_or_image",
+      "old_href": "../references/release_origin_2026-09-24/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/release_origin_2026-09-24/README.md",
+      "old_destination": "references/release_origin_2026-09-24/README.md",
+      "origin_git_object_oid": "f5c8c2d36b88c8b0696844a27204dcdbd45e2b4b",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/38_operating_area_judge.md",
+      "line": 92,
+      "syntax": "inline_or_image",
+      "old_href": "../references/operating_area_2026-09-25/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/operating_area_2026-09-25/README.md",
+      "old_destination": "references/operating_area_2026-09-25/README.md",
+      "origin_git_object_oid": "39a8ad39d08b0f178ca8faa55aabf333119d51e0",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/39_multi_operating_area.md",
+      "line": 156,
+      "syntax": "inline_or_image",
+      "old_href": "../references/multi_operating_area_2026-09-25/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/multi_operating_area_2026-09-25/README.md",
+      "old_destination": "references/multi_operating_area_2026-09-25/README.md",
+      "origin_git_object_oid": "36aad65a5c3310f3ee2f05c42305e30672f4e01d",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/40_strict_wire_and_clients.md",
+      "line": 148,
+      "syntax": "inline_or_image",
+      "old_href": "../references/strict_wire_clients_2026-09-25/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/strict_wire_clients_2026-09-25/README.md",
+      "old_destination": "references/strict_wire_clients_2026-09-25/README.md",
+      "origin_git_object_oid": "f148da5f47e2b64b932a45360549f2ea7d616c43",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/41_dynamixel_ping_adapter.md",
+      "line": 87,
+      "syntax": "inline_or_image",
+      "old_href": "../references/dynamixel_ping_2026-09-25/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/dynamixel_ping_2026-09-25/README.md",
+      "old_destination": "references/dynamixel_ping_2026-09-25/README.md",
+      "origin_git_object_oid": "24f53db28ad39a7ed012e47a9ac7b3f91b761bef",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/42_framework_master_plan.md",
+      "line": 184,
+      "syntax": "inline_or_image",
+      "old_href": "../references/p_restart_adoption_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_adoption_2026-09-29/README.md",
+      "old_destination": "references/p_restart_adoption_2026-09-29/README.md",
+      "origin_git_object_oid": "aa01d545dd84f507780e4ca85e050de6186fa4fb",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/42_framework_master_plan.md",
+      "line": 184,
+      "syntax": "inline_or_image",
+      "old_href": "../references/p_restart_rebind_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_rebind_2026-09-29/README.md",
+      "old_destination": "references/p_restart_rebind_2026-09-29/README.md",
+      "origin_git_object_oid": "9668d8ac8793ad323a912f84465c0db819bb6f50",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/contracts/resident-execution/v1/README.md",
+      "line": 4,
+      "syntax": "inline_or_image",
+      "old_href": "../../../../references/resident_execution_2026-10-01/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_execution_2026-10-01/README.md",
+      "old_destination": "references/resident_execution_2026-10-01/README.md",
+      "origin_git_object_oid": "e52817800e99034cc9e5bb1bfb8820e8ac93bfc2",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/contracts/resident-execution/v1/README.md",
+      "line": 5,
+      "syntax": "inline_or_image",
+      "old_href": "../../../../references/resident_execution_2026-10-01/integration.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_execution_2026-10-01/integration.json",
+      "old_destination": "references/resident_execution_2026-10-01/integration.json",
+      "origin_git_object_oid": "ece648d04a9f1fb19c6db5a0b76ae7d46146966e",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/governance/phase-0-gate-2026-09-29.md",
+      "line": 32,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/p_restart_adoption_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_adoption_2026-09-29/README.md",
+      "old_destination": "references/p_restart_adoption_2026-09-29/README.md",
+      "origin_git_object_oid": "aa01d545dd84f507780e4ca85e050de6186fa4fb",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/host_binding_admission.md",
+      "line": 85,
+      "syntax": "inline_or_image",
+      "old_href": "../references/host_binding_commit_live_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_commit_live_2026-09-29/README.md",
+      "old_destination": "references/host_binding_commit_live_2026-09-29/README.md",
+      "origin_git_object_oid": "83ed45d53af03003b4ccbbf5e6e03c0c6312fb69",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/host_binding_admission.md",
+      "line": 93,
+      "syntax": "inline_or_image",
+      "old_href": "../references/host_binding_apply_live_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_apply_live_2026-09-29/README.md",
+      "old_destination": "references/host_binding_apply_live_2026-09-29/README.md",
+      "origin_git_object_oid": "0887f4b61c063d2f548fe11582a112ac3e8573c2",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/host_binding_admission.md",
+      "line": 112,
+      "syntax": "inline_or_image",
+      "old_href": "../references/p_restart_adoption_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_adoption_2026-09-29/README.md",
+      "old_destination": "references/p_restart_adoption_2026-09-29/README.md",
+      "origin_git_object_oid": "aa01d545dd84f507780e4ca85e050de6186fa4fb",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/host_binding_admission.md",
+      "line": 121,
+      "syntax": "inline_or_image",
+      "old_href": "../references/p_restart_rebind_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_rebind_2026-09-29/README.md",
+      "old_destination": "references/p_restart_rebind_2026-09-29/README.md",
+      "origin_git_object_oid": "9668d8ac8793ad323a912f84465c0db819bb6f50",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/host_binding_admission.md",
+      "line": 132,
+      "syntax": "inline_or_image",
+      "old_href": "../references/host_restart_before_commit_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_restart_before_commit_2026-09-29/README.md",
+      "old_destination": "references/host_restart_before_commit_2026-09-29/README.md",
+      "origin_git_object_oid": "40c6bab959d07c87642cfa7e18752573df8bdad9",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/host_binding_commit_observation.md",
+      "line": 13,
+      "syntax": "inline_or_image",
+      "old_href": "../references/host_binding_observation_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_observation_2026-09-29/README.md",
+      "old_destination": "references/host_binding_observation_2026-09-29/README.md",
+      "origin_git_object_oid": "0b2929235bffe3665c8127718d9776a29954e642",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/host_binding_commit_observation.md",
+      "line": 17,
+      "syntax": "inline_or_image",
+      "old_href": "../references/p_host_binding_intents_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_host_binding_intents_2026-09-29/README.md",
+      "old_destination": "references/p_host_binding_intents_2026-09-29/README.md",
+      "origin_git_object_oid": "9a73c8860f7eb09ceb9f2ce19151b753664111eb",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/README.md",
+      "line": 11,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/README.md",
+      "old_destination": "references/README.md",
+      "origin_git_object_oid": "b8e89b48a3bac5ae6d168aab444b55cd38633383",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/f2_adapter_registry_cp1.md",
+      "line": 26,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f2-checkpoint1/RUN_CP1.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f2-checkpoint1/RUN_CP1.md",
+      "old_destination": "references/2026-10-04-f2-checkpoint1/RUN_CP1.md",
+      "origin_git_object_oid": "6e0a2679e3d764a0e01cbf70a5df58c0320ec2c9",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/f2_cp2_prerequisites.md",
+      "line": 19,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-05-f2-two-host/RUN.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-two-host/RUN.md",
+      "old_destination": "references/2026-10-05-f2-two-host/RUN.md",
+      "origin_git_object_oid": "0618ea0ca269f8ff4576f74affb1119e15a860d7",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/f2_cp2_prerequisites.md",
+      "line": 53,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-05-f2-prerequisites/support-inspect.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-prerequisites/support-inspect.json",
+      "old_destination": "references/2026-10-05-f2-prerequisites/support-inspect.json",
+      "origin_git_object_oid": "0dd4962817b62e0ce71b34cf54623a5110dc35ab",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/f2_cp2_prerequisites.md",
+      "line": 54,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-05-f2-prerequisites/inspect_support.py",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-prerequisites/inspect_support.py",
+      "old_destination": "references/2026-10-05-f2-prerequisites/inspect_support.py",
+      "origin_git_object_oid": "7a1799fb6a8d5d61f2a75aebd512cf45235d3bf6",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_delivery_plan.md",
+      "line": 248,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/workflow_canvas_2026-10-01/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/workflow_canvas_2026-10-01/README.md",
+      "old_destination": "references/workflow_canvas_2026-10-01/README.md",
+      "origin_git_object_oid": "8669e280cb85dcfda2d88bae9cae15503b82e242",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 385,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-03-f1-checkpoint1/interim-receipt.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/interim-receipt.json",
+      "old_destination": "references/2026-10-03-f1-checkpoint1/interim-receipt.json",
+      "origin_git_object_oid": "2d23e1ce27cae1c7753521de0241522097c313d4",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 424,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-03-f1-checkpoint1/premerge-product-summary.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/premerge-product-summary.json",
+      "old_destination": "references/2026-10-03-f1-checkpoint1/premerge-product-summary.json",
+      "origin_git_object_oid": "8161248a15bcdcfee402db0e31371abe7133af91",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 451,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-03-f1-checkpoint1/receipt.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/receipt.json",
+      "old_destination": "references/2026-10-03-f1-checkpoint1/receipt.json",
+      "origin_git_object_oid": "cfe15d594914e7d13adb65721cf0f0d3de194114",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 452,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-03-f1-checkpoint1/product-receipt.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/product-receipt.json",
+      "old_destination": "references/2026-10-03-f1-checkpoint1/product-receipt.json",
+      "origin_git_object_oid": "8aa412f865de2ce149dbae2428f10f00a283d5dc",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 453,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-03-f1-checkpoint1/RUN_CP1.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-03-f1-checkpoint1/RUN_CP1.md",
+      "old_destination": "references/2026-10-03-f1-checkpoint1/RUN_CP1.md",
+      "origin_git_object_oid": "ddba331263cc00b8013fae6ee065551d4f0d2325",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 481,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint2/premerge-summary.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/premerge-summary.json",
+      "old_destination": "references/2026-10-04-f1-checkpoint2/premerge-summary.json",
+      "origin_git_object_oid": "5eeda74cfd63cb182c7686fe82891189bc9fa49d",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 505,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint2/receipt.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/receipt.json",
+      "old_destination": "references/2026-10-04-f1-checkpoint2/receipt.json",
+      "origin_git_object_oid": "ac09700e819e5b73c31042a2bfe2f427d655346d",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 506,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint2/product-receipt.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/product-receipt.json",
+      "old_destination": "references/2026-10-04-f1-checkpoint2/product-receipt.json",
+      "origin_git_object_oid": "c0ad7b7716b3789c0d5ee3d25411c23a4ef72daf",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 507,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint2/effects.jsonl",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/effects.jsonl",
+      "old_destination": "references/2026-10-04-f1-checkpoint2/effects.jsonl",
+      "origin_git_object_oid": "5b5f73eecde7c8f17fc86bd57accbebe5de6895a",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 508,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint2/RUN_CP2.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint2/RUN_CP2.md",
+      "old_destination": "references/2026-10-04-f1-checkpoint2/RUN_CP2.md",
+      "origin_git_object_oid": "7290aafc7141f4e768a4cf1f0e824defc67abd56",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 542,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint3/preserved-first-attempt.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/preserved-first-attempt.json",
+      "old_destination": "references/2026-10-04-f1-checkpoint3/preserved-first-attempt.json",
+      "origin_git_object_oid": "314eb35332da2012431d2ac1731b1b6b738578b2",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 550,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint3/premerge-summary.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/premerge-summary.json",
+      "old_destination": "references/2026-10-04-f1-checkpoint3/premerge-summary.json",
+      "origin_git_object_oid": "17174af16cf0c79fb05419cf3be2efa6b69488c8",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 582,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint3/receipt.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/receipt.json",
+      "old_destination": "references/2026-10-04-f1-checkpoint3/receipt.json",
+      "origin_git_object_oid": "dbb0865403b4af90e46d794f10cb03b7ef53af42",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 583,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint3/unknown-product-receipt.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/unknown-product-receipt.json",
+      "old_destination": "references/2026-10-04-f1-checkpoint3/unknown-product-receipt.json",
+      "origin_git_object_oid": "517940bb4aa54a600f5ede67c418f53e2510bbff",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 584,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint3/completed-product-receipt.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/completed-product-receipt.json",
+      "old_destination": "references/2026-10-04-f1-checkpoint3/completed-product-receipt.json",
+      "origin_git_object_oid": "d595de4f49d8e9ff1ae9a2e542c197afd7799e3a",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 585,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint3/effects.jsonl",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/effects.jsonl",
+      "old_destination": "references/2026-10-04-f1-checkpoint3/effects.jsonl",
+      "origin_git_object_oid": "07218ac7a232c4582038c236fd5f2eb66b27ecd7",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 586,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint3/RUN_CP3.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/RUN_CP3.md",
+      "old_destination": "references/2026-10-04-f1-checkpoint3/RUN_CP3.md",
+      "origin_git_object_oid": "fc7f10a08158b683a3aade6288ea682503981ae0",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 600,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f1-checkpoint3/user-acceptance.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f1-checkpoint3/user-acceptance.json",
+      "old_destination": "references/2026-10-04-f1-checkpoint3/user-acceptance.json",
+      "origin_git_object_oid": "1368fd2f1791eb162f86a56d8ef455c5f37a48f5",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 643,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f2-checkpoint1/RUN_CP1.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f2-checkpoint1/RUN_CP1.md",
+      "old_destination": "references/2026-10-04-f2-checkpoint1/RUN_CP1.md",
+      "origin_git_object_oid": "6e0a2679e3d764a0e01cbf70a5df58c0320ec2c9",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 644,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-04-f2-checkpoint1/baseline.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-04-f2-checkpoint1/baseline.json",
+      "old_destination": "references/2026-10-04-f2-checkpoint1/baseline.json",
+      "origin_git_object_oid": "5ba5778a1c31763408460be2fb2d40b7141fec02",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 694,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-05-f2-two-host/RUN.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-two-host/RUN.md",
+      "old_destination": "references/2026-10-05-f2-two-host/RUN.md",
+      "origin_git_object_oid": "0618ea0ca269f8ff4576f74affb1119e15a860d7",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 702,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-05-f2-checkpoint2/RUN_CP2.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/RUN_CP2.md",
+      "old_destination": "references/2026-10-05-f2-checkpoint2/RUN_CP2.md",
+      "origin_git_object_oid": "707321a8469e4aad9c6b33e4038c5270a069a81b",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 715,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-05-f2-checkpoint2/B1.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/B1.json",
+      "old_destination": "references/2026-10-05-f2-checkpoint2/B1.json",
+      "origin_git_object_oid": "d567773acef41d011154c5391cd6dc9fa23b5cb1",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 736,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-05-f2-checkpoint2/summary.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/summary.json",
+      "old_destination": "references/2026-10-05-f2-checkpoint2/summary.json",
+      "origin_git_object_oid": "abd76940bc7aa2b7417db6d7769a2da54cc2d944",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 737,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-05-f2-checkpoint2/sha256.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/sha256.json",
+      "old_destination": "references/2026-10-05-f2-checkpoint2/sha256.json",
+      "origin_git_object_oid": "150ce41fae4a9aeb21b64b3321adac94f49d066c",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 752,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-05-f2-checkpoint2/cost.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/cost.json",
+      "old_destination": "references/2026-10-05-f2-checkpoint2/cost.json",
+      "origin_git_object_oid": "2bed7500480628a86640950df612c7a246383bc5",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "line": 767,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/2026-10-05-f2-checkpoint2/preserved-attempts.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/2026-10-05-f2-checkpoint2/preserved-attempts.json",
+      "old_destination": "references/2026-10-05-f2-checkpoint2/preserved-attempts.json",
+      "origin_git_object_oid": "c17f9a219d6a60bb7a23946eef8ea1a20a9ee1e5",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/host_readmission_delta.md",
+      "line": 88,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/p_restart_adoption_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_adoption_2026-09-29/README.md",
+      "old_destination": "references/p_restart_adoption_2026-09-29/README.md",
+      "origin_git_object_oid": "aa01d545dd84f507780e4ca85e050de6186fa4fb",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/host_readmission_delta.md",
+      "line": 92,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/p_restart_rebind_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_restart_rebind_2026-09-29/README.md",
+      "old_destination": "references/p_restart_rebind_2026-09-29/README.md",
+      "origin_git_object_oid": "9668d8ac8793ad323a912f84465c0db819bb6f50",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/laser_cell_model.md",
+      "line": 94,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/cell_model_m1_2026-10-01/api-acceptance.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/cell_model_m1_2026-10-01/api-acceptance.json",
+      "old_destination": "references/cell_model_m1_2026-10-01/api-acceptance.json",
+      "origin_git_object_oid": "e0360c26b97ef53fe31579163e88049569d73b8c",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/laser_cell_model.md",
+      "line": 95,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/cell_model_m1_2026-10-01/ui-cli-match.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/cell_model_m1_2026-10-01/ui-cli-match.json",
+      "old_destination": "references/cell_model_m1_2026-10-01/ui-cli-match.json",
+      "origin_git_object_oid": "6dad63cb53708231d480e2fce7126a9d96e8680d",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/laser_cell_model.md",
+      "line": 341,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/execution_v2_design_2026-10-02/sizing.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/sizing.json",
+      "old_destination": "references/execution_v2_design_2026-10-02/sizing.json",
+      "origin_git_object_oid": "760fb06bc83b061511a63ce27ed3fea2c096e496",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/laser_cell_model.md",
+      "line": 350,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/execution_v2_design_2026-10-02/dense-performance.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/dense-performance.json",
+      "old_destination": "references/execution_v2_design_2026-10-02/dense-performance.json",
+      "origin_git_object_oid": "ac2f68a45a811e431d90cd01ea6b13f8695901e2",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/laser_cell_model.md",
+      "line": 447,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/execution_v2_design_2026-10-02/m3a-handover-repeat.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/m3a-handover-repeat.json",
+      "old_destination": "references/execution_v2_design_2026-10-02/m3a-handover-repeat.json",
+      "origin_git_object_oid": "6ad502a64bc7c9c1e5945a9174f65c56f7e8cca6",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/m3a_first_gate.md",
+      "line": 10,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/execution_v2_design_2026-10-02/legacy-runtime-injection.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/legacy-runtime-injection.json",
+      "old_destination": "references/execution_v2_design_2026-10-02/legacy-runtime-injection.json",
+      "origin_git_object_oid": "1225256b5d50401d6249080dba4098f7974cf078",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/m3a_first_gate.md",
+      "line": 10,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/execution_v2_design_2026-10-02/legacy-ui-injection.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/legacy-ui-injection.json",
+      "old_destination": "references/execution_v2_design_2026-10-02/legacy-ui-injection.json",
+      "origin_git_object_oid": "91dc78a006ec71d07bcbfc50e4d08d8235384374",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/m3a_first_gate.md",
+      "line": 15,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/execution_v2_design_2026-10-02/m3a-registered-final.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/m3a-registered-final.json",
+      "old_destination": "references/execution_v2_design_2026-10-02/m3a-registered-final.json",
+      "origin_git_object_oid": "7ea0772b77e0dc78a77f974f896eac1a9a6cb8a4",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/m3a_first_gate.md",
+      "line": 17,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/execution_v2_design_2026-10-02/m3a-handover-repeat.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/execution_v2_design_2026-10-02/m3a-handover-repeat.json",
+      "old_destination": "references/execution_v2_design_2026-10-02/m3a-handover-repeat.json",
+      "origin_git_object_oid": "6ad502a64bc7c9c1e5945a9174f65c56f7e8cca6",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/repository_foundation.md",
+      "line": 7,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/repository_foundation_2026-09-14/summary.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/repository_foundation_2026-09-14/summary.json",
+      "old_destination": "references/repository_foundation_2026-09-14/summary.json",
+      "origin_git_object_oid": "152ee875c6eec294bec40e2ffe3d42a14bd8695c",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/repository_foundation.md",
+      "line": 8,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/repository_foundation_2026-09-14/image-smoke.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/repository_foundation_2026-09-14/image-smoke.json",
+      "old_destination": "references/repository_foundation_2026-09-14/image-smoke.json",
+      "origin_git_object_oid": "4a4cecf75b473ca74c7db728daa1b9cbf8ad14a5",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/repository_foundation.md",
+      "line": 9,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/repository_foundation_2026-09-14/supervisor-smoke.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/repository_foundation_2026-09-14/supervisor-smoke.json",
+      "old_destination": "references/repository_foundation_2026-09-14/supervisor-smoke.json",
+      "origin_git_object_oid": "f8699f65339238f0d30f96230ad9f96eb9d3d000",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/repository_foundation.md",
+      "line": 10,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/repository_foundation_2026-09-14/ros-jtc-bridge-final.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/repository_foundation_2026-09-14/ros-jtc-bridge-final.json",
+      "old_destination": "references/repository_foundation_2026-09-14/ros-jtc-bridge-final.json",
+      "origin_git_object_oid": "0a8b6b52e9659dddaa8dedf5c4695e2dbcc87137",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_execution_recovery.md",
+      "line": 68,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/resident_recovery_source_2026-10-01/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_recovery_source_2026-10-01/README.md",
+      "old_destination": "references/resident_recovery_source_2026-10-01/README.md",
+      "origin_git_object_oid": "e5d94b80d599bfae9eb18dedbbde23ce2d049f2c",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_execution_recovery.md",
+      "line": 72,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/resident_recovery_source_2026-10-01/integration.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_recovery_source_2026-10-01/integration.json",
+      "old_destination": "references/resident_recovery_source_2026-10-01/integration.json",
+      "origin_git_object_oid": "313bba7d8dec0f25625811bc49f66007d2659707",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "line": 121,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/resident_reporting_2026-10-01/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_reporting_2026-10-01/README.md",
+      "old_destination": "references/resident_reporting_2026-10-01/README.md",
+      "origin_git_object_oid": "f4b3ae6b57838704d3220758adc205c657955af5",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "line": 167,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/resident_delivery_2026-10-01/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_delivery_2026-10-01/README.md",
+      "old_destination": "references/resident_delivery_2026-10-01/README.md",
+      "origin_git_object_oid": "ca0290cc2422cee001b666b3e958e1120a249b27",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "line": 183,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/resident_delivery_2026-10-01/integration.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_delivery_2026-10-01/integration.json",
+      "old_destination": "references/resident_delivery_2026-10-01/integration.json",
+      "origin_git_object_oid": "40541819f27690a5bb70dc8d23c6f648d3aaf654",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "line": 209,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/registration_transfer_source_2026-10-01/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_transfer_source_2026-10-01/README.md",
+      "old_destination": "references/registration_transfer_source_2026-10-01/README.md",
+      "origin_git_object_oid": "d97f21252b444e498727b9fbc4dad3b088c4d4be",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "line": 216,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/registration_transfer_source_2026-10-01/integration.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_transfer_source_2026-10-01/integration.json",
+      "old_destination": "references/registration_transfer_source_2026-10-01/integration.json",
+      "origin_git_object_oid": "48302cd0f1df1d16e4616e88037cc2bf829f2105",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "line": 252,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/registration_intake_2026-10-01/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_intake_2026-10-01/README.md",
+      "old_destination": "references/registration_intake_2026-10-01/README.md",
+      "origin_git_object_oid": "dbef5a45e4e650f16214a72dbbb88fae07143b4e",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "line": 253,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/registration_intake_2026-10-01/integration.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_intake_2026-10-01/integration.json",
+      "old_destination": "references/registration_intake_2026-10-01/integration.json",
+      "origin_git_object_oid": "05d43ca2ef31b1e5f0a403f8a954fe6fb7be35e6",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "line": 296,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/registration_reconciliation_2026-10-01/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_reconciliation_2026-10-01/README.md",
+      "old_destination": "references/registration_reconciliation_2026-10-01/README.md",
+      "origin_git_object_oid": "2e31cc978c41b1281d87167749a23bb9e8d02a74",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "line": 297,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/registration_reconciliation_2026-10-01/integration.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/registration_reconciliation_2026-10-01/integration.json",
+      "old_destination": "references/registration_reconciliation_2026-10-01/integration.json",
+      "origin_git_object_oid": "914ba81349b24037403c4ff1293d269b7c0ac52a",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "line": 320,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/resident_execution_2026-10-01/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_execution_2026-10-01/README.md",
+      "old_destination": "references/resident_execution_2026-10-01/README.md",
+      "origin_git_object_oid": "e52817800e99034cc9e5bb1bfb8820e8ac93bfc2",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "line": 344,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/resident_execution_2026-10-01/integration.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_execution_2026-10-01/integration.json",
+      "old_destination": "references/resident_execution_2026-10-01/integration.json",
+      "origin_git_object_oid": "ece648d04a9f1fb19c6db5a0b76ae7d46146966e",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "line": 362,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/resident_recovery_source_2026-10-01/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/resident_recovery_source_2026-10-01/README.md",
+      "old_destination": "references/resident_recovery_source_2026-10-01/README.md",
+      "origin_git_object_oid": "e5d94b80d599bfae9eb18dedbbde23ce2d049f2c",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/implementation/workflow_contract_design.md",
+      "line": 5,
+      "syntax": "inline_or_image",
+      "old_href": "../../references/workflow_contract_design_2026-10-01/api_inventory.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/workflow_contract_design_2026-10-01/api_inventory.json",
+      "old_destination": "references/workflow_contract_design_2026-10-01/api_inventory.json",
+      "origin_git_object_oid": "e638319aae02aea2dd4a2725e246eb45bd37a110",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/local_skill_installation.md",
+      "line": 48,
+      "syntax": "inline_or_image",
+      "old_href": "../references/local_skills_2026-09-28/arm64-local.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/local_skills_2026-09-28/arm64-local.json",
+      "old_destination": "references/local_skills_2026-09-28/arm64-local.json",
+      "origin_git_object_oid": "c2152f43d93bbdc8334d6c35493699179deb19d4",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/local_skill_installation.md",
+      "line": 56,
+      "syntax": "inline_or_image",
+      "old_href": "../references/local_skills_2026-09-28/image-portability.json",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/local_skills_2026-09-28/image-portability.json",
+      "old_destination": "references/local_skills_2026-09-28/image-portability.json",
+      "origin_git_object_oid": "850e708e939bc5b9acb8423ba65941e2df739bee",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 42,
+      "syntax": "inline_or_image",
+      "old_href": "../references/python_host_gate_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_host_gate_2026-09-29/README.md",
+      "old_destination": "references/python_host_gate_2026-09-29/README.md",
+      "origin_git_object_oid": "c8c12875d3ba2f78535ba467cd9d74e157ec2883",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 48,
+      "syntax": "inline_or_image",
+      "old_href": "../references/python_host_service_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_host_service_2026-09-29/README.md",
+      "old_destination": "references/python_host_service_2026-09-29/README.md",
+      "origin_git_object_oid": "e891b884a412904958f031b97420cd223b22ba58",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 54,
+      "syntax": "inline_or_image",
+      "old_href": "../references/python_device_package_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_device_package_2026-09-29/README.md",
+      "old_destination": "references/python_device_package_2026-09-29/README.md",
+      "origin_git_object_oid": "397a6d1e7ed36c1c271e6094b8a71047a7a12e0e",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 60,
+      "syntax": "inline_or_image",
+      "old_href": "../references/python_package_p_review_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_package_p_review_2026-09-29/README.md",
+      "old_destination": "references/python_package_p_review_2026-09-29/README.md",
+      "origin_git_object_oid": "ea6ef5d2bd1b11de59ece0dab0c0564e2b331246",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 66,
+      "syntax": "inline_or_image",
+      "old_href": "../references/python_reviewed_composition_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_reviewed_composition_2026-09-29/README.md",
+      "old_destination": "references/python_reviewed_composition_2026-09-29/README.md",
+      "origin_git_object_oid": "dba2aaae3817622eea2259ed84ecd7883480ea11",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 72,
+      "syntax": "inline_or_image",
+      "old_href": "../references/python_deployment_boundary_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/python_deployment_boundary_2026-09-29/README.md",
+      "old_destination": "references/python_deployment_boundary_2026-09-29/README.md",
+      "origin_git_object_oid": "b0b395523726f8f1797eaee24d59f79b2610434b",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 86,
+      "syntax": "inline_or_image",
+      "old_href": "../references/host_binding_commit_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_commit_2026-09-29/README.md",
+      "old_destination": "references/host_binding_commit_2026-09-29/README.md",
+      "origin_git_object_oid": "64f70387bbffdfd658ff4facd87d61dcd27dbf37",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 92,
+      "syntax": "inline_or_image",
+      "old_href": "../references/host_binding_observation_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_observation_2026-09-29/README.md",
+      "old_destination": "references/host_binding_observation_2026-09-29/README.md",
+      "origin_git_object_oid": "0b2929235bffe3665c8127718d9776a29954e642",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 98,
+      "syntax": "inline_or_image",
+      "old_href": "../references/p_host_binding_intents_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_host_binding_intents_2026-09-29/README.md",
+      "old_destination": "references/p_host_binding_intents_2026-09-29/README.md",
+      "origin_git_object_oid": "9a73c8860f7eb09ceb9f2ce19151b753664111eb",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 104,
+      "syntax": "inline_or_image",
+      "old_href": "../references/p_host_binding_reader_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/p_host_binding_reader_2026-09-29/README.md",
+      "old_destination": "references/p_host_binding_reader_2026-09-29/README.md",
+      "origin_git_object_oid": "9630d27f6c29273ec479f3c9d9b953924610595e",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 106,
+      "syntax": "inline_or_image",
+      "old_href": "../references/platform_stop_fence_wait_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/platform_stop_fence_wait_2026-09-29/README.md",
+      "old_destination": "references/platform_stop_fence_wait_2026-09-29/README.md",
+      "origin_git_object_oid": "dd857040e2946947e4a8a87a4868dacd672092cf",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 110,
+      "syntax": "inline_or_image",
+      "old_href": "../references/host_binding_admission_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_admission_2026-09-29/README.md",
+      "old_destination": "references/host_binding_admission_2026-09-29/README.md",
+      "origin_git_object_oid": "ff5ff45c4832e6bf083d2fc19a43f77a41b4e6a0",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 120,
+      "syntax": "inline_or_image",
+      "old_href": "../references/host_binding_commit_live_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_commit_live_2026-09-29/README.md",
+      "old_destination": "references/host_binding_commit_live_2026-09-29/README.md",
+      "origin_git_object_oid": "83ed45d53af03003b4ccbbf5e6e03c0c6312fb69",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 124,
+      "syntax": "inline_or_image",
+      "old_href": "../references/host_binding_apply_live_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_binding_apply_live_2026-09-29/README.md",
+      "old_destination": "references/host_binding_apply_live_2026-09-29/README.md",
+      "origin_git_object_oid": "0887f4b61c063d2f548fe11582a112ac3e8573c2",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/python_device_skill_draft.md",
+      "line": 128,
+      "syntax": "inline_or_image",
+      "old_href": "../references/host_restart_before_commit_2026-09-29/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/host_restart_before_commit_2026-09-29/README.md",
+      "old_destination": "references/host_restart_before_commit_2026-09-29/README.md",
+      "origin_git_object_oid": "40c6bab959d07c87642cfa7e18752573df8bdad9",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/skill_framework_draft_audit.md",
+      "line": 38,
+      "syntax": "inline_or_image",
+      "old_href": "../references/skill_process_draft_2026-09-28/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/skill_process_draft_2026-09-28/README.md",
+      "old_destination": "references/skill_process_draft_2026-09-28/README.md",
+      "origin_git_object_oid": "be5033f00faa0894b1d44c0ae760f7e6e18f5a40",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/skill_framework_draft_audit.md",
+      "line": 42,
+      "syntax": "inline_or_image",
+      "old_href": "../references/runtime_skill_bridge_2026-09-28/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/runtime_skill_bridge_2026-09-28/README.md",
+      "old_destination": "references/runtime_skill_bridge_2026-09-28/README.md",
+      "origin_git_object_oid": "0dc15356d8c92bff6bcbeef648055bbc48603be0",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/skill_framework_draft_audit.md",
+      "line": 50,
+      "syntax": "inline_or_image",
+      "old_href": "../references/runtime_skill_authoring_2026-09-28/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/runtime_skill_authoring_2026-09-28/README.md",
+      "old_destination": "references/runtime_skill_authoring_2026-09-28/README.md",
+      "origin_git_object_oid": "c94f29504b7a7118f5f78adbc6a7293fbf960bde",
+      "conversion_reason": "evidence_in_original_repository"
+    },
+    {
+      "document": "rx_docs/docs/skill_framework_draft_audit.md",
+      "line": 56,
+      "syntax": "inline_or_image",
+      "old_href": "../references/runtime_composed_execution_2026-09-28/README.md",
+      "new_href": "https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/runtime_composed_execution_2026-09-28/README.md",
+      "old_destination": "references/runtime_composed_execution_2026-09-28/README.md",
+      "origin_git_object_oid": "753098f68249d1c5b3854192a53c4ec4773d0033",
+      "conversion_reason": "evidence_in_original_repository"
+    }
+  ],
+  "changed_documents": [
+    {
+      "path": "rx_docs/docs/00_design_roadmap.md",
+      "before_sha256": "1585c297d4b37a94907bb5081a24b93f245525e2eb43c134ab2141acacdacbfa",
+      "after_sha256": "a0741d820242d9e5bfc00877115b552a6f24f483649d1f8c2c5a030e9bcbc72a",
+      "before_bytes": 6708,
+      "after_bytes": 6787,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/01_product_definition.md",
+      "before_sha256": "a033a1dbe039ee1a5a5b79ca08b18727f070fa26f2b82373c977f8784539c3d7",
+      "after_sha256": "8e4b348639647e0fd523a721f59c8dd754076a060dab885f4c4167eb202e5b68",
+      "before_bytes": 8993,
+      "after_bytes": 9151,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/07_future_implementation_and_validation.md",
+      "before_sha256": "ba8e62d9bd4897ce30129d0eef3477fb6539e0e5100095cbfd6724decf05bd69",
+      "after_sha256": "0f34a5051ede0d6fe05299f732e30a393d3cda8613d73d1c05aa777fab4afca5",
+      "before_bytes": 1418,
+      "after_bytes": 1497,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/08_delivery_and_maintenance.md",
+      "before_sha256": "d63fbbe3d283ec57c53889a4e4167f961ca8c0eafdd3809324c62735eef9763e",
+      "after_sha256": "b3aeca4afe39e275eb76c9b0c89eac6cdb86b1ad7a5b516694cc3c8cf791307f",
+      "before_bytes": 1240,
+      "after_bytes": 1319,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/09_decisions_and_sources.md",
+      "before_sha256": "d804a5c5f4b797d7a9c8c8f4cbf978b17da9c0163f80459a1c2d74b24bb86d06",
+      "after_sha256": "3d1dad03e5db9569b8afaab4fe569cc0ea195e9b4150c235e2be49795e378c90",
+      "before_bytes": 3429,
+      "after_bytes": 3508,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/11_first_cell_contract.md",
+      "before_sha256": "12ca98bf4cba5f813a41330e030b0729552e41decca3218b432a203009b909e2",
+      "after_sha256": "9ebf24a85819489a49905073967f97b2583caaf295bdc624b367b9ca5c44332f",
+      "before_bytes": 1005,
+      "after_bytes": 1084,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/13_device_support_matrix.md",
+      "before_sha256": "1610c7c90649c61e5a769d44ab1fcbd88dfb4c3e9232a2495ab1d1087e835d5d",
+      "after_sha256": "4fc4e5299dd20192dd947d30c3f6c42f129830e93bd8c336dc5100cb86ed087f",
+      "before_bytes": 2684,
+      "after_bytes": 2763,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/14_image_support_spec.md",
+      "before_sha256": "ad3184d6ab98cd9e81d1cb3d7e50529c4c1b1d91e0c26300fdeb4e0fd1b55a75",
+      "after_sha256": "0662ef66485605d4edceea5713c443725898745b05b36ed715d9f9db78d983b1",
+      "before_bytes": 1612,
+      "after_bytes": 1691,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/15_contract_protocol_design_plan.md",
+      "before_sha256": "f99f2b26bdd8870fde99d59b0c14322e61af7541e386270c4fc0c1224a2877fe",
+      "after_sha256": "88672886368fa13f54ab7d4b6c0f295caf65db18b3cb8da02161dba719f638e5",
+      "before_bytes": 986,
+      "after_bytes": 1065,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/21_declaration_reuse_measurement.md",
+      "before_sha256": "3301788aa34e7820a3597be00e096f03031ae38063b4fdb7f75d481fee8df9da",
+      "after_sha256": "d3b2a604e43ed54ff6f1ec98584a8e184adb6cb7ac8d87e934ec3dbc3b0b1b7d",
+      "before_bytes": 73669,
+      "after_bytes": 73748,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/30_resident_registration_ownership.md",
+      "before_sha256": "bcc6905a8c54ba5264915dfc1c81f3818b35be53e61fd29bd1566d1e7b05ec6f",
+      "after_sha256": "700303f2d70573911483a192bc049adc37faf56fcd9f2afe3de3b9155ec508a5",
+      "before_bytes": 6564,
+      "after_bytes": 6643,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/31_linux_address_space_enforcement.md",
+      "before_sha256": "d93e49fdb9bcd812c8e1c46b8d4981be478e24164b48493b78f4d7bd2f81d60d",
+      "after_sha256": "fce5d84d7b3ffd628da7aaa8b99cd4b8f70fbe96bdb47badb222f3412002fc9f",
+      "before_bytes": 9741,
+      "after_bytes": 9820,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/32_total_manager_loss_recovery.md",
+      "before_sha256": "7e2298a7385eba37ab0812124a1840b94eb43f0c88daca91444469be450b0a1a",
+      "after_sha256": "3b29fb9c30a23801b9a6a2ccacced76af879bf2157fb09ae87f26ff8aa60f55e",
+      "before_bytes": 9884,
+      "after_bytes": 9963,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/33_work_judgment_enforcement.md",
+      "before_sha256": "3b92e654490ca735c5a7a6fd8090d6c3c65d6266163e6c2fa6057c0a11ae23fb",
+      "after_sha256": "a421b1622af38fbc44fcdf0f26e275f792860217e9d0e5435bba99795d5f30ea",
+      "before_bytes": 9991,
+      "after_bytes": 10070,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/34_dependency_replacement_application.md",
+      "before_sha256": "2a25c92f098c40d9486c0b90cd7019e6d0666e5d8b9f77078ac3df33eb77cc72",
+      "after_sha256": "bf22998d30e101f7d2b4223fd1c4ff1141ac0301da6a5c0505fcbedc7f348c63",
+      "before_bytes": 9129,
+      "after_bytes": 9287,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/35_open_items_and_support_limits.md",
+      "before_sha256": "f8ecb7f04bfcd19dc53d105bbbc8981433e25dafafb67f8147a5e3bf7c297e34",
+      "after_sha256": "890a826d3fe63f1f87b980f4e9dc6c75459eadd5818eefbaa7103f3ff8c233c6",
+      "before_bytes": 15436,
+      "after_bytes": 15515,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/36_storage_lock_lifetime.md",
+      "before_sha256": "b4d702f3b3e9c50fc81fa04f31d473dd1653abbd2d61d39e57e3d37e800cf652",
+      "after_sha256": "40fec64bb4da93e4dda1529afa1d2c344be8b8a92cdb6ee2298405f5ca35d1bf",
+      "before_bytes": 10400,
+      "after_bytes": 10479,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/37_authenticated_release_origin.md",
+      "before_sha256": "d32cff723e3cafdf9d71bc026d8fcc92b36997756ef68a647819b4a9ab0367e9",
+      "after_sha256": "14b8397189e1f2282607dd9da8f1a8a6125427379eee816d3a5d96986fd5f3fd",
+      "before_bytes": 11574,
+      "after_bytes": 11653,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/38_operating_area_judge.md",
+      "before_sha256": "e476366ac5a6585351914e624a4ff65e8f623319235b20a345f3d3b793b5c6ab",
+      "after_sha256": "a6458bf8dd4515507f23d924990de44427502b96ba65ccbd89fd6ed1f86e141a",
+      "before_bytes": 13485,
+      "after_bytes": 13564,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/39_multi_operating_area.md",
+      "before_sha256": "0930df4569b11744769b759f5576f03c90bbf5fc55fbeaf2cad5c27c7a4b0a47",
+      "after_sha256": "3acfe90d19af5718d748b2343de4002ff7e559d7dfb84dc96cba5ea2cf093594",
+      "before_bytes": 12179,
+      "after_bytes": 12258,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/40_strict_wire_and_clients.md",
+      "before_sha256": "2e6de2725c9bce9af9fc3cafdb53692368465a8d52a56a140677a980ff05fc04",
+      "after_sha256": "f829f14d846c6af526517f45b8cd4bb94042e67aa66ec51753a30e6f26122426",
+      "before_bytes": 16282,
+      "after_bytes": 16361,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/41_dynamixel_ping_adapter.md",
+      "before_sha256": "f4538b136871929f3ded03c75506a216c2b66f98a430c6e9b3368537fa22bc6d",
+      "after_sha256": "d53dc7b183fb7fbd42335086a514d0c53d88c64c80498ae587a39ca672697c49",
+      "before_bytes": 11565,
+      "after_bytes": 11644,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/42_framework_master_plan.md",
+      "before_sha256": "1d2a8cd9b2c2f2877fb813f032a5c3399f2436d4e83e470970b179eed00562e2",
+      "after_sha256": "30217a78a31f7742e6caebb5cdd0ad9d15deca4682bcffd4d6397271cf007343",
+      "before_bytes": 22801,
+      "after_bytes": 22959,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/contracts/resident-execution/v1/README.md",
+      "before_sha256": "77d59b7f3c0e5c4c90bafbba679b1fce4d5a3e02437b576663dbd4dbf8b49ddb",
+      "after_sha256": "88ba1bdb827212f87aa4dd2ce440ebe5e7aad4b916e924874d8a47c52eabbe44",
+      "before_bytes": 7831,
+      "after_bytes": 7971,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/governance/phase-0-gate-2026-09-29.md",
+      "before_sha256": "724ae0f2f6c8532db08624d60a4cf592aede2e0b6844e82c42755f41dead7845",
+      "after_sha256": "91284deb49383ddfdab7590bcb3e7309958c280ca967ac4a115776c2044fd399",
+      "before_bytes": 3461,
+      "after_bytes": 3537,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/host_binding_admission.md",
+      "before_sha256": "1a4efb42462c5a75c4b8dc5d28b2c2a724ad71036aa06a3b44367710ff65e60f",
+      "after_sha256": "8ba6d8d24714f5d64c49b74041875fd17baea1eb224fe37fb42a262e9bc8257f",
+      "before_bytes": 19102,
+      "after_bytes": 19497,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/host_binding_commit_observation.md",
+      "before_sha256": "3505d4eaba83135c63520d6be2f84ab11142ed487933696b897e68d652d6f3cc",
+      "after_sha256": "8626b54fd2fe0436c13cf6cdf92dfc729b89775ffa50cb5c0d37f7188af8d23c",
+      "before_bytes": 2839,
+      "after_bytes": 2997,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/implementation/README.md",
+      "before_sha256": "164fd23909bcc71fee1af1aa7e5004be75bf22ec1f4f15ce4e9139f608ac5bc4",
+      "after_sha256": "df9ec819893a255612ceadaf834aec07ddf9bd1b914052ab7f08ced310315ed8",
+      "before_bytes": 1170,
+      "after_bytes": 1246,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/implementation/f2_adapter_registry_cp1.md",
+      "before_sha256": "9cbe63c31c3a5635994aeb4eb37d2dee6c4f161be549bad14abeb515a5271026",
+      "after_sha256": "791ac37ee3b4ae9a2bafd3ae0ef25da3dc10ebf2b47930ad59bfbf30ca5623e4",
+      "before_bytes": 21919,
+      "after_bytes": 21995,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/implementation/f2_cp2_prerequisites.md",
+      "before_sha256": "f66e8c8d82a5d11c5f8732a749494d068a69c18000e02fa86ba5e7f741cccf12",
+      "after_sha256": "bc2bb14d16393a71ee25c4c277211983210bb2602251145c5401f0873588f24c",
+      "before_bytes": 7652,
+      "after_bytes": 7880,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/implementation/framework_delivery_plan.md",
+      "before_sha256": "4859da9fecc2927950c4baf7151ab7070d31dcb8f2c56ba80351ded3b6830e2f",
+      "after_sha256": "69cb90c9541207b5496fd82cdc1abcbe1ce22dccb1ffc593f8ef1be9af3d0485",
+      "before_bytes": 25771,
+      "after_bytes": 25847,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/implementation/framework_extension_cost.md",
+      "before_sha256": "e368b00d0c6d6ccb561d5121b8f2fa58b719ad75c9316abe2f45e36a70df9399",
+      "after_sha256": "3e12513f93dbeb3baaaee7612ad9872109618dd7b22c206cd705c50bd54353de",
+      "before_bytes": 64773,
+      "after_bytes": 66825,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/implementation/host_readmission_delta.md",
+      "before_sha256": "3b924bdf33adc857a101b2780174355a7fe2a22d1eb7b907f30c9970bdea7580",
+      "after_sha256": "62552963180b99ede225fd5aff066a61a4058998b0963a0d6bb9036a3b16c788",
+      "before_bytes": 10025,
+      "after_bytes": 10177,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/implementation/laser_cell_model.md",
+      "before_sha256": "ccf22066eb1d92b1623e1009d076b51f3a79dd6e51fdeb8cab5c6920ed224286",
+      "after_sha256": "b2e504cf5faa06fd75ecfdd4ce4712dd556f66d7180288acacca04a28f69e29b",
+      "before_bytes": 43148,
+      "after_bytes": 43528,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/implementation/m3a_first_gate.md",
+      "before_sha256": "0ef53274b53deef82ab23b759dc21364fe667b73e3707120f40b542ca76881e4",
+      "after_sha256": "33f0cc23ee64996140c902b5c3fcdb1dc0f4e2b1680fdc960145d9cc8b4232f5",
+      "before_bytes": 4166,
+      "after_bytes": 4470,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/implementation/repository_foundation.md",
+      "before_sha256": "15ab4a28d23e55bc5c66ea7cfd8a3715be33940e6ec8f83cf41c576d80eef1a5",
+      "after_sha256": "a90dd5479e20961f0fab5d0fd51e236747aa3854a358e1249f9318bc29b8d852",
+      "before_bytes": 1588,
+      "after_bytes": 1892,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/implementation/resident_execution_recovery.md",
+      "before_sha256": "be5816bbfa3254535aab266d45dcbca391d5c625dfa1089eec8984a101a4ab58",
+      "after_sha256": "31aebe5b36c743064bf0d38036df15f353ccfb13ca6184b93fcea833d1cb0a8b",
+      "before_bytes": 6599,
+      "after_bytes": 6751,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/implementation/resident_framework_completion.md",
+      "before_sha256": "932d514253adc0bc965e7e74438012c7a07a9d9da4fe1c52b5cc8fc0c4dc7e15",
+      "after_sha256": "91a18b5b712e1f98ddb1142090e5bc0f18026237b1cdb356e2768a58e82957f7",
+      "before_bytes": 34903,
+      "after_bytes": 35815,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/implementation/workflow_contract_design.md",
+      "before_sha256": "9caf418dfca2c38b563db068a097187e0ea24da90b73965c8419a66a399d0839",
+      "after_sha256": "0bd9c0c4d3441a96ff68d5a468abd4037f32e8309094ccdb7deaa0402cd2223a",
+      "before_bytes": 19650,
+      "after_bytes": 19726,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/local_skill_installation.md",
+      "before_sha256": "cb35f2bc7ee1b2f914846667b2f9c63e854191284533ad82d79c8b9bf04697e6",
+      "after_sha256": "a38e2445539664df80d80799e52e4bf4750d6f55c333a1d13171058af71f0ea1",
+      "before_bytes": 5694,
+      "after_bytes": 5852,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/python_device_skill_draft.md",
+      "before_sha256": "0087e44e3a7d6abc2c15465e8496fc85ce87b6a35f2647539867be6b2365ccb0",
+      "after_sha256": "e0124c28bdaed9b8bf3b431d7aba55716178255aaa7ac220db510a241f1897a6",
+      "before_bytes": 19977,
+      "after_bytes": 21162,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    },
+    {
+      "path": "rx_docs/docs/skill_framework_draft_audit.md",
+      "before_sha256": "df97987f467d1b097597aeec148748052f169e52ad1000fbf5a670c9e0959983",
+      "after_sha256": "d96c6b423a1fd843e1300f88f180652e5e6938527ea2494278d24dcce42a8704",
+      "before_bytes": 8911,
+      "after_bytes": 9227,
+      "mode": "100644",
+      "change": "rendered evidence destination only"
+    }
+  ],
+  "hash_bound_documents": [
+    {
+      "path": "rx_docs/docs/cell_operations/v1.0/01_scope_conditions_functions.md",
+      "sha256": "308af9c0cec3ce8dc5a4b35d84bbaf55a9237e6b07c037a306a891812ae2248e",
+      "owner_manifest": "rx_docs/docs/cell_operations/v1.0/protocol_manifest.json",
+      "manifest_field": "normative_document_sha256",
+      "manifest_sha256": "5e75ab4d3d72d4b22082003dbec5e2ca54562cc4302d2e306b07ce64d215d71b"
+    },
+    {
+      "path": "rx_docs/docs/cell_operations/v1.0/02_authorization_invalidation.md",
+      "sha256": "6f8aa71c40aa27fa1bbf57d8196f4b91f27ca817856aa5aedc8e719ef094c46c",
+      "owner_manifest": "rx_docs/docs/cell_operations/v1.0/protocol_manifest.json",
+      "manifest_field": "normative_document_sha256",
+      "manifest_sha256": "5e75ab4d3d72d4b22082003dbec5e2ca54562cc4302d2e306b07ce64d215d71b"
+    },
+    {
+      "path": "rx_docs/docs/cell_operations/v1.0/03_intervention_recovery_change.md",
+      "sha256": "3b5ea7226d160b649051c2478cc18c06c10fe6b5d6f0af54e6d2474c6971c961",
+      "owner_manifest": "rx_docs/docs/cell_operations/v1.0/protocol_manifest.json",
+      "manifest_field": "normative_document_sha256",
+      "manifest_sha256": "5e75ab4d3d72d4b22082003dbec5e2ca54562cc4302d2e306b07ce64d215d71b"
+    },
+    {
+      "path": "rx_docs/docs/cell_operations/v1.0/04_protocol_integration_ui.md",
+      "sha256": "95a4e504148fdff0497a264b28653254329ae5168f322067626ab9bed6be50f8",
+      "owner_manifest": "rx_docs/docs/cell_operations/v1.0/protocol_manifest.json",
+      "manifest_field": "normative_document_sha256",
+      "manifest_sha256": "5e75ab4d3d72d4b22082003dbec5e2ca54562cc4302d2e306b07ce64d215d71b"
+    },
+    {
+      "path": "rx_docs/docs/contracts/v1.0/01_responsibility_and_semantics.md",
+      "sha256": "03af71059d44919e3c3b8a68b0b765fd12934cb4026b8c53f47aa6b4db1f359b",
+      "owner_manifest": "rx_docs/docs/contracts/v1.0/protocol_manifest.json",
+      "manifest_field": "normative_document_sha256",
+      "manifest_sha256": "d32519ffd33cc02f5e6f82406ad2fe253421527dc047b807c11beb11a8f7583c"
+    },
+    {
+      "path": "rx_docs/docs/contracts/v1.0/02_identity_durability_recovery.md",
+      "sha256": "c8ec0784ed3c301370f2fc8399dd1d2214bb0b4bc8c9ee3c4ba6a25df9754fa5",
+      "owner_manifest": "rx_docs/docs/contracts/v1.0/protocol_manifest.json",
+      "manifest_field": "normative_document_sha256",
+      "manifest_sha256": "d32519ffd33cc02f5e6f82406ad2fe253421527dc047b807c11beb11a8f7583c"
+    },
+    {
+      "path": "rx_docs/docs/contracts/v1.0/03_data_and_protocol.md",
+      "sha256": "6d0ecc949c08dae3689e6912253e1473e1c617d36fc5b92d9fd209a389a4b13f",
+      "owner_manifest": "rx_docs/docs/contracts/v1.0/protocol_manifest.json",
+      "manifest_field": "normative_document_sha256",
+      "manifest_sha256": "d32519ffd33cc02f5e6f82406ad2fe253421527dc047b807c11beb11a8f7583c"
+    },
+    {
+      "path": "rx_docs/docs/contracts/v1.0/04_binding_and_admission.md",
+      "sha256": "6351e8e075d593f2c7a2d696610f9a9ab08cd284c7245d745751f80c1923b6cb",
+      "owner_manifest": "rx_docs/docs/contracts/v1.0/protocol_manifest.json",
+      "manifest_field": "normative_document_sha256",
+      "manifest_sha256": "d32519ffd33cc02f5e6f82406ad2fe253421527dc047b807c11beb11a8f7583c"
+    },
+    {
+      "path": "rx_docs/docs/contracts/workflow-execution/v2/README.md",
+      "sha256": "41d0e5bea9d0bee97bcffcefa3fe400b385d6d81b7f487e678c66046071acb5c",
+      "owner_manifest": "rx_docs/docs/contracts/workflow-execution/v2/manifest.json",
+      "manifest_field": "files",
+      "manifest_sha256": "ec37b11a61fdeebd909a0dbe0ccb8048e3a396ed134e6ec4a87bdeb24d403ae1"
+    },
+    {
+      "path": "rx_docs/docs/contracts/workflow-execution/v2/executor-admission.md",
+      "sha256": "4f2443681ad2346decadc46a96f4f14dd86e3ad39a99fef34eab6558d7ee2700",
+      "owner_manifest": "rx_docs/docs/contracts/workflow-execution/v2/manifest.json",
+      "manifest_field": "files",
+      "manifest_sha256": "ec37b11a61fdeebd909a0dbe0ccb8048e3a396ed134e6ec4a87bdeb24d403ae1"
+    },
+    {
+      "path": "rx_docs/docs/contracts/workflow-execution/v2/host-input-membership.md",
+      "sha256": "1511434e3b6d39a42acf2281dc92ee8d2ebb77893df440284e46b3da49e8f8a6",
+      "owner_manifest": "rx_docs/docs/contracts/workflow-execution/v2/manifest.json",
+      "manifest_field": "files",
+      "manifest_sha256": "ec37b11a61fdeebd909a0dbe0ccb8048e3a396ed134e6ec4a87bdeb24d403ae1"
+    },
+    {
+      "path": "rx_docs/docs/contracts/workflow-execution/v2/host-qualification.md",
+      "sha256": "9937b0cc88625d532af29bbc916cf623764d112f5fa1983f82b75090b8701e59",
+      "owner_manifest": "rx_docs/docs/contracts/workflow-execution/v2/manifest.json",
+      "manifest_field": "files",
+      "manifest_sha256": "ec37b11a61fdeebd909a0dbe0ccb8048e3a396ed134e6ec4a87bdeb24d403ae1"
+    },
+    {
+      "path": "rx_docs/docs/contracts/workflow-execution/v2/legacy-isolation.md",
+      "sha256": "646f35bd88a4e85da4e3a33f6c26528be8c77cae6bb617b0b806f4edfc4a08b4",
+      "owner_manifest": "rx_docs/docs/contracts/workflow-execution/v2/manifest.json",
+      "manifest_field": "files",
+      "manifest_sha256": "ec37b11a61fdeebd909a0dbe0ccb8048e3a396ed134e6ec4a87bdeb24d403ae1"
+    },
+    {
+      "path": "rx_docs/docs/contracts/workflow-execution/v2/native-completion.md",
+      "sha256": "31bd14d52b058c725dc4e28794d24030bc08cce9bdc0b8761f03a5beda2af66a",
+      "owner_manifest": "rx_docs/docs/contracts/workflow-execution/v2/manifest.json",
+      "manifest_field": "files",
+      "manifest_sha256": "ec37b11a61fdeebd909a0dbe0ccb8048e3a396ed134e6ec4a87bdeb24d403ae1"
+    },
+    {
+      "path": "rx_docs/docs/contracts/workflow-execution/v2/operation-admission.md",
+      "sha256": "813ca82370d054d75b0a8256d1f9091fc450a5436a3859a2f31c08c9cdd7c50e",
+      "owner_manifest": "rx_docs/docs/contracts/workflow-execution/v2/manifest.json",
+      "manifest_field": "files",
+      "manifest_sha256": "ec37b11a61fdeebd909a0dbe0ccb8048e3a396ed134e6ec4a87bdeb24d403ae1"
+    },
+    {
+      "path": "rx_docs/docs/contracts/workflow-execution/v2/python-execution-profile.md",
+      "sha256": "6392f21da91161b0e9f6a67a1c0c2bcc4991307b7dffd08e069affb2fc6a6ae7",
+      "owner_manifest": "rx_docs/docs/contracts/workflow-execution/v2/manifest.json",
+      "manifest_field": "files",
+      "manifest_sha256": "ec37b11a61fdeebd909a0dbe0ccb8048e3a396ed134e6ec4a87bdeb24d403ae1"
+    },
+    {
+      "path": "rx_docs/docs/contracts/workflow-execution/v2/retry-admission.md",
+      "sha256": "e8ea94f5f6d9a9d58a9189985a271465e9b902046ff6d52f74ed87234032dca5",
+      "owner_manifest": "rx_docs/docs/contracts/workflow-execution/v2/manifest.json",
+      "manifest_field": "files",
+      "manifest_sha256": "ec37b11a61fdeebd909a0dbe0ccb8048e3a396ed134e6ec4a87bdeb24d403ae1"
+    },
+    {
+      "path": "rx_docs/docs/contracts/workflow-execution/v2/runtime-binding.md",
+      "sha256": "a723941e86eef419a308241bfc4b31ced1a5651557d3138b7a7e878edb61eac8",
+      "owner_manifest": "rx_docs/docs/contracts/workflow-execution/v2/manifest.json",
+      "manifest_field": "files",
+      "manifest_sha256": "ec37b11a61fdeebd909a0dbe0ccb8048e3a396ed134e6ec4a87bdeb24d403ae1"
+    }
+  ],
+  "unchanged_local_evidence_projections": [
+    {
+      "document": "rx_docs/docs/contracts/workflow-execution/v2/README.md",
+      "line": 90,
+      "href": "../../../../references/execution_v2_design_2026-10-02/sizing.json",
+      "target": "rx_docs/references/execution_v2_design_2026-10-02/sizing.json"
+    },
+    {
+      "document": "rx_docs/docs/contracts/workflow-execution/v2/README.md",
+      "line": 186,
+      "href": "../../../../references/execution_v2_design_2026-10-02/legacy-freeze.json",
+      "target": "rx_docs/references/execution_v2_design_2026-10-02/legacy-freeze.json"
+    }
+  ],
+  "unsupported_converted_fragments": [],
+  "external_network_anchor_checks": "NOT_RUN; converted destinations have no fragments"
+}

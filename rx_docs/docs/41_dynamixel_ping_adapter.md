@@ -84,7 +84,7 @@ helper 내용 변조, helper와 함께 위조한 inventory다. 실제 helper의 
 네 endpoint 거절도 별도 관측했다. 설치·등록·소프트웨어 준비·cell 인가·native 결과를 하나의
 READY 판정으로 합치지 않았다. 전체 material workflow 완료나 물리 자원 해제를 주장하지 않는다.
 
-[원시 근거와 재현](../references/dynamixel_ping_2026-09-25/README.md)은 최초 실패와 수정된
+[원시 근거와 재현](https://github.com/jack0682/rx_docs/blob/4384ed49e384c53e645f71757ce597292b928eb6/references/dynamixel_ping_2026-09-25/README.md)은 최초 실패와 수정된
 조건을 함께 보존한다. 기존 아홉 통과선, G3 12장면·G4 22장면, Host 자기 발급 거절 셋과
 새로 설치한 두 언어의 82 wire 벡터도 별도 검증했다. 과거 runner가 출력하는 당시 한계 문구는
 원문으로 보존하며 이를 현재 구현 전체의 상태 판정으로 재사용하지 않는다.
