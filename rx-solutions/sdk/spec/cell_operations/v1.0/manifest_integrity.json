@@ -1,0 +1,7 @@
+{
+  "cell_manifest_sha256": "5e75ab4d3d72d4b22082003dbec5e2ca54562cc4302d2e306b07ce64d215d71b",
+  "manifest_file": "protocol_manifest.json",
+  "encoding": "JCS UTF-8 without trailing newline",
+  "scope": "Document byte integrity and English translation revision; no change to wire semantics, and no new hardware or distributed conformance claim",
+  "document_revision": "2026-09-14-english.1"
+}

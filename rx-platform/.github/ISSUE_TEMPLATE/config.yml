@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/jack0682/rx-platform/security/advisories/new
+    about: Report privately instead of posting vulnerabilities or secrets in public issues.

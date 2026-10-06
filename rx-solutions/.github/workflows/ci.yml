@@ -1,0 +1,210 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop, 'codex/**', 'feature/**', 'fix/**', 'docs/**', 'chore/**', 'release/**', 'hotfix/**']
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-${{ github.ref == 'refs/heads/main' && github.run_id || 'latest' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  repository:
+    name: Repository and GitFlow
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Test repository checks
+        run: |
+          python3 .github/test_repository.py
+          python3 .github/test_commit_policy.py
+      - name: Test runtime client request recovery
+        run: |
+          python3 tools/test_runtime_skill_client.py
+          python3 tools/test_definition_client.py
+          python3 tools/test_workflow_client.py
+          python3 tools/test_execution_client.py
+          python3 tools/test_api_transport.py
+      - name: Test Linux development installer boundaries
+        run: python3 -B tools/test_linux_dev_bundle.py
+      - name: Test offline Python SDK environment
+        run: python3 tools/test_python_environment.py
+      - name: Test Python SDK execution receipt boundaries
+        run: python3 tools/test_python_host_runner.py
+      - name: Test external adapter native facts
+        run: python3 tools/test_external_adapter.py
+      - name: Test browser server lifecycle helper
+        run: python3 apps/operator/tests/test_with_servers.py
+      - name: Check DCO and verified OpenPGP signatures
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python3 tools/check_commit_policy.py --head "$HEAD_SHA" --github-repository "$GITHUB_REPOSITORY"
+      - name: Validate PR branch route
+        if: github.event_name == 'pull_request'
+        run: python3 tools/check_repository.py --event "$GITHUB_EVENT_PATH"
+      - name: Validate JSON, local links and contract integrity
+        run: python3 tools/check_repository.py
+      - name: Check invariant traceability
+        run: python3 tools/check_invariant_traceability.py
+      - name: Check device catalog sources and native inventory regressions
+        run: |
+          python3 tools/check_device_catalog_sources.py
+          python3 tools/test_native_inventory.py
+
+  rust:
+    name: Rust
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CARGO_TERM_COLOR: always
+      RUST_BACKTRACE: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install repository Rust toolchain
+        run: |
+          toolchain=$(python3 -c 'import tomllib; print(tomllib.load(open("rust-toolchain.toml", "rb"))["toolchain"]["channel"])')
+          rustup toolchain install "$toolchain" --profile minimal --component rustfmt --component clippy
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            target
+          key: ${{ runner.os }}-${{ runner.arch }}-rust-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml', 'sdk/source-lock.json') }}
+      - name: Check Rust formatting
+        run: cargo fmt --all -- --check
+      - name: Check Rust lints
+        run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+      - name: Test Rust workspace
+        run: cargo test --workspace --all-features --locked
+
+  dynamixel:
+    name: DYNAMIXEL helper boundary
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Build pinned protocol-only helper and exercise direct caller refusals
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends nlohmann-json3-dev
+          cmake -S native/dynamixel -B /tmp/rx-dynamixel-build -DCMAKE_BUILD_TYPE=Release
+          cmake --build /tmp/rx-dynamixel-build -j2
+          python3 tools/test_dynamixel_helper.py --helper /tmp/rx-dynamixel-build/rx-dynamixel-ping
+
+  operator:
+    name: Operator app
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/operator
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: apps/operator/package-lock.json
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm test
+      - run: npm run test:bundle
+      - run: npm run build
+
+  skills:
+    name: Installed skills (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Read pinned platform revision
+        id: platform
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          v = json.load(open('deployment/local-skills/platform-source.json'))
+          assert v['repository'] == 'jack0682/rx-platform'
+          assert re.fullmatch('[0-9a-f]{40}', v['commit'])
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write('ref=' + v['commit'] + '\n')
+          PY
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: jack0682/rx-platform
+          ref: ${{ steps.platform.outputs.ref }}
+          path: platform-src
+          persist-credentials: false
+      - name: Build and exercise the installed release
+        run: |
+          echo /platform-src/ >> .git/info/exclude
+          python3 tools/test_skill_image_identity.py
+          python3 tools/build_skill_release.py --platform platform-src --architecture '${{ matrix.arch }}' --output "$RUNNER_TEMP/skill-bundle"
+          python3 tools/test_skill_install.py --bundle "$RUNNER_TEMP/skill-bundle/bundle" --evidence "$RUNNER_TEMP/skill-acceptance"
+          cp "$RUNNER_TEMP/skill-acceptance/result.json" "$RUNNER_TEMP/skill-bundle/acceptance-${{ matrix.arch }}.json"
+          cp "$RUNNER_TEMP/skill-bundle/bundle/release.json" "$RUNNER_TEMP/skill-bundle/release-${{ matrix.arch }}.json"
+          cp deployment/local-skills/install.sh "$RUNNER_TEMP/skill-bundle/install.sh"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: rx-local-skills-${{ matrix.arch }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/skill-bundle/*.tar.gz
+            ${{ runner.temp }}/skill-bundle/*.sha256
+            ${{ runner.temp }}/skill-bundle/*.json
+            ${{ runner.temp }}/skill-bundle/install.sh
+
+  ci:
+    name: ${{ github.event_name == 'pull_request' && 'CI' || 'Branch CI' }}
+    if: ${{ always() }}
+    needs: [repository, rust, operator, dynamixel, skills]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require every validation job to pass
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          python3 - <<'PYTHON'
+          import json, os, sys
+          results = json.loads(os.environ["NEEDS"])
+          failed = {name: value["result"] for name, value in results.items() if value["result"] != "success"}
+          if failed:
+              sys.exit(f"Required validation jobs did not pass: {failed}")
+          print("All required validation jobs passed.")
+          PYTHON

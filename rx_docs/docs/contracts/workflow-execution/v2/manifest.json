@@ -1,0 +1,21 @@
+{
+  "schema": "rx.contract-revision.v1",
+  "contract_version": "execution-v2",
+  "revision_procedure": "v1.1",
+  "revision": "2026-10-03.3",
+  "status": "AUTHORIZED_DECISIONS_FIXED_IMPLEMENTATION_PENDING",
+  "files": {
+    "README.md": "41d0e5bea9d0bee97bcffcefa3fe400b385d6d81b7f487e678c66046071acb5c",
+    "host-qualification.md": "9937b0cc88625d532af29bbc916cf623764d112f5fa1983f82b75090b8701e59",
+    "runtime-binding.md": "a723941e86eef419a308241bfc4b31ced1a5651557d3138b7a7e878edb61eac8",
+    "executor-admission.md": "4f2443681ad2346decadc46a96f4f14dd86e3ad39a99fef34eab6558d7ee2700",
+    "operation-admission.md": "813ca82370d054d75b0a8256d1f9091fc450a5436a3859a2f31c08c9cdd7c50e",
+    "retry-admission.md": "e8ea94f5f6d9a9d58a9189985a271465e9b902046ff6d52f74ed87234032dca5",
+    "legacy-isolation.md": "646f35bd88a4e85da4e3a33f6c26528be8c77cae6bb617b0b806f4edfc4a08b4",
+    "host-input-membership.md": "1511434e3b6d39a42acf2281dc92ee8d2ebb77893df440284e46b3da49e8f8a6",
+    "python-execution-profile.md": "6392f21da91161b0e9f6a67a1c0c2bcc4991307b7dffd08e069affb2fc6a6ae7",
+    "native-completion.md": "31bd14d52b058c725dc4e28794d24030bc08cce9bdc0b8761f03a5beda2af66a"
+  },
+  "legacy_v1": "UNCHANGED",
+  "runtime_conformance": "NOT_YET_TESTED"
+}

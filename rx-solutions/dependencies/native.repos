@@ -1,0 +1,3 @@
+# No floating VCS imports. DHI simulation sources are pinned separately in
+# native/dhi/dependencies.json and prepared with tools/prepare_dhi_sources.py.
+repositories: {}

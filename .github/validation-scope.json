@@ -1,11 +1,16 @@
 {
   "schema": "rx.validation-scope.v1",
-  "scope": "BOOTSTRAP_ONLY",
-  "product_source_imported": false,
+  "scope": "SOURCE_IMPORTED_UNVALIDATED",
+  "product_source_imported": true,
   "product_validation": "NOT_RUN",
   "historical_dco_exceptions": 0,
   "required_jobs": [
     "repository",
-    "commit_policy"
-  ]
+    "commit_policy",
+    "import_fidelity",
+    "sdk_parity",
+    "static_identity"
+  ],
+  "import_manifest": "provenance/import/M2-source-manifest.json",
+  "import_payload_sha256": "c154b96c9bfb63d70d837dfefc2c41cc37e586bf26c754a9f6291e2e538be5fc"
 }

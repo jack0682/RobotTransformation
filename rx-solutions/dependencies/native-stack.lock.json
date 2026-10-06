@@ -1,0 +1,14 @@
+{
+  "schema": "rx.native-stack-lock.v1",
+  "ros": {
+    "distribution": "jazzy",
+    "base_image": "ros:jazzy-ros-base@sha256:386d06ec6d4188f731bae5678e07b4cb64a4e4d4152090c0bd1f881dcf7706f5",
+    "rosdistro_commit": "86ac06531559f070ce9ea5ad485714395336ec6f"
+  },
+  "repositories": [],
+  "required_external_assets": [],
+  "policy_assets": [],
+  "apt_inventory_locks": {},
+  "qualification": "NOT_PERFORMED",
+  "scope": "Manufacturer-neutral ROS/JTC and RX software image. APT inventory is recorded per build; no historical image validation is inherited."
+}

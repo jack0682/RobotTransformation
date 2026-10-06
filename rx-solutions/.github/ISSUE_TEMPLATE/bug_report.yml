@@ -1,0 +1,30 @@
+name: Bug report
+description: Record a reproducible error and its impact.
+title: '[Bug] '
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and expected outcome
+      description: Distinguish the observed behavior from the expected behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Provide minimal inputs, commands and observed results.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment and versions
+      description: Include the commit, OS, tool versions and whether the environment is simulated or physical.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Validation evidence
+      description: Attach relevant logs after removing tokens, certificates, passwords and equipment connection details. Report vulnerabilities through the private channel in SECURITY.md.

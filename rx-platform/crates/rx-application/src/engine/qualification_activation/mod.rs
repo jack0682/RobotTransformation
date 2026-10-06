@@ -1,0 +1,907 @@
+use super::*;
+use crate::{
+    configuration_dispatch::{Issue, Phase, Sender},
+    qualification_activation as a, requalification as q,
+};
+use rx_domain::host_qualification as host;
+mod storage;
+use storage::decode_task;
+const BATCH: &str = "rx.qualification-activation-batch.v1";
+const TASK: &str = "rx.qualification-host-task.v1";
+#[derive(serde::Serialize, serde::Deserialize)]
+struct Owner {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    runtime_origin: Option<Digest>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    device_origin: Option<Digest>,
+    block: Id,
+    cell: Name,
+    change: Id,
+    reason: BlockReason,
+}
+pub(super) fn record_blocks(
+    tx: &mut dyn Transaction,
+    change: &Id,
+    cell: &Cell,
+    before: &BTreeSet<Id>,
+) -> Result<()> {
+    for b in cell.blocks.iter().filter(|b| !before.contains(&b.id)) {
+        let runtime_origin = if b.reason == BlockReason::RuntimeRestart {
+            let origin = crate::runtime_invalidation::load(tx, &b.id)?
+                .ok_or(StoreError::Rejected(Reject::ContinuityUnproven))?;
+            if origin.cell != cell.configuration.id
+                || canonical::bytes(&origin.block).map_err(domain_error)?
+                    != canonical::bytes(b).map_err(domain_error)?
+            {
+                return Err(StoreError::Integrity(
+                    "runtime block owner origin differs".into(),
+                ));
+            }
+            Some(origin.digest().map_err(StoreError::Integrity)?)
+        } else {
+            None
+        };
+        // A DeviceRestart block cannot be added inside a change today; if a stored origin exists
+        // it is carried, but its absence is legacy and never fails ownership recording.
+        let device_origin = if b.reason == BlockReason::DeviceRestart {
+            match crate::device_invalidation::load(tx, &b.id)? {
+                Some(origin) => {
+                    if origin.cell != cell.configuration.id
+                        || canonical::bytes(&origin.block).map_err(domain_error)?
+                            != canonical::bytes(b).map_err(domain_error)?
+                    {
+                        return Err(StoreError::Integrity(
+                            "device block owner origin differs".into(),
+                        ));
+                    }
+                    Some(origin.digest().map_err(StoreError::Integrity)?)
+                }
+                None => None,
+            }
+        } else {
+            None
+        };
+        save(
+            tx,
+            "changeblockowner",
+            &b.id,
+            None,
+            "rx.change-block-owner.v1",
+            &Owner {
+                runtime_origin,
+                device_origin,
+                block: b.id.clone(),
+                cell: cell.configuration.id.clone(),
+                change: change.clone(),
+                reason: b.reason,
+            },
+        )?;
+    }
+    Ok(())
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
+struct RuntimeRestrictionBinding {
+    block: Id,
+    cell: Name,
+    change: Id,
+    review: Id,
+    request_digest: Digest,
+    origin_digest: Digest,
+}
+pub(super) fn bind_runtime_restrictions(
+    tx: &mut dyn Transaction,
+    meta: &Installation,
+    job: &q::Job,
+) -> Result<()> {
+    let request_digest = job.request.digest().map_err(StoreError::Invalid)?;
+    for origin in &job.request.runtime_restrictions {
+        let actual =
+            crate::runtime_invalidation::read_for_cell(tx, meta, &origin.cell, &origin.block.id)?
+                .ok_or(StoreError::Rejected(Reject::ContinuityUnproven))?;
+        let digest = origin.digest().map_err(StoreError::Integrity)?;
+        if actual.digest().map_err(StoreError::Integrity)? != digest {
+            return reject(Reject::StaleRevision);
+        }
+        let k = key("changeblockowner", &origin.block.id);
+        if let Some(row) = tx.get(&k)? {
+            let owner: Owner = decode(&row, "rx.change-block-owner.v1")?;
+            if owner.block != origin.block.id
+                || owner.cell != origin.cell
+                || owner.change != job.request.change
+                || owner.reason != origin.block.reason
+                || owner.runtime_origin != Some(digest)
+            {
+                return reject(Reject::Forbidden);
+            }
+        } else {
+            save(
+                tx,
+                "changeblockowner",
+                &origin.block.id,
+                None,
+                "rx.change-block-owner.v1",
+                &Owner {
+                    block: origin.block.id.clone(),
+                    cell: origin.cell.clone(),
+                    change: job.request.change.clone(),
+                    reason: origin.block.reason,
+                    runtime_origin: Some(digest),
+                    device_origin: None,
+                },
+            )?;
+        }
+        save(
+            tx,
+            "runtimerestrictionbinding",
+            (&job.request.id, &origin.block.id),
+            None,
+            "rx.runtime-restriction-binding.v1",
+            &RuntimeRestrictionBinding {
+                block: origin.block.id.clone(),
+                cell: origin.cell.clone(),
+                change: job.request.change.clone(),
+                review: job.request.id.clone(),
+                request_digest,
+                origin_digest: digest,
+            },
+        )?;
+    }
+    Ok(())
+}
+#[derive(serde::Serialize, serde::Deserialize)]
+struct DeviceRestrictionBinding {
+    block: Id,
+    cell: Name,
+    change: Id,
+    review: Id,
+    request_digest: Digest,
+    origin_digest: Digest,
+}
+const DEVICE_BINDING: &str = "rx.device-restriction-binding.v1";
+pub(super) fn bind_device_restrictions(
+    tx: &mut dyn Transaction,
+    meta: &Installation,
+    job: &q::Job,
+) -> Result<()> {
+    let request_digest = job.request.digest().map_err(StoreError::Invalid)?;
+    for origin in &job.request.device_restrictions {
+        let actual =
+            crate::device_invalidation::read_for_cell(tx, meta, &origin.cell, &origin.block.id)?
+                .ok_or(StoreError::Rejected(Reject::ContinuityUnproven))?;
+        let digest = origin.digest().map_err(StoreError::Integrity)?;
+        if actual.digest().map_err(StoreError::Integrity)? != digest {
+            return reject(Reject::StaleRevision);
+        }
+        let k = key("changeblockowner", &origin.block.id);
+        if let Some(row) = tx.get(&k)? {
+            let owner: Owner = decode(&row, "rx.change-block-owner.v1")?;
+            if owner.block != origin.block.id
+                || owner.cell != origin.cell
+                || owner.change != job.request.change
+                || owner.reason != BlockReason::DeviceRestart
+                || owner.device_origin != Some(digest)
+            {
+                return reject(Reject::Forbidden);
+            }
+        } else {
+            save(
+                tx,
+                "changeblockowner",
+                &origin.block.id,
+                None,
+                "rx.change-block-owner.v1",
+                &Owner {
+                    block: origin.block.id.clone(),
+                    cell: origin.cell.clone(),
+                    change: job.request.change.clone(),
+                    reason: BlockReason::DeviceRestart,
+                    runtime_origin: None,
+                    device_origin: Some(digest),
+                },
+            )?;
+        }
+        save(
+            tx,
+            "devicerestrictionbinding",
+            (&job.request.id, &origin.block.id),
+            None,
+            DEVICE_BINDING,
+            &DeviceRestrictionBinding {
+                block: origin.block.id.clone(),
+                cell: origin.cell.clone(),
+                change: job.request.change.clone(),
+                review: job.request.id.clone(),
+                request_digest,
+                origin_digest: digest,
+            },
+        )?;
+    }
+    Ok(())
+}
+fn batch(tx: &mut dyn Transaction, id: &Id) -> Result<a::Batch> {
+    let (rev, b): (_, a::Batch) = load(tx, "qualificationbatch", id, BATCH)?;
+    if b.id != *id || b.revision != rev {
+        return Err(StoreError::Integrity("qualification batch identity".into()));
+    }
+    Ok(b)
+}
+fn record_batch(tx: &mut dyn Transaction, b: &a::Batch, expected: Option<Counter>) -> Result<()> {
+    save(tx, "qualificationbatch", &b.id, expected, BATCH, b)?;
+    save(
+        tx,
+        "qualificationbatchhistory",
+        (&b.id, b.revision),
+        None,
+        BATCH,
+        b,
+    )?;
+    event(tx, "rx.event.qualification-batch.v1", b)
+}
+fn task(tx: &mut dyn Transaction, id: &Id) -> Result<(Counter, a::Task)> {
+    let row = tx
+        .get(&key("qualificationtask", id))?
+        .ok_or(StoreError::Rejected(Reject::NotFound))?;
+    let rev = row.revision;
+    let t = decode_task(tx, &row)?;
+    if t.id != *id
+        || t.request.is_some() != t.digest.is_some()
+        || t.request.as_ref().is_some_and(|r| {
+            r.context().id != t.id || r.context().host != t.host || r.digest().ok() != t.digest
+        })
+        || t.receipt
+            .as_ref()
+            .is_some_and(|r| r.validate().is_err() || Some(r.request_digest()) != t.digest)
+    {
+        return Err(StoreError::Integrity("qualification task identity".into()));
+    }
+    if t.request
+        .as_ref()
+        .is_some_and(|r| r.is_v2() != !t.execution_policies.is_empty())
+        || t.receipt
+            .as_ref()
+            .is_some_and(|r| r.is_v2() != !t.execution_policies.is_empty())
+        || t.observation
+            .as_ref()
+            .is_some_and(|o| o.is_v2() != !t.execution_policies.is_empty())
+    {
+        return Err(StoreError::Integrity(
+            "qualification task protocol differs".into(),
+        ));
+    }
+    if let Some(a::Request::V2(r)) = &t.request
+        && r.policies != t.execution_policies
+    {
+        return Err(StoreError::Integrity(
+            "qualification policy bindings differ".into(),
+        ));
+    }
+    if let Some(o) = &t.observation {
+        o.validate().map_err(StoreError::Integrity)?;
+    }
+    Ok((rev, t))
+}
+fn record_task(tx: &mut dyn Transaction, t: &a::Task, expected: Option<Counter>) -> Result<()> {
+    storage::persist(tx, t, expected)
+}
+fn access(
+    tx: &mut dyn Transaction,
+    meta: &Installation,
+    now: &TimePoint,
+    identity: &Identity,
+    b: &a::Batch,
+    terminal: bool,
+) -> Result<Principal> {
+    let p = if terminal {
+        authorize(
+            tx,
+            identity,
+            meta,
+            now,
+            Some(&b.origin),
+            Role::ReleaseManager,
+            true,
+        )?
+    } else {
+        authorize_identity(tx, identity, meta, now)?
+    };
+    if !terminal
+        && !p
+            .roles
+            .iter()
+            .any(|r| matches!(r, Role::Engineer | Role::Verifier | Role::ReleaseManager))
+    {
+        return reject(Reject::Forbidden);
+    }
+    if b.cells.iter().any(|c| !p.cells.contains(&c.cell)) {
+        return reject(Reject::Forbidden);
+    }
+    Ok(p)
+}
+fn approved(
+    tx: &mut dyn Transaction,
+    meta: &Installation,
+    j: &q::Job,
+    revision: Counter,
+    digest: Digest,
+    decision_revision: Counter,
+) -> Result<(q::Version, q::Decision)> {
+    if requalification::policy(tx, meta)?
+        .digest()
+        .map_err(StoreError::Integrity)?
+        != j.request.policy_digest
+    {
+        return reject(Reject::QualificationRequired);
+    }
+    let v = requalification::latest(tx, &j.request.id)?
+        .ok_or(StoreError::Rejected(Reject::NotFound))?;
+    let (r, d): (_, q::Decision) = load(
+        tx,
+        "requalificationdecision",
+        &j.request.id,
+        "rx.requalification-decision.v1",
+    )?;
+    if v.revision != revision
+        || v.digest != digest
+        || requalification::version_digest(&v)? != digest
+        || !v.ready_for_review
+        || r != decision_revision
+        || d.revision != r
+        || d.report_revision != v.revision
+        || d.report_digest != v.digest
+        || d.choice != q::Choice::Approve
+        || d.scope.as_str() != "REQUALIFICATION_EVIDENCE_REVIEW"
+    {
+        return reject(Reject::QualificationRequired);
+    }
+    Ok((v, d))
+}
+fn quiet(tx: &mut dyn Transaction, j: &q::Job) -> Result<()> {
+    admission::quiet_cells(
+        tx,
+        &j.request
+            .cells
+            .iter()
+            .map(|c| c.profile.cell.clone())
+            .collect(),
+    )
+}
+
+fn pending_current(tx: &mut dyn Transaction, meta: &Installation, b: &a::Batch) -> Result<()> {
+    if b.state != a::State::Pending
+        || b.runtime_boot != meta.runtime_boot
+        || package_intake::current(tx, meta)?.as_ref() != Some(&b.registration)
+    {
+        return reject(Reject::StaleRevision);
+    }
+    requalification::current(tx, meta, &b.job)?;
+    approved(
+        tx,
+        meta,
+        &b.job,
+        b.report_revision,
+        b.report_digest,
+        b.decision_revision,
+    )?;
+    if !requalification::fences_confirmed(tx, &b.job)? {
+        return reject(Reject::HostNotPrepared);
+    }
+    quiet(tx, &b.job)
+}
+fn owned_clear(tx: &mut dyn Transaction, job: &q::Job, cell: &Cell, ids: &[Id]) -> Result<()> {
+    if ids.len() > 512 || ids.iter().collect::<BTreeSet<_>>().len() != ids.len() {
+        return reject(Reject::InvalidInput);
+    }
+    for id in ids {
+        let b = cell
+            .blocks
+            .iter()
+            .find(|b| &b.id == id)
+            .ok_or(StoreError::Rejected(Reject::StaleRevision))?;
+        let row = tx
+            .get(&key("changeblockowner", id))?
+            .ok_or(StoreError::Rejected(Reject::Forbidden))?;
+        let owner: Owner = decode(&row, "rx.change-block-owner.v1")?;
+        if owner.block != *id
+            || owner.cell != cell.configuration.id
+            || owner.change != job.request.change
+            || owner.reason != b.reason
+        {
+            return reject(Reject::Forbidden);
+        }
+        // A block with runtime provenance (a restart, or a stop's AuthorityRevoked) or device
+        // provenance clears only when this Job selected it and bound that exact origin.
+        if b.reason == BlockReason::RuntimeRestart || owner.runtime_origin.is_some() {
+            let origin = job
+                .request
+                .runtime_restrictions
+                .iter()
+                .find(|o| o.block.id == *id && o.cell == cell.configuration.id)
+                .ok_or(StoreError::Rejected(Reject::Forbidden))?;
+            let digest = origin.digest().map_err(StoreError::Integrity)?;
+            let (_, binding): (_, RuntimeRestrictionBinding) = load(
+                tx,
+                "runtimerestrictionbinding",
+                (&job.request.id, id),
+                "rx.runtime-restriction-binding.v1",
+            )?;
+            if owner.runtime_origin != Some(digest)
+                || binding.block != *id
+                || binding.cell != cell.configuration.id
+                || binding.change != job.request.change
+                || binding.review != job.request.id
+                || binding.origin_digest != digest
+                || binding.request_digest != job.request.digest().map_err(StoreError::Integrity)?
+            {
+                return reject(Reject::Forbidden);
+            }
+        } else if b.reason == BlockReason::DeviceRestart || owner.device_origin.is_some() {
+            // A DeviceRestart block without provenance selected by this Job is never cleared.
+            let origin = job
+                .request
+                .device_restrictions
+                .iter()
+                .find(|o| o.block.id == *id && o.cell == cell.configuration.id)
+                .ok_or(StoreError::Rejected(Reject::Forbidden))?;
+            let digest = origin.digest().map_err(StoreError::Integrity)?;
+            let (_, binding): (_, DeviceRestrictionBinding) = load(
+                tx,
+                "devicerestrictionbinding",
+                (&job.request.id, id),
+                DEVICE_BINDING,
+            )?;
+            if owner.device_origin != Some(digest)
+                || binding.block != *id
+                || binding.cell != cell.configuration.id
+                || binding.change != job.request.change
+                || binding.review != job.request.id
+                || binding.origin_digest != digest
+                || binding.request_digest != job.request.digest().map_err(StoreError::Integrity)?
+            {
+                return reject(Reject::Forbidden);
+            }
+        }
+    }
+    Ok(())
+}
+fn ticket(
+    tx: &mut dyn Transaction,
+    meta: &Installation,
+    now: TimePoint,
+    identity: Identity,
+    key_: Id,
+    action: a::Action,
+    reviewed: (q::Job, q::Version, q::Decision),
+) -> Result<a::Ticket> {
+    let (j, version, decision) = reviewed;
+    let change = process_change::change(tx, &j.request.change, &j.request.origin)?;
+    let source = process_review::load_job(tx, &change.review.id, &change.cell)?;
+    let registration = package_intake::current(tx, meta)?
+        .ok_or(StoreError::Rejected(Reject::CapabilityMissing))?;
+    let package = rx_package::store::ObjectId {
+        manifest: source.request.package_manifest,
+        signature: source.request.package_signature,
+    };
+    let mut blobs = BTreeMap::new();
+    for r in version.report.references() {
+        blobs.insert(r.sha256, requalification::read_blob(tx, &r)?);
+    }
+    Ok(a::Ticket {
+        action,
+        identity,
+        key: key_,
+        job: j,
+        version,
+        decision,
+        blobs,
+        registration,
+        package,
+        issued: now,
+    })
+}
+fn host_access(
+    tx: &mut dyn Transaction,
+    meta: &Installation,
+    now: &TimePoint,
+    identity: &Identity,
+    t: &a::Task,
+) -> Result<()> {
+    let p = authorize(tx, identity, meta, now, None, Role::Host, false)?;
+    if p.id != t.host || t.cells.iter().any(|c| !p.cells.contains(c)) {
+        return reject(Reject::Forbidden);
+    }
+    Ok(())
+}
+fn generation(tx: &mut dyn Transaction, t: &a::Task) -> Result<bool> {
+    for c in &t.cells {
+        let (_, r): (_, HostRegistration) = load(tx, "host", (c, &t.host), HOST)?;
+        if r.boot_id != t.host_boot || r.delivery_journal != t.journal || r.session != t.session {
+            return Ok(false);
+        }
+    }
+    Ok(true)
+}
+fn sender(
+    tx: &mut dyn Transaction,
+    meta: &Installation,
+    now: &TimePoint,
+    b: &a::Batch,
+    t: &a::Task,
+) -> Result<()> {
+    pending_current(tx, meta, b)?;
+    access(tx, meta, now, &b.sender.identity(), b, true)?;
+    if !generation(tx, t)? {
+        return reject(Reject::ContinuityUnproven);
+    }
+    Ok(())
+}
+fn view(tx: &mut dyn Transaction, meta: &Installation, b: a::Batch) -> Result<a::View> {
+    let hosts = b
+        .tasks
+        .iter()
+        .map(|id| task(tx, id).map(|v| v.1))
+        .collect::<Result<Vec<_>>>()?;
+    let accepted = hosts
+        .iter()
+        .filter(|t| {
+            t.receipt
+                .as_ref()
+                .is_some_and(|r| r.context().status == host::Status::Accepted)
+        })
+        .count();
+    let unknown = hosts
+        .iter()
+        .any(|t| t.phase == Phase::SendEntered && t.receipt.is_none());
+    let result = if b.state == a::State::Active {
+        active_current(tx, meta, &b)
+    } else {
+        pending_current(tx, meta, &b)
+    };
+    let current = match result {
+        Ok(()) => true,
+        Err(StoreError::Rejected(_)) => false,
+        Err(e) => return Err(e),
+    };
+    Ok(a::View {
+        mixed: accepted > 0 && accepted < hosts.len(),
+        outcome_unknown: unknown,
+        current,
+        operation_authorized: false,
+        accepted_hosts: accepted,
+        batch: b,
+        hosts,
+    })
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
+struct Certificate {
+    batch: Id,
+    cell: Name,
+}
+fn active_current(tx: &mut dyn Transaction, meta: &Installation, b: &a::Batch) -> Result<()> {
+    if b.state != a::State::Active
+        || b.runtime_boot != meta.runtime_boot
+        || package_intake::current(tx, meta)?.as_ref() != Some(&b.registration)
+    {
+        return reject(Reject::QualificationRequired);
+    }
+    requalification::impact_current(tx, &b.job)?;
+    approved(
+        tx,
+        meta,
+        &b.job,
+        b.report_revision,
+        b.report_digest,
+        b.decision_revision,
+    )?;
+    for target in &b.cells {
+        let (_, cell): (_, Cell) = load(tx, "cell", &target.cell, CELL)?;
+        requalification::derived_current(tx, meta, &cell.configuration)?;
+        if process_change::config_ref(&cell.configuration)? != target.configuration
+            || cell.epoch != target.epoch
+            || cell.scope_epochs != target.scopes
+            || cell.qualification.as_ref().is_none_or(|q| {
+                q.id != target.qualification.id || q.revision != target.qualification.revision
+            })
+        {
+            return reject(Reject::QualificationRequired);
+        }
+    }
+    for id in &b.tasks {
+        let (_, t) = task(tx, id)?;
+        if t.disputed
+            || t.issue.is_some()
+            || !generation(tx, &t)?
+            || !t
+                .observation
+                .as_ref()
+                .is_some_and(|o| o.receipt_matches_current_host())
+        {
+            return reject(Reject::HostNotPrepared);
+        }
+    }
+    Ok(())
+}
+pub(super) fn check_ready(tx: &mut dyn Transaction, meta_boot: &str, cell: &Cell) -> Result<()> {
+    let Some(q) = &cell.qualification else {
+        return reject(Reject::QualificationRequired);
+    };
+    if let Some(row) = tx.get(&key("qualificationcertificate", &q.id))? {
+        let cert: Certificate = decode(&row, "rx.qualification-certificate.v1")?;
+        if cert.cell != cell.configuration.id {
+            return Err(StoreError::Integrity(
+                "qualification certificate cell".into(),
+            ));
+        }
+        let b = batch(tx, &cert.batch)?;
+        let meta: Installation = decode(
+            &tx.get(&name("installation/current"))?
+                .ok_or(StoreError::Integrity("installation missing".into()))?,
+            "rx.internal.installation.v1",
+        )?;
+        if meta.clock_id != meta_boot {
+            return reject(Reject::QualificationRequired);
+        }
+        active_current(tx, &meta, &b)?;
+    }
+    Ok(())
+}
+pub(super) fn purpose(tx: &mut dyn Transaction, cell: &Cell, purpose: Purpose) -> Result<()> {
+    let Some(q) = &cell.qualification else {
+        return reject(Reject::QualificationRequired);
+    };
+    if let Some(row) = tx.get(&key("qualificationcertificate", &q.id))? {
+        let cert: Certificate = decode(&row, "rx.qualification-certificate.v1")?;
+        let b = batch(tx, &cert.batch)?;
+        let c = b
+            .cells
+            .iter()
+            .find(|c| c.cell == cell.configuration.id)
+            .ok_or(StoreError::Integrity("qualification cell absent".into()))?;
+        let purpose = match purpose {
+            Purpose::Production => "PRODUCTION",
+            Purpose::Setup => "SETUP",
+        };
+        if !c.purposes.iter().any(|p| p.as_str() == purpose) {
+            return reject(Reject::Forbidden);
+        }
+    }
+    Ok(())
+}
+fn fresh_hosts(
+    tx: &mut dyn Transaction,
+    b: &a::Batch,
+    now: &TimePoint,
+    reads: &BTreeMap<Id, (TimePoint, Digest)>,
+) -> Result<()> {
+    for id in &b.tasks {
+        let (_, t) = task(tx, id)?;
+        let o = t
+            .observation
+            .as_ref()
+            .ok_or(StoreError::Rejected(Reject::HostNotPrepared))?;
+        if t.disputed
+            || t.issue.is_some()
+            || t.receipt
+                .as_ref()
+                .is_none_or(|r| r.context().status != host::Status::Accepted)
+            || !o.receipt_matches_current_host()
+            || !generation(tx, &t)?
+        {
+            return reject(Reject::HostNotPrepared);
+        }
+        let (at, hash) = reads.get(id).ok_or(StoreError::Rejected(Reject::Expired))?;
+        if now.age_ns(at).is_none_or(|age| age > 3_000_000_000)
+            || o.digest().map_err(StoreError::Invalid)? != *hash
+        {
+            return reject(Reject::Expired);
+        }
+    }
+    Ok(())
+}
+pub(super) fn suspend(
+    tx: &mut dyn Transaction,
+    b: &a::Batch,
+    meta: Option<&Installation>,
+    reason: Name,
+) -> Result<a::Batch> {
+    if b.state == a::State::Suspended {
+        return Ok(b.clone());
+    }
+    let mut changed = b.clone();
+    changed.state = a::State::Suspended;
+    changed.suspended_reason = Some(reason);
+    changed.revision = changed.revision.increment().map_err(domain_error)?;
+    record_batch(tx, &changed, Some(b.revision))?;
+    for target in &b.cells {
+        let (rev, mut cell): (_, Cell) = load(tx, "cell", &target.cell, CELL)?;
+        if let Some(q) = cell
+            .qualification
+            .take_if(|q| q.id == target.qualification.id)
+        {
+            let k = key("qualificationhistory", &q.id);
+            if tx.get(&k)?.is_none() {
+                tx.put(&k, None, &doc("rx.internal.qualification-history.v1", &q)?)?;
+            }
+            cell.commissioning = Some(Commissioning::RevalidationRequired);
+            let before = cell.blocks.iter().map(|b| b.id.clone()).collect();
+            invalidate_cell(tx, &mut cell, rev, BlockReason::AuthorityRevoked)?;
+            record_blocks(tx, &b.change, &cell, &before)?;
+        } else if b.state == a::State::Pending
+            && meta.is_some_and(|m| m.runtime_boot == b.runtime_boot)
+            && cell.epoch == target.epoch
+        {
+            let before = cell.blocks.iter().map(|b| b.id.clone()).collect();
+            invalidate_cell(tx, &mut cell, rev, BlockReason::AuthorityRevoked)?;
+            record_blocks(tx, &b.change, &cell, &before)?;
+        }
+    }
+    let mut c = process_change::change(tx, &b.change, &b.origin)?;
+    if c.state == crate::process_change::State::QualifiedActive
+        && c.qualification_activation.as_ref() == Some(&b.id)
+    {
+        let rev = c.revision;
+        c.state = crate::process_change::State::AppliedUnqualified;
+        c.revision = c.revision.increment().map_err(domain_error)?;
+        process_change::record(tx, &c, Some(rev))?;
+    }
+    Ok(changed)
+}
+pub(super) fn suspend_for_executor_replacement(
+    tx: &mut dyn Transaction,
+    meta: &Installation,
+    cells: &BTreeSet<Name>,
+    before: &BTreeMap<Name, BTreeSet<Id>>,
+) -> Result<()> {
+    // Complete the known invalidation in the peer-opening transaction. Otherwise
+    // a later Host poll can advance the epoch again after recovery was approved.
+    for row in tx.scan("qualificationbatch/")? {
+        let b: a::Batch = decode(&row, BATCH)?;
+        if matches!(b.state, a::State::Pending | a::State::Active)
+            && b.cells.iter().any(|c| cells.contains(&c.cell))
+        {
+            if b.state == a::State::Active && b.runtime_boot == meta.runtime_boot {
+                for target in b.cells.iter().filter(|c| cells.contains(&c.cell)) {
+                    let (_, cell): (_, Cell) = load(tx, "cell", &target.cell, CELL)?;
+                    if cell.qualification.as_ref().is_some_and(|q| {
+                        q.id == target.qualification.id
+                            && q.revision == target.qualification.revision
+                    }) && process_change::config_ref(&cell.configuration)?
+                        == target.configuration
+                    {
+                        let previous = before.get(&target.cell).ok_or(StoreError::Integrity(
+                            "executor invalidation baseline missing".into(),
+                        ))?;
+                        // Only restrictions created by this authenticated replacement
+                        // inherit the exact active qualification's Change ownership.
+                        // Existing holds or unrelated authority restrictions remain owned
+                        // by their original procedures, or unowned when no proof exists.
+                        record_blocks(tx, &b.change, &cell, previous)?;
+                    }
+                }
+            }
+            suspend(tx, &b, Some(meta), name("EXECUTOR_INCARNATION_CHANGED"))?;
+        }
+    }
+    Ok(())
+}
+pub(super) fn suspend_changed_roots(tx: &mut dyn Transaction, meta: &Installation) -> Result<()> {
+    let policy = match requalification::policy(tx, meta) {
+        Ok(p) => Some(p.digest().map_err(StoreError::Integrity)?),
+        Err(StoreError::Rejected(_)) => None,
+        Err(e) => return Err(e),
+    };
+    for row in tx.scan("qualificationbatch/")? {
+        let b: a::Batch = decode(&row, BATCH)?;
+        if b.state == a::State::Active
+            && (b.runtime_boot != meta.runtime_boot
+                || package_intake::current(tx, meta)?.as_ref() != Some(&b.registration)
+                || policy != Some(b.job.request.policy_digest))
+        {
+            suspend(
+                tx,
+                &b,
+                Some(meta),
+                name("QUALIFICATION_TRUST_OR_RUNTIME_CHANGED"),
+            )?;
+        }
+    }
+    Ok(())
+}
+pub(super) fn cell_change(tx: &mut dyn Transaction, cell: &Cell) -> Result<Option<Id>> {
+    let Some(q) = &cell.qualification else {
+        return Ok(None);
+    };
+    let Some(row) = tx.get(&key("qualificationcertificate", &q.id))? else {
+        return Ok(None);
+    };
+    let c: Certificate = decode(&row, "rx.qualification-certificate.v1")?;
+    Ok(Some(batch(tx, &c.batch)?.change))
+}
+pub(super) fn arm_clear(tx: &mut dyn Transaction, cell: &Cell) -> Result<Vec<Id>> {
+    let Some(q) = &cell.qualification else {
+        return Ok(vec![]);
+    };
+    let Some(row) = tx.get(&key("qualificationcertificate", &q.id))? else {
+        return Ok(vec![]);
+    };
+    let cert: Certificate = decode(&row, "rx.qualification-certificate.v1")?;
+    let b = batch(tx, &cert.batch)?;
+    let target = b
+        .cells
+        .iter()
+        .find(|c| c.cell == cell.configuration.id && c.qualification.id == q.id)
+        .ok_or(StoreError::Integrity(
+            "qualification clear plan absent".into(),
+        ))?;
+    Ok(target.clear_blocks.clone())
+}
+
+mod activation;
+mod host_tasks;
+mod issuance;
+
+fn policy_bindings(
+    tx: &mut dyn Transaction,
+    job: &q::Job,
+    host: &Name,
+    cells: &[Name],
+) -> Result<BTreeMap<Name, rx_process_contract::execution_v2::host_qualification::PolicyBinding>> {
+    let mut has_execution = false;
+    for id in cells {
+        let (_, cell): (_, Cell) = load(tx, "cell", id, CELL)?;
+        has_execution |= cell.configuration.execution.is_some();
+    }
+    if !has_execution {
+        return Ok(BTreeMap::new());
+    }
+    let change = process_change::change(tx, &job.request.change, &job.request.origin)?;
+    let application = change
+        .application
+        .as_ref()
+        .ok_or(StoreError::Rejected(Reject::HostNotPrepared))?;
+    let proof = application
+        .host_proofs
+        .iter()
+        .find(|p| &p.host == host)
+        .ok_or(StoreError::Rejected(Reject::HostNotPrepared))?;
+    let (_, source) = configuration_dispatch::read(tx, &proof.task)?;
+    let receipt = source
+        .receipt
+        .as_ref()
+        .ok_or(StoreError::Rejected(Reject::HostNotPrepared))?;
+    if source.integrity_disputed
+        || receipt.digest().map_err(StoreError::Integrity)? != proof.receipt_digest
+        || receipt.request_digest() != proof.request_digest
+    {
+        return reject(Reject::ContinuityUnproven);
+    }
+    let mut policies = BTreeMap::new();
+    for id in cells {
+        let (_, cell): (_, Cell) = load(tx, "cell", id, CELL)?;
+        let Some(binding) = &cell.configuration.execution else {
+            continue;
+        };
+        let crate::configuration_dispatch::Receipt::V2(receipt) = receipt else {
+            return reject(Reject::UnsupportedSchema);
+        };
+        let accepted = receipt
+            .request
+            .policies
+            .get(id)
+            .ok_or(StoreError::Rejected(Reject::HostNotPrepared))?;
+        if accepted.publication != binding.publication || accepted.reference != binding.policy {
+            return reject(Reject::StaleRevision);
+        }
+        policies.insert(
+            id.clone(),
+            rx_process_contract::execution_v2::host_qualification::PolicyBinding {
+                publication: accepted.publication.clone(),
+                policy: accepted.reference.clone(),
+                configuration_request: receipt.request_digest,
+                configuration_receipt: receipt.digest().map_err(StoreError::Integrity)?,
+            },
+        );
+    }
+    Ok(policies)
+}

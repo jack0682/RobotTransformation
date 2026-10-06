@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the source-free G0 scaffold. This does not run product integrity or runtime gates."""
+"""Validate root governance for G0 or the frozen M2 import; no product runtime claims."""
 from __future__ import annotations
 
 import argparse
@@ -10,6 +10,9 @@ import sys
 from urllib.parse import unquote, urlsplit
 
 from common import ROOT, branch_error, git, require_checkout, settings
+from check_ci import BOOTSTRAP_SCOPE, IMPORT_SCOPE, stage
+sys.path.insert(0, str(ROOT / "tools/migration"))
+import check_import
 
 ROOT_FILES = {"README.md", "LICENSE", "NOTICE", "CONTRIBUTING.md", "GOVERNANCE.md",
               "SECURITY.md", "CODE_OF_CONDUCT.md", ".gitignore", "repository-settings.json"}
@@ -21,9 +24,14 @@ REQUIRED = ROOT_FILES | {".github/workflows/ci.yml", ".github/repository-policy.
                         "tools/governance/install_git_hooks.py", "tools/governance/merge_pr.py",
                         ".githooks/pre-commit", ".githooks/prepare-commit-msg",
                         ".githooks/commit-msg", ".githooks/pre-push"}
-SCOPE = {"schema": "rx.validation-scope.v1", "scope": "BOOTSTRAP_ONLY",
-         "product_source_imported": False, "product_validation": "NOT_RUN",
-         "historical_dco_exceptions": 0, "required_jobs": ["repository", "commit_policy"]}
+# Retained G0 contract used by the original bootstrap regression fixtures.
+SCOPE = BOOTSTRAP_SCOPE
+M2_REQUIRED = REQUIRED | {
+    ".github/test_import.py", "tools/migration/check_import.py",
+    "tools/migration/source_identities.py", "provenance/import/M2-source-manifest.json",
+    "provenance/import/M2-source-identities.json",
+}
+
 KOREAN = re.compile(r"[\u1100-\u11ff\u3130-\u318f\uac00-\ud7af]")
 
 
@@ -64,7 +72,7 @@ def links(root, path):
     return errors
 
 
-def check(root, files):
+def check_bootstrap(root, files):
     errors = []
     relative = {p.relative_to(root).as_posix() for p in files}
     for name in sorted(REQUIRED - relative):
@@ -112,6 +120,75 @@ def check(root, files):
     return errors
 
 
+def check_import_stage(root, files):
+    errors = []
+    try:
+        payload = check_import.load_manifest(root)
+    except (ValueError, OSError, KeyError, TypeError) as exc:
+        return ["Pinned import manifest: " + str(exc)]
+    imported = {row["target_path"] for row in payload["files"]}
+    relative = {p.relative_to(root).as_posix() for p in files}
+    for missing in sorted((M2_REQUIRED | imported) - relative):
+        errors.append("Missing M2 file: " + missing)
+    for extra in sorted(relative - M2_REQUIRED - imported - {".github/pull_request_template.md"}):
+        errors.append("File outside declared root/import inventory: " + extra)
+    for path in files:
+        name = path.relative_to(root).as_posix()
+        if name in imported:
+            # Byte/mode/tree closure is mandatory in import_fidelity for this same candidate.
+            # Do not run current-doc link/language normalization on frozen historical source.
+            continue
+        if ai_artifact(Path(name)):
+            errors.append("Local assistant/harness artifact must not be published: " + name)
+        if path.is_symlink() or not path.is_file():
+            errors.append("Root entries must be regular files: " + name)
+            continue
+        try:
+            text = path.read_text()
+            if KOREAN.search(name) or KOREAN.search(text):
+                errors.append("Root source and governance text must be English: " + name)
+            if path.suffix == ".json":
+                json.loads(text)
+            if path.suffix == ".md":
+                errors.extend(name + ": " + e for e in links(root, path))
+        except (UnicodeError, ValueError, OSError) as exc:
+            errors.append(f"{name}: {exc}")
+    try:
+        if json.loads((root / ".github/repository-policy.json").read_text()) != {"schema": "rx.repository-content-policy.v1", "language": "en", "exclude_ai_artifacts": True}:
+            errors.append("Unexpected root content policy")
+        if "Apache License" not in (root / "LICENSE").read_text() or "Version 2.0" not in (root / "LICENSE").read_text():
+            errors.append("Apache-2.0 license missing")
+        workflow = (root / ".github/workflows/ci.yml").read_text()
+        if "pull_request_target" in workflow:
+            errors.append("Privileged contributor-code workflow trigger is forbidden")
+        for action in re.findall(r"(?m)^\s*- uses:\s*(\S+)", workflow):
+            if not re.fullmatch(r"[^@\s]+@[0-9a-f]{40}", action):
+                errors.append("Action revision must be a full SHA: " + action)
+        for required in (
+            "contents: read", "fetch-depth: 0", "if: ${{ always() }}",
+            "needs: [repository, commit_policy, import_fidelity, sdk_parity, static_identity]",
+            "tools/governance/check_ci.py", "tools/governance/check_commit_policy.py --head",
+            "tools/migration/check_import.py --git", "rx-platform/tools/check_host_sdk.py rx-solutions/sdk",
+            "tools/migration/source_identities.py compare --baseline-report provenance/import/M2-source-identities.json",
+            "SOURCE_IMPORTED_UNVALIDATED",
+        ):
+            if required not in workflow:
+                errors.append("Missing M2 workflow boundary: " + required)
+        if workflow.count("uses: actions/checkout@") != workflow.count("ref: ${{ github.event.pull_request.head.sha || github.sha }}"):
+            errors.append("Every M2 checkout must select the exact same candidate revision")
+    except (ValueError, OSError) as exc:
+        errors.append("Required M2 configuration: " + str(exc))
+    return errors
+
+
+def check(root, files):
+    try:
+        scope = stage(json.loads((root / ".github/validation-scope.json").read_text()))
+    except (ValueError, OSError, TypeError) as exc:
+        return ["Validation scope: " + str(exc)]
+    return check_bootstrap(root, files) if scope == BOOTSTRAP_SCOPE else check_import_stage(root, files)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--event", type=Path)
@@ -136,7 +213,8 @@ def main():
     if errors:
         return 1
     mode = "UNCOMMITTED_SCAFFOLD" if args.filesystem else "GIT_CHECKOUT"
-    print(f"OK: {mode}; BOOTSTRAP_ONLY; {len(files)} files; product gates NOT_RUN")
+    scope = stage(json.loads((ROOT / ".github/validation-scope.json").read_text()))
+    print(f"OK: {mode}; {scope['scope']}; {len(files)} files; root links checked; imported historical links NOT_VALIDATED_UNTIL_M4; product runtime NOT_RUN")
     return 0
 
 

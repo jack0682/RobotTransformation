@@ -1,0 +1,9 @@
+# Executor start relationship query
+
+`Client::assignment_view()` queries the cell bound to the current mTLS/base/cell session and `PeerPin` through a separate `rx.executor.assignment.v1` binding. The constructor of return type `client::ValidatedAssignment` is not public. `data()` exposes the validated P result unchanged; `is_current()` and `expires_at()` report read validity.
+
+It checks response digest, exact size, schema and strict JSON/DTOs. Payloads honor the smaller of the negotiated limit and 65,536 bytes. Installation/store/runtime, caller session and current executor/cell/definition are compared with pins; monotonic sequence and checked-time validation is shared with snapshot/production queries. P time must lie within the same-host clock's request–receive interval. It checks both a positive TTL of at most 100 ms and a local monotonic deadline measured from before the request. Rejected or expired responses do not change the client's last validated cut.
+
+`NONE` retains 0 candidates, `SINGLE` 1, and `AMBIGUOUS` 2 distinct candidates. Previous executor sessions, expired pending/arming attempts, PAUSED/RECOVERY_REQUIRED and historical configurations are not filtered out after reception. The query result neither selects a candidate nor creates authority. Current authority and process state for a Run to attach must still be separately revalidated through existing `Production.Inspect` and admission paths. Adding this API does not change startup behavior in the existing RunService or CLI.
+
+Dedicated unit tests feed controlled clocks and payloads into the actual response acceptance path. They cover forged identity/cut/cardinality, duplicate candidates, digest/size/schema and JSON errors, TTL/clock intervals, response expiry and preservation of previous candidates. The channel is lazy and does not initiate connection; no server or actual equipment is used. Integrated mTLS/session/P-query verification is a separate P/S integration-test scope.
