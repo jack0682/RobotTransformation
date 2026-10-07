@@ -68,6 +68,14 @@ Optional current file-device sources are `shelf.occupied`, `shelf.stopped`,
 `gripper.part_held`, and `ft.part_seated`, with the same type/schema/unit. These are
 passive current state reads; they are not fresh physical sensor readings.
 
+The BOOLEAN sources `vision.result_available` and `vision.groove_detected` expose
+the current file-device groove result through the same observation plane. Before
+A2 both are false. A completed simulated detection has available=true and
+detected=true; a completed simulated miss has available=true and detected=false.
+Detected=false alone does not establish a completed miss. Read availability and
+detection together with the original A2 operation outcome and material identity;
+these observations do not settle an operation or replace its completion evidence.
+
 ## Evidence and negative cases
 
 `state.json` and append-only `effects.jsonl` are provider-owned device records,

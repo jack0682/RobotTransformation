@@ -135,6 +135,35 @@ class MaterialAlignment(unittest.TestCase):
         self.assertEqual(len(self.effects()), 2)
         self.assertFalse(self.effects()[-1]['facts']['found'])
 
+    def test_passive_vision_sources_distinguish_unmeasured_from_completed_miss(self):
+        sources = ['vision.result_available', 'vision.groove_detected']
+        before = (self.root / 'state.json').read_bytes()
+        self.assertEqual(self.adapter.observe(sources), {
+            'vision.result_available': {'boolean': False},
+            'vision.groove_detected': {'boolean': False}})
+        self.assertEqual(before, (self.root / 'state.json').read_bytes())
+        self.assertEqual(self.effects(), [])
+        self.override('groove_found', False)
+        self.execute('shelf-seat')
+        self.assertFalse(self.adapter.observe(sources)['vision.result_available']['boolean'])
+        self.assertEqual(self.execute('groove-detect')['status'], 10)
+        state, effects = (self.root / 'state.json').read_bytes(), self.effects()
+        self.assertEqual(self.adapter.observe(sources), {
+            'vision.result_available': {'boolean': True},
+            'vision.groove_detected': {'boolean': False}})
+        self.assertEqual(state, (self.root / 'state.json').read_bytes())
+        self.assertEqual(effects, self.effects())
+
+    def test_passive_vision_sources_report_completed_detection(self):
+        self.execute('shelf-seat')
+        self.assertEqual(self.execute('groove-detect')['status'], 0)
+        state, effects = (self.root / 'state.json').read_bytes(), self.effects()
+        self.assertEqual(self.adapter.observe(['vision.result_available', 'vision.groove_detected']), {
+            'vision.result_available': {'boolean': True},
+            'vision.groove_detected': {'boolean': True}})
+        self.assertEqual(state, (self.root / 'state.json').read_bytes())
+        self.assertEqual(effects, self.effects())
+
     def test_wrong_object_channel_order_and_selection_are_rejected(self):
         self.unchanged_rejection(lambda: self.execute('groove-detect'))
         self.override('gripper_channel', 'other')

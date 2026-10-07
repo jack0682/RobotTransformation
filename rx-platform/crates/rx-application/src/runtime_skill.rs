@@ -37,14 +37,6 @@ pub struct Catalog {
     pub truncated: bool,
 }
 #[derive(Clone, Debug, Serialize)]
-pub struct NativeResult {
-    pub evidence: Id,
-    pub invocation: Id,
-    pub status_schema: Name,
-    pub status: Integer,
-    pub captured_at: TimePoint,
-}
-#[derive(Clone, Debug, Serialize)]
 pub struct Work {
     /// Current P-owned resource state, observed in the same read transaction.
     pub resources: Vec<Versioned<crate::Resource>>,
@@ -57,9 +49,6 @@ pub struct Work {
     pub host: Name,
     pub activation: Id,
     pub invocation: Option<Id>,
-    /// Native facts already referenced by this operation, not a new conclusion.
-    /// Provider-specific native_details and private artifact payloads are excluded.
-    pub native_results: Vec<NativeResult>,
 }
 #[derive(Clone, Debug, Serialize)]
 pub struct ResultView {

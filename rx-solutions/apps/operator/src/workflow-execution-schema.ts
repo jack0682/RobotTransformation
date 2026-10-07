@@ -7,7 +7,6 @@ import {
   operationSchema,
   runSchema,
   startCommandSchema,
-  timeSchema,
   type Pending,
 } from './schema';
 import { definitionRefSchema, refKey } from './definition-schema';
@@ -182,17 +181,6 @@ const executionWorkSchema = z.object({
   part: z.uuid().nullable(),
   operation: operationSchema,
   invocation: z.uuid().nullable(),
-  native_results: z
-    .array(
-      z.object({
-        evidence: z.uuid(),
-        invocation: z.uuid(),
-        status_schema: z.string(),
-        status: z.string().regex(/^-?(0|[1-9][0-9]*)$/),
-        captured_at: timeSchema,
-      }),
-    )
-    .default([]),
   resources: z.array(z.object({ revision: counter, value: z.object({}).passthrough() })),
   execution: z.object({
     operation: z.uuid(),
@@ -237,11 +225,6 @@ export function validateExecutionResult(
         w.execution.selection.ordinal !== material.ordinal ||
         w.execution.selection.part !== w.part ||
         !result.run.value.part_ids.includes(w.execution.selection.part) ||
-        w.native_results.some(
-          (native) =>
-            native.invocation !== w.invocation ||
-            !w.operation.evidence_ids.includes(native.evidence),
-        ) ||
         w.execution.selection.run !== binding.run ||
         w.execution.operation !== w.operation.operation_id ||
         refKey(w.execution.publication) !== refKey(binding.publication) ||

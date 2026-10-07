@@ -35,7 +35,8 @@ PARAMETERS = {
     'ft_force_n': ('NUMBER', 'N'), 'ft_min_n': ('NUMBER', 'N'), 'ft_max_n': ('NUMBER', 'N'),
     'timeout_s': ('NUMBER', 's'),
 }
-SOURCES = {'ready', 'sim/ready', 'shelf.occupied', 'shelf.stopped', 'gripper.part_held', 'ft.part_seated'}
+SOURCES = {'ready', 'sim/ready', 'shelf.occupied', 'shelf.stopped', 'gripper.part_held',
+           'ft.part_seated', 'vision.result_available', 'vision.groove_detected'}
 
 
 def encoded(value):
@@ -320,7 +321,9 @@ class Adapter:
         values = {'ready': state['pending'] is None, 'sim/ready': state['pending'] is None,
                   'shelf.occupied': state['shelf_occupied'], 'shelf.stopped': state['shelf_stopped'],
                   'gripper.part_held': state['channels'][self.config['new_material_channel']]['holding'],
-                  'ft.part_seated': bool(state['ft'] and state['ft']['seated'])}
+                  'ft.part_seated': bool(state['ft'] and state['ft']['seated']),
+                  'vision.result_available': state['groove'] is not None,
+                  'vision.groove_detected': bool(state['groove'] and state['groove']['found'])}
         # These are actual reads of current file-device state, not retimestamped camera samples.
         return {source: self.sdk.sample({'boolean': values[source]}) for source in sources}
 

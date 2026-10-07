@@ -162,7 +162,8 @@ class Installation:
                    'observations': {source: {'schema': 'boolean/v1', 'unit': 'unitless',
                        'value_type': 'BOOLEAN', 'maximum_age_ns': '1000000000', 'maximum_uncertainty_ns': '0'}
                        for source in ('ready', 'sim/ready', 'shelf.occupied', 'shelf.stopped',
-                                      'gripper.part_held', 'ft.part_seated')},
+                                      'gripper.part_held', 'ft.part_seated',
+                                      'vision.result_available', 'vision.groove_detected')},
                    'conditions': {'sim/ready': 'sim/ready'}}
         templates = {}
         for node, contract in contracts.items():
@@ -220,7 +221,8 @@ class Installation:
             step['completion']['schema'] = 'm1/alignment-result'
             step['completion']['failure'] = ['10', '11', '12']
             self.initial['steps'].append(step)
-        for source in ('shelf.occupied', 'shelf.stopped', 'gripper.part_held', 'ft.part_seated'):
+        for source in ('shelf.occupied', 'shelf.stopped', 'gripper.part_held', 'ft.part_seated',
+                       'vision.result_available', 'vision.groove_detected'):
             self.initial['fact_specs'].append({'id': source, 'host': self.initial['hosts'][0],
                 'schema': 'boolean/v1', 'unit': 'unitless', 'maximum_age_ns': '1000000000',
                 'maximum_uncertainty_ns': '0'})

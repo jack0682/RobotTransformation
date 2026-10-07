@@ -120,32 +120,6 @@ impl<R: Repository, C: Clock, A: QualificationAuthority> Engine<R, C, A> {
                         .get(&key("reconciliation", value.operation.id()))?
                         .map(|row| decode(&row, "rx.internal.reconciliation-request.v1"))
                         .transpose()?;
-                    let mut native_results = Vec::new();
-                    for evidence_id in value.operation.evidence_ids() {
-                        let Some(record) = tx.get(&key("evidence", evidence_id))? else {
-                            // Other operation proofs (for example NOT_EXECUTED) need
-                            // not have a native record. Do not infer a native result.
-                            continue;
-                        };
-                        let evidence: NativeEvidence =
-                            decode(&record, "rx.internal.native-evidence.v1")?;
-                        if evidence.id != *evidence_id
-                            || evidence.operation != *value.operation.id()
-                            || value.invocation.as_ref() != Some(&evidence.invocation)
-                            || evidence.profile_digest != value.intent.profile_digest
-                        {
-                            return Err(StoreError::Integrity(
-                                "skill native result correlation differs".into(),
-                            ));
-                        }
-                        native_results.push(view::NativeResult {
-                            evidence: evidence.id,
-                            invocation: evidence.invocation,
-                            status_schema: evidence.status_schema,
-                            status: evidence.status,
-                            captured_at: evidence.captured_at,
-                        });
-                    }
                     work.push(view::Work {
                         resources,
                         reconciliation,
@@ -156,7 +130,6 @@ impl<R: Repository, C: Clock, A: QualificationAuthority> Engine<R, C, A> {
                         host: value.host,
                         activation: value.activation,
                         invocation: value.invocation,
-                        native_results,
                     });
                 }
             }

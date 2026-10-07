@@ -51,7 +51,7 @@ it('preserves UNKNOWN with custody and refuses cross-run result attribution', ()
     outcome: 'NONE',
     integrity: 'VALID',
     disposition: 'HELD',
-    evidence_ids: [] as string[],
+    evidence_ids: [],
   };
   const result = {
     schema: 'rx.runtime-skill-result.v1',
@@ -126,20 +126,4 @@ it('preserves UNKNOWN with custody and refuses cross-run result attribution', ()
     expect(() => validateExecutionResult(wrong, binding, material)).toThrow();
   }
   expect(() => validateExecutionResult(result, binding, null)).toThrow();
-  const native = {
-    evidence: id('d'),
-    invocation: id('8'),
-    status_schema: 'm1/alignment-result',
-    status: '10',
-    captured_at: { clock_id: 'clock', ticks_ns: '1' },
-  };
-  const withNative = structuredClone(result);
-  Object.assign(withNative.work[0], { native_results: [native] });
-  expect(() => validateExecutionResult(withNative, binding, material)).toThrow();
-  withNative.work[0].operation.evidence_ids.push(native.evidence);
-  expect(
-    validateExecutionResult(withNative, binding, material).work[0].native_results[0].status,
-  ).toBe('10');
-  native.invocation = id('f');
-  expect(() => validateExecutionResult(withNative, binding, material)).toThrow();
 });
