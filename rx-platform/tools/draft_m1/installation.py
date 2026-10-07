@@ -58,9 +58,10 @@ class FreshMaterials(Materials):
 
 
 class Installation:
-    def __init__(self, workspace, evidence, platform_image, solutions_image, case):
+    def __init__(self, workspace, evidence, platform_image, solutions_image, case, *,
+                 network_subnet=None, terminal_subnet=None):
         self.root, self.evidence, self.case = workspace, evidence, case
-        self.d = Docker(evidence)
+        self.d = Docker(evidence, network_subnet=network_subnet, terminal_subnet=terminal_subnet)
         self.pimage = self.d.image(platform_image)
         self.simage = self.d.image(solutions_image)
         if self.pimage['Architecture'] != self.simage['Architecture']:
@@ -87,6 +88,8 @@ class Installation:
             'volumes': self.volumes, 'services': self.services,
             'containers': self.d.containers, 'network': self.d.network,
             'terminal_network': self.d.front_network, 'origin': self.origin,
+            **({'network_subnet': self.d.network_subnet, 'terminal_subnet': self.d.terminal_subnet}
+               if self.d.network_subnet is not None or self.d.terminal_subnet is not None else {}),
             'workspace': str(self.root), 'preserve': True,
         })
 

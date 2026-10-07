@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import traceback
 
 from common import *
@@ -18,7 +19,23 @@ def main():
     parser.add_argument('--prepare-only', action='store_true', help='Install and qualify the bounded domain, but make no UI/runtime acceptance claim')
     parser.add_argument('--macos-docker-prepare', action='store_true',
         help='Explicitly authorized Darwin API/deployment controller only; requires --prepare-only --case normal and a Linux Docker daemon')
+    parser.add_argument('--network-subnet', help='Optional unused RFC1918 /24-/28 for the new internal Docker network; requires --terminal-subnet')
+    parser.add_argument('--terminal-subnet', help='Optional separate unused RFC1918 /24-/28 for the new terminal Docker network')
     args = parser.parse_args()
+    if bool(args.network_subnet) != bool(args.terminal_subnet):
+        parser.error('--network-subnet and --terminal-subnet must be supplied together')
+    if args.network_subnet:
+        try:
+            subnets = [ipaddress.ip_network(value, strict=True)
+                       for value in (args.network_subnet, args.terminal_subnet)]
+            private = [ipaddress.ip_network(value) for value in ('10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16')]
+            if any(net.version != 4 or not 24 <= net.prefixlen <= 28
+                   or not any(net.subnet_of(pool) for pool in private) for net in subnets):
+                raise ValueError('new network subnets must be RFC1918 IPv4 /24-/28')
+            if subnets[0].overlaps(subnets[1]):
+                raise ValueError('new internal and terminal subnets must not overlap')
+        except ValueError as error:
+            parser.error(str(error))
     daemon_os_type = None
     if args.macos_docker_prepare:
         if platform.system() != 'Darwin' or not args.prepare_only or args.case != 'normal':
@@ -49,6 +66,8 @@ def main():
     if args.macos_docker_prepare:
         source.update(docker_daemon_os_type=daemon_os_type,
             controller_scope='Darwin API/deployment controller; product binaries execute only in new Linux Docker containers')
+    if args.network_subnet:
+        source['docker_network_subnets'] = {'internal': args.network_subnet, 'terminal': args.terminal_subnet}
     save(evidence / 'source.json', source)
     stage = 'created'
     def progress(value):
@@ -59,7 +78,8 @@ def main():
     site = None
     try:
         progress('installing')
-        site = Installation(workspace, evidence, args.platform_image, args.solutions_image, args.case)
+        site = Installation(workspace, evidence, args.platform_image, args.solutions_image, args.case,
+            network_subnet=args.network_subnet, terminal_subnet=args.terminal_subnet)
         save(evidence / 'environment.json', {**source, 'case': args.case, 'platform_image': site.p,
             'solutions_image': site.s, 'image_architecture': site.simage['Architecture'],
             'runtime_image_os': site.simage['Os'], 'runtime_architecture': site.simage['Architecture'],
