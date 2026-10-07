@@ -48,6 +48,7 @@ def generate(scenario, case):
     for key, kind, unit, length in [('done', 'BOOLEAN', 'unitless', None),
             ('implementation', 'TEXT', 'unitless', None), ('version', 'TEXT', 'unitless', None),
             ('origin', 'VECTOR', 'mm', 3), ('frame', 'TEXT', 'unitless', None),
+            ('orientation', 'VECTOR', 'unitless', 4),
             ('count', 'NUMBER', 'unitless', None), ('pitch', 'NUMBER', 'mm', None)]:
         prop(key, kind, unit, length)
     material_fields = [key for key in parameters if key not in equipment.values()]
@@ -68,6 +69,7 @@ def generate(scenario, case):
         values = {field: definition_value('TEXT', parameters[field]['default'])}
         if slot == 'shelf':
             for key, kind, value in [('origin', 'VECTOR', [0, 0, 0]), ('frame', 'TEXT', 'SIMULATION/shelf'),
+                                     ('orientation', 'VECTOR', [0, 0, 0, 1]),
                                      ('count', 'NUMBER', 1), ('pitch', 'NUMBER', 1)]:
                 fields[key] = {'property': ref('property.' + key), 'required': True}
                 values[key] = definition_value(kind, value)
@@ -81,6 +83,7 @@ def generate(scenario, case):
         'can_align': {'boolean': True}, 'implementation': {'text': scenario['implementation']},
         'version': {'text': scenario['version']}}})
     add('pattern.shelf', {'kind': 'POINT_PATTERN', 'resource_type': ref('type.shelf'),
+        'orientation': 'orientation',
         'origin': 'origin', 'frame': 'frame', 'axes': [{'count': 'count', 'pitch': 'pitch', 'direction': [1, 0, 0]}]},
         'Single simulation shelf seat custody slot')
     contexts = {'part': {'label': 'Material', 'kind': 'OBJECT', 'accepted_types': [ref('type.material')],
@@ -144,9 +147,9 @@ def author(site):
                    'contexts': {**saved_model['spec']['defaults'], 'part': [refs['material.' + key]]},
                    'property_sets': [], 'overrides': {}, 'inputs': {}, 'slot_index': '0'}
         report = Workflows(terminal, journal).resolve(request, uid())
+        save(site.evidence / ('resolution-' + key + '.json'), report)
         if report['report']['valid'] is not True or report['report']['concrete'] is not True:
             raise ValueError('M1 input domain is not concrete: ' + str(report['report']['violations']))
-        save(site.evidence / ('resolution-' + key + '.json'), report)
         requests.append(request)
     execution = ExecutionClient(terminal, journal)
     preview = execution.command('preview', {'id': uid(), 'candidates': [
