@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { api, ApiFailure, explain } from './api';
+import { formatValue } from './conditions';
 import {
   definitionPageSchema,
   definitionViewSchema,
@@ -32,6 +33,8 @@ export function WorkflowExecution({
   onSubmit,
   latest,
   onResult,
+  onFresh,
+  canExecute,
 }: {
   data: Overview;
   receipt: WorkflowReceipt;
@@ -43,6 +46,8 @@ export function WorkflowExecution({
   onSubmit: (request: Pending) => Promise<void>;
   latest: ExecutionReceipt | null;
   onResult: (result: ExecutionResult | null) => void;
+  onFresh: (fresh: boolean) => void;
+  canExecute: boolean;
 }) {
   const [installed, setInstalled] = useState<InstalledTask | null>(null);
   const [objects, setObjects] = useState<Array<{ reference: DefinitionRef; label: string }>>([]);
@@ -53,6 +58,8 @@ export function WorkflowExecution({
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [reload, setReload] = useState(0);
+  const [resultFresh, setResultFresh] = useState(false);
+  const resultKey = useRef('');
   const selectedCell = data.cells.find((c) => c.cell.value.id === cell);
   useEffect(() => {
     let cancelled = false;
@@ -106,10 +113,21 @@ export function WorkflowExecution({
   useEffect(() => {
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
-    setBound(null);
-    setMaterial(null);
-    setResult(null);
-    onResult(null);
+    const key = JSON.stringify([
+      selectedRun,
+      receipt.reference,
+      data.installation.id,
+      data.installation.store_generation,
+    ]);
+    if (resultKey.current !== key) {
+      resultKey.current = key;
+      setBound(null);
+      setMaterial(null);
+      setResult(null);
+      onResult(null);
+    }
+    setResultFresh(false);
+    onFresh(false);
     if (!selectedRun || !installed) return;
     const inspect = async () => {
       try {
@@ -142,6 +160,7 @@ export function WorkflowExecution({
         const status = validateExecutionResult(
           await api(`/api/v1/runtime-skill-result?${new URLSearchParams({ run: selectedRun })}`),
           binding,
+          assigned,
         );
         if (
           status.installation.id !== data.installation.id ||
@@ -153,14 +172,17 @@ export function WorkflowExecution({
           setMaterial(assigned);
           setResult(status);
           onResult(status);
+          setResultFresh(true);
+          onFresh(true);
           setError('');
           timer = setTimeout(() => void inspect(), 1500);
         }
       } catch (e) {
         if (!cancelled) {
           setError(explain(e));
-          onResult(null);
-          setResult(null);
+          setResultFresh(false);
+          onFresh(false);
+          timer = setTimeout(() => void inspect(), 1500);
         }
       }
     };
@@ -179,6 +201,7 @@ export function WorkflowExecution({
     data.installation.id,
     data.installation.store_generation,
     onResult,
+    onFresh,
   ]);
   function request(
     route: Pending['route'],
@@ -186,6 +209,7 @@ export function WorkflowExecution({
     label: string,
     review?: Pending['start_review'],
   ) {
+    if (!canExecute || locked || busy) return Promise.resolve();
     return onSubmit({
       route,
       command,
@@ -242,6 +266,10 @@ export function WorkflowExecution({
   return (
     <section className="inset" aria-label="Run saved Task">
       <h3>Run saved Task</h3>
+      {!data.user.roles.includes('OPERATOR') && (
+        <p>An Operator role is required to execute this Task.</p>
+      )}
+      {!data.user.terminal && <p>Use a registered terminal to execute this Task.</p>}
       <label>
         Simulation cell
         <select
@@ -290,7 +318,7 @@ export function WorkflowExecution({
           </label>
           {!selectedRun && (
             <button
-              disabled={locked || busy || !data.user.terminal}
+              disabled={locked || busy || !canExecute || !data.user.terminal}
               onClick={() =>
                 void request(
                   '/api/v1/workflow-executions/runs',
@@ -325,7 +353,7 @@ export function WorkflowExecution({
                 </select>
               </label>
               <button
-                disabled={locked || busy || !selectedObject}
+                disabled={locked || busy || !canExecute || !resultFresh || !selectedObject}
                 onClick={() =>
                   selectedObject &&
                   void request(
@@ -342,7 +370,7 @@ export function WorkflowExecution({
           {material && result?.run.value.state === 'PREPARED' && (
             <button
               className="primary"
-              disabled={locked || busy || !data.user.terminal}
+              disabled={locked || busy || !canExecute || !resultFresh || !data.user.terminal}
               onClick={() => void start()}
             >
               Run Task in simulation
@@ -350,10 +378,30 @@ export function WorkflowExecution({
           )}
           {result && (
             <p role="status">
-              Execution {result.run.value.state}
+              {resultFresh ? 'Execution' : 'Last retrieved execution'} {result.run.value.state}
               {!result.current_binding_matches ? ' · installation has changed' : ''}
               {result.details_truncated ? ' · partial result list' : ''}
             </p>
+          )}
+          {selectedCell && (
+            <section aria-label="Last reported device observations">
+              <h4>Last reported device observations</h4>
+              <dl className="facts">
+                {selectedCell.diagnostics.sources.map((source) => (
+                  <div key={source.source} data-source={source.source}>
+                    <dt>{source.source}</dt>
+                    <dd>
+                      {source.observation ? formatValue(source.observation.value) : 'UNKNOWN'}
+                      {' · '}
+                      {source.usable
+                        ? 'Usable at the last read'
+                        : 'Current value needs verification'}
+                      {source.issues.length ? ` (${source.issues.join(', ')})` : ''}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
           )}
         </>
       )}

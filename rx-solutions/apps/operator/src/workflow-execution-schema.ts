@@ -178,6 +178,7 @@ export async function installedTask(cell: string, receipt: WorkflowReceipt) {
 }
 export type InstalledTask = Awaited<ReturnType<typeof installedTask>>;
 const executionWorkSchema = z.object({
+  part: z.uuid().nullable(),
   operation: operationSchema,
   invocation: z.uuid().nullable(),
   resources: z.array(z.object({ revision: counter, value: z.object({}).passthrough() })),
@@ -190,6 +191,9 @@ const executionWorkSchema = z.object({
       node: z.string(),
       object: definitionRefSchema,
       candidate: z.number().int(),
+      part: z.uuid(),
+      ordinal: counter,
+      slot: z.number().int().min(0),
     }),
   }),
 });
@@ -203,13 +207,24 @@ export const executionResultSchema = z.object({
   work: z.array(executionWorkSchema),
 });
 export type ExecutionResult = z.infer<typeof executionResultSchema>;
-export function validateExecutionResult(raw: unknown, binding: z.infer<typeof executionRunSchema>) {
+export function validateExecutionResult(
+  raw: unknown,
+  binding: z.infer<typeof executionRunSchema>,
+  material: z.infer<typeof executionObjectSchema> | null,
+) {
   const result = executionResultSchema.parse(raw);
   if (
     result.run.value.id !== binding.run ||
     result.run.value.cell !== binding.cell ||
     result.work.some(
       (w) =>
+        !material ||
+        refKey(w.execution.selection.object) !== refKey(material.object) ||
+        w.execution.selection.candidate !== material.candidate ||
+        w.execution.selection.slot !== material.slot ||
+        w.execution.selection.ordinal !== material.ordinal ||
+        w.execution.selection.part !== w.part ||
+        !result.run.value.part_ids.includes(w.execution.selection.part) ||
         w.execution.selection.run !== binding.run ||
         w.execution.operation !== w.operation.operation_id ||
         refKey(w.execution.publication) !== refKey(binding.publication) ||

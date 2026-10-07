@@ -9,12 +9,14 @@ export function WorkflowTaskGraph({
   selected,
   onSelect,
   execution,
+  executionFresh,
 }: {
   model: WorkflowModel;
   receipt: WorkflowReceipt | null;
   selected: string;
   onSelect: (node: string) => void;
   execution: ExecutionResult | null;
+  executionFresh: boolean;
 }) {
   const report =
     receipt && refKey(receipt.report.request.workflow) === refKey(model.reference)
@@ -24,6 +26,12 @@ export function WorkflowTaskGraph({
     <section className="task-graph" aria-label="Task action graph">
       <h3>{model.label}</h3>
       <p className="muted">Select an action to inspect its settings and value sources.</p>
+      {execution && !executionFresh && (
+        <p role="status">
+          Last retrieved results. Current execution state needs verification; original evidence and
+          custody remain shown.
+        </p>
+      )}
       <ol>
         {model.spec.steps.map((step, index) => {
           const work = execution?.work.filter((w) => w.execution.selection.node === step.id) ?? [];
@@ -44,11 +52,13 @@ export function WorkflowTaskGraph({
                   {work.length
                     ? work
                         .map((w) =>
-                          w.operation.execution_knowledge === 'UNKNOWN'
-                            ? 'UNKNOWN · original operation retained'
-                            : w.operation.outcome !== 'NONE'
-                              ? w.operation.outcome
-                              : w.operation.execution_knowledge,
+                          w.operation.integrity === 'DISPUTED'
+                            ? 'DISPUTED · QUARANTINED'
+                            : w.operation.execution_knowledge === 'UNKNOWN'
+                              ? 'UNKNOWN · original operation retained'
+                              : w.operation.outcome !== 'NONE'
+                                ? w.operation.outcome
+                                : w.operation.execution_knowledge,
                         )
                         .join(', ')
                     : issues?.length

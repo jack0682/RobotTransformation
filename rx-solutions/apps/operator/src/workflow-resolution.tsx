@@ -46,6 +46,7 @@ type Props = {
   onSelectRun: (run: string) => void;
   onExecute: (request: Pending) => Promise<void>;
   executionReceipt: ExecutionReceipt | null;
+  canExecute: boolean;
 };
 export function WorkflowResolution({
   principal,
@@ -61,6 +62,7 @@ export function WorkflowResolution({
   onSelectRun,
   onExecute,
   executionReceipt,
+  canExecute,
 }: Props) {
   const [catalogs, setCatalogs] = useState<Catalog[]>([]);
   const [catalog, setCatalog] = useState('');
@@ -78,6 +80,7 @@ export function WorkflowResolution({
   const [propertySets, setPropertySets] = useState<WorkflowRequest['property_sets']>([]);
   const [result, setResult] = useState<WorkflowReceipt | null>(null);
   const [execution, setExecution] = useState<ExecutionResult | null>(null);
+  const [executionFresh, setExecutionFresh] = useState(false);
   useEffect(() => setExecution(null), [result]);
   const [selected, setSelected] = useState('');
   const [propertyTarget, setPropertyTarget] = useState<{
@@ -387,6 +390,7 @@ export function WorkflowResolution({
           receipt={result}
           selected={selected || node}
           execution={execution}
+          executionFresh={executionFresh}
           onSelect={(id) => {
             setSelected(id);
             setNode(id);
@@ -618,6 +622,8 @@ export function WorkflowResolution({
           onSubmit={onExecute}
           latest={executionReceipt}
           onResult={setExecution}
+          onFresh={setExecutionFresh}
+          canExecute={canExecute}
         />
       )}
       {result && (

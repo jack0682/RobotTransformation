@@ -35,7 +35,7 @@ PARAMETERS = {
     'ft_force_n': ('NUMBER', 'N'), 'ft_min_n': ('NUMBER', 'N'), 'ft_max_n': ('NUMBER', 'N'),
     'timeout_s': ('NUMBER', 's'),
 }
-SOURCES = {'sim/ready', 'shelf.occupied', 'shelf.stopped', 'gripper.part_held', 'ft.part_seated'}
+SOURCES = {'ready', 'sim/ready', 'shelf.occupied', 'shelf.stopped', 'gripper.part_held', 'ft.part_seated'}
 
 
 def encoded(value):
@@ -317,7 +317,7 @@ class Adapter:
     def observe(self, sources):
         require(set(sources) <= SOURCES, 'undeclared source')
         state = self.state()
-        values = {'sim/ready': state['pending'] is None,
+        values = {'ready': state['pending'] is None, 'sim/ready': state['pending'] is None,
                   'shelf.occupied': state['shelf_occupied'], 'shelf.stopped': state['shelf_stopped'],
                   'gripper.part_held': state['channels'][self.config['new_material_channel']]['holding'],
                   'ft.part_seated': bool(state['ft'] and state['ft']['seated'])}

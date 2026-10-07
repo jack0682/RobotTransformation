@@ -817,6 +817,7 @@ export function App() {
               onSelectRun={(run) => setRunSelections((old) => ({ ...old, [selected]: run }))}
               onExecute={(request) => submit(undefined, request)}
               executionReceipt={executionReceipt}
+              canExecute={canRequest}
               locked={!!pending || working || storageError}
               receipt={workflowReceipt}
               onSubmit={(command) =>

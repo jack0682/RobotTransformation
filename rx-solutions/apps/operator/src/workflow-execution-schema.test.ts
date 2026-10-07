@@ -72,13 +72,14 @@ it('preserves UNKNOWN with custody and refuses cross-run result attribution', ()
         budget: { unit: 'PART_ATTEMPT', limit: '1', revision: '1', consumptions: [] },
         recipe_digest: 'a'.repeat(64),
         envelope_digest: 'b'.repeat(64),
-        part_ids: [],
+        part_ids: [id('a')],
       },
     },
     details_truncated: false,
     current_binding_matches: true,
     work: [
       {
+        part: id('a'),
         operation: op,
         invocation: id('8'),
         resources: [],
@@ -86,14 +87,43 @@ it('preserves UNKNOWN with custody and refuses cross-run result attribution', ()
           operation: op.operation_id,
           publication: pin,
           policy: artifact,
-          selection: { run: binding.run, node: 'groove-detect', object: pin, candidate: 0 },
+          selection: {
+            run: binding.run,
+            node: 'groove-detect',
+            object: pin,
+            candidate: 0,
+            part: id('a'),
+            ordinal: '1',
+            slot: 0,
+          },
         },
       },
     ],
   };
-  expect(validateExecutionResult(result, binding).work[0].operation.execution_knowledge).toBe(
-    'UNKNOWN',
-  );
-  result.work[0].execution.selection.run = id('9');
-  expect(() => validateExecutionResult(result, binding)).toThrow();
+  const material = {
+    run: binding.run,
+    cell: binding.cell,
+    ordinal: '1',
+    object: pin,
+    model: pin,
+    candidate: 0,
+    slot: 0,
+    request: id('4'),
+    actor: 'operator',
+  };
+  expect(
+    validateExecutionResult(result, binding, material).work[0].operation.execution_knowledge,
+  ).toBe('UNKNOWN');
+  for (const changed of [
+    { run: id('9') },
+    { candidate: 1 },
+    { slot: 1 },
+    { part: id('b') },
+    { object: { ...pin, id: id('c') } },
+  ]) {
+    const wrong = structuredClone(result);
+    Object.assign(wrong.work[0].execution.selection, changed);
+    expect(() => validateExecutionResult(wrong, binding, material)).toThrow();
+  }
+  expect(() => validateExecutionResult(result, binding, null)).toThrow();
 });

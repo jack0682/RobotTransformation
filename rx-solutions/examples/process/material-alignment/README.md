@@ -62,6 +62,8 @@ failure code and remain subject to existing UNKNOWN handling.
 
 Declare `sim/ready` as the BOOLEAN `boolean/v1` unitless source with 1 s maximum
 age and zero uncertainty, and map the installation condition to that source.
+The existing delivery fixture's fact ID `ready` is also supported as a passive alias
+of the same current state read; declare it separately if that fixture requests it.
 Optional current file-device sources are `shelf.occupied`, `shelf.stopped`,
 `gripper.part_held`, and `ft.part_seated`, with the same type/schema/unit. These are
 passive current state reads; they are not fresh physical sensor readings.

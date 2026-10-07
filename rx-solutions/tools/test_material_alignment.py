@@ -202,6 +202,8 @@ class MaterialAlignment(unittest.TestCase):
     def test_observation_is_passive_and_pending_state_is_not_repaired(self):
         before = (self.root / 'state.json').read_bytes()
         self.assertEqual(self.adapter.observe(['sim/ready']), {'sim/ready': {'boolean': True}})
+        self.assertEqual(self.adapter.observe(['ready', 'sim/ready']),
+                         {'ready': {'boolean': True}, 'sim/ready': {'boolean': True}})
         self.assertEqual(before, (self.root / 'state.json').read_bytes())
         self.assertEqual(self.effects(), [])
         state = self.adapter.state()
@@ -209,6 +211,7 @@ class MaterialAlignment(unittest.TestCase):
         self.provider.save(self.root, state)  # Explicit crash-state injection, not product recovery.
         self.assertFalse(self.adapter.custody()['no_pending_commands'])
         self.assertFalse(self.adapter.observe(['sim/ready'])['sim/ready']['boolean'])
+        self.assertFalse(self.adapter.observe(['ready'])['ready']['boolean'])
         self.unchanged_rejection(lambda: self.execute('shelf-seat'))
 
 
