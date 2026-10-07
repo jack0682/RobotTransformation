@@ -102,7 +102,7 @@ jobs:
           python3 -B rx-platform/tools/check_host_sdk.py rx-solutions/sdk
 
   static_identity:
-    name: Unchanged named source identity closure
+    name: Named identities and reviewed source context
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -110,10 +110,22 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
+          fetch-depth: 0
           persist-credentials: false
-      - name: Compare required source recipes against frozen proof
+      - name: Compare original identities and the exact reviewed source context
+        env:
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          python3 -B tools/migration/source_identities.py compare --baseline-report provenance/import/M2-source-identities.json --target . --output "$RUNNER_TEMP/m3-static-identities.json"
+          python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-static-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --reviewed-context provenance/verification/m1-admission-context-review.json --static-only
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: static-source-identities
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/m3-static-identities/*.json
+            ${{ runner.temp }}/m3-static-identities/logs/**
 
   platform_repository:
     name: Platform repository and contract checks
@@ -503,6 +515,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
+          fetch-depth: 0
           persist-credentials: false
       - name: Install pinned Rust toolchain
         run: |
@@ -512,7 +525,7 @@ jobs:
         env:
           CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --execute
+          python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --reviewed-context provenance/verification/m1-admission-context-review.json --execute
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

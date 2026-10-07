@@ -1,0 +1,36 @@
+{
+  "baseline_report_sha256": "e2016d2af1bdb63cdef079738ffba5ebaf47a66f78ae0391b8ed02e85a0334f5",
+  "base_commit": "f500edab60c9f81151d84e0bb68500347b78fffe",
+  "reviewed_commit": "7a365bf1ff66b073d482d6e64c781f1e4f4ae2c1",
+  "files": [
+    {
+      "path": "rx-platform/crates/rx-application/src/engine/execution_inventory.rs",
+      "old_sha256": "fba435b095e32e18544cc304857b12a66b2705419582906a18e9e9678afcbce7",
+      "new_sha256": "954e25bbf4f5824517109b5e58cc0a53a79750fd1dde3eadb421e9aa44a83232"
+    },
+    {
+      "path": "rx-platform/crates/rx-application/src/engine/execution_inventory/operations.rs",
+      "old_sha256": "b5da2dd7cc92e17e9f21af634ed3ac797ff7ff59195406f58ba968dc6fa78f5e",
+      "new_sha256": "c97cc29bd52fe53d9b261302a1c4ecd334c5213a17606d45ed0608d68cb7030c"
+    }
+  ],
+  "impact_review": {
+    "text": "Reuse the execution Domain already validated by object_current within the same SQLite IMMEDIATE admission transaction. Remove only the subsequent duplicate domain computation; do not cache across transactions or move clock sampling. The historical comparator still reports UNKNOWN_CONTEXT_CHANGED for this source delta. Current context review is distinct from frozen import equality.",
+    "preserved_checks": [
+      "First definition closure/currentness and object projection validation",
+      "Part, configuration, publication, policy, object and slot identity checks",
+      "Pool hold and process eligibility checks in their original order",
+      "First workflow-execution reader barrier; its removed second PRAGMA user_version raise is idempotent on the current SQLite implementation",
+      "All permit, authority, freshness/deadline, native entry/completion and UNKNOWN rules",
+      "Original named identity formulas, source closures, SDK inventory, frozen baseline and evaluator"
+    ],
+    "limitations": [
+      "Static review covers current SQLite transaction success and domain rejection semantics; it does not preserve occurrence of failures in removed redundant I/O.",
+      "No independent clock reads or domain-relevant writes were found between the two original validations.",
+      "This review does not prove a speed improvement or resolve the retained 53f0a84 A6 failure.",
+      "Actual same-candidate compiled identity probes and all required product/runtime regressions remain mandatory.",
+      "This is implementation impact review, not maintainer acceptance, physical qualification or release approval."
+    ],
+    "reviewer": "Codex independent Verify agent (fresh task context), with separate source-path audit by Codex execution-map agent; accountable owner jack0682 has not accepted the milestone."
+  }
+}
