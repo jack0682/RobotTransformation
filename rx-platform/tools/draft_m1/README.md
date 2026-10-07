@@ -6,7 +6,7 @@ Run only on authorized isolated Linux. `run.py` refuses other operating systems.
 
 ## Build from this repository
 
-The minimal image uses the exact P/S source and operator bundle in this repository, the existing external-process provider, and the real C++ BT engine. It does not build ROS, DHI, controller packages or the full distribution. The source-pinned Rust recovery tests are included in the image. Rust binaries use the development compilation profile with debug symbols disabled; this is an integration candidate, not a release image.
+The minimal image uses the exact P/S source and operator bundle in this repository, the existing external-process provider, and the real C++ BT engine. It does not build ROS, DHI, controller packages or the full distribution. Runtime binaries use the repository's release profile, matching the existing runtime installation tests; this is still a simulation integration candidate, not a product release. The source-pinned Rust recovery tests and disposable signing exporter retain their normal test profiles.
 
 From the RobotTransformation root on Linux:
 

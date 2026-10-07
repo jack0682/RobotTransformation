@@ -12,9 +12,9 @@ COPY rx-platform/spec ./spec
 RUN --mount=type=cache,id=rx-m1-p-registry,target=/usr/local/cargo/registry \
     --mount=type=cache,id=rx-m1-p-target,target=/source/target \
     find /source -path /source/target -prune -o -type f -exec touch {} + && \
-    cargo build --locked -p rx-platformd && \
+    cargo build --release --locked -p rx-platformd && \
     cargo test --locked -p rx-platformd --test delivery_fixture --no-run --message-format=json > /fixture-build.jsonl && \
-    mkdir /out && cp target/debug/rx-platformd target/debug/rx-package-store /out/ && \
+    mkdir /out && cp target/release/rx-platformd target/release/rx-package-store /out/ && \
     python3 -c 'import json,shutil; a=[json.loads(s) for s in open("/fixture-build.jsonl")]; e=[v["executable"] for v in a if v.get("reason")=="compiler-artifact" and v.get("target",{}).get("name")=="delivery_fixture" and v.get("executable")]; assert len(e)==1; shutil.copyfile(e[0],"/out/delivery_fixture")'
 
 FROM rust:1.98.1-bookworm@sha256:9a73a5088750b4c95158ab26629c854c3d6fc4b173cb7bc8079ad252d8ed7bfa AS s-build
@@ -34,8 +34,8 @@ COPY rx-solutions/deployment/external-adapters ./deployment/external-adapters
 RUN --mount=type=cache,id=rx-m1-s-registry,target=/usr/local/cargo/registry \
     --mount=type=cache,id=rx-m1-s-target,target=/source/target \
     find /source -path /source/target -prune -o -type f -exec touch {} + && \
-    cargo build --locked -p rx-host -p rx-executor -p rx-process-package -p rx-device-package -p rx-process && \
-    mkdir /out && cp target/debug/rx-hostd target/debug/rx-executor-service target/debug/rx-process-package target/debug/rx-device-package target/debug/rx-process-compile /out/ && \
+    cargo build --release --locked -p rx-host -p rx-executor -p rx-process-package -p rx-device-package -p rx-process && \
+    mkdir /out && cp target/release/rx-hostd target/release/rx-executor-service target/release/rx-process-package target/release/rx-device-package target/release/rx-process-compile /out/ && \
     cargo test --locked -p rx-host --test external_process > /out/external-process.log && \
     cargo test --locked -p rx-host --features test-harness --test process_crash sigkill_at_both_journal_native_boundaries_never_replays_device_effect -- --exact > /out/host-recovery.log && \
     cargo test --locked -p rx-executor --test assignment_journal lost_run_initialization_reply_recovers_binding_without_reinitializing -- --exact > /out/executor-recovery.log && \
