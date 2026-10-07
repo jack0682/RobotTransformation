@@ -13,6 +13,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import select
 import subprocess
 import sys
 import tempfile
@@ -235,6 +236,82 @@ class MaterialAlignmentObserver(unittest.TestCase):
         self.assertFalse(observed['control_available'])
         self.assertFalse(observed['safe_to_drop'])
         self.assertFalse(observed['samples']['ready']['value']['boolean'])
+
+    def wait_for_shared_state_lock(self, process):
+        inode = str((self.device / 'state.lock').stat().st_ino)
+        deadline = time.monotonic() + 5
+        while time.monotonic() < deadline:
+            self.assertIsNone(process.poll(), 'observer exited before writer released its state lock')
+            self.assertFalse(select.select([process.stdout], [], [], 0)[0],
+                             'observer emitted a premature snapshot during the writer transaction')
+            for line in Path('/proc/locks').read_text().splitlines():
+                fields = line.split()
+                if '->' not in fields or 'FLOCK' not in fields or 'READ' not in fields:
+                    continue
+                position = fields.index('READ')
+                if (fields[position + 1] == str(process.pid)
+                        and fields[position + 2].rsplit(':', 1)[-1] == inode):
+                    return
+            time.sleep(.005)
+        self.fail('observer did not reach the shared state lock within the test setup bound')
+
+    def coherent_read_case(self, commit):
+        state_path = self.device / 'state.json'
+        initial = json.loads(state_path.read_bytes())
+        pending = copy.deepcopy(initial)
+        pending['pending'] = {'operation': identifier()}
+        pending['channels']['new-material']['holding'] = False
+        pending['shelf_occupied'] = True
+        readers = []
+        try:
+            with (self.device / 'state.lock').open('rb') as writer:
+                fcntl.flock(writer, fcntl.LOCK_EX)
+                # Isolated write-boundary fixture, not a fabricated Host/Run outcome.
+                state_path.write_bytes(encoded(pending))
+                for provider in ('python', 'observer'):
+                    request = self.request()
+                    process = subprocess.Popen(self.arguments(provider), stdin=subprocess.PIPE,
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    readers.append((provider, request, process))
+                    process.stdin.write(encoded(request))
+                    process.stdin.close()
+                    process.stdin = None
+                for _, _, process in readers:
+                    self.wait_for_shared_state_lock(process)
+                if commit:
+                    final = copy.deepcopy(pending)
+                    final['pending'] = None
+                    final['channels']['new-material']['holding'] = True
+                    state_path.write_bytes(encoded(final))
+                expected = self.files()
+                released_at = now()
+                fcntl.flock(writer, fcntl.LOCK_UN)
+            for provider, request, process in readers:
+                output, error = process.communicate(timeout=10)
+                self.assertEqual(process.returncode, 0, (provider, error.decode(errors='replace')))
+                snapshot = json.loads(output)
+                for key in ('challenge', 'profile_digest', 'device_session'):
+                    self.assertEqual(snapshot[key], request[key])
+                for key in ('ready', 'sim/ready', 'gripper.part_held'):
+                    self.assertEqual(snapshot['samples'][key]['value']['boolean'], commit)
+                self.assertEqual(snapshot['no_pending_commands'], commit)
+                self.assertEqual(snapshot['control_available'], commit)
+                for sample in snapshot['samples'].values():
+                    self.assertGreaterEqual(int(sample['acquired_at']['ticks_ns']),
+                                            int(released_at['ticks_ns']))
+            self.assertEqual(expected, self.files(), 'passive readers mutated state/native records')
+            self.assertFalse((self.device / 'effects.jsonl').exists())
+        finally:
+            for _, _, process in readers:
+                if process.poll() is None:
+                    process.kill()
+                    process.communicate(timeout=10)
+
+    def test_writer_commit_hides_transient_pending_marker_from_both_passive_readers(self):
+        self.coherent_read_case(commit=True)
+
+    def test_writer_exit_retains_persisted_pending_marker_in_both_passive_readers(self):
+        self.coherent_read_case(commit=False)
 
     def test_original_lookup_returns_same_capture_and_execute_is_not_replayed(self):
         request, completion = self.execute('shelf-seat')

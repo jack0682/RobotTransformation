@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Linux-only finite provider checks; not P/Executor/Host or UI acceptance evidence."""
 import copy
+from concurrent.futures import ThreadPoolExecutor
+import fcntl
 import importlib.util
 import json
 from pathlib import Path
 import sys
 import tempfile
+import threading
 import types
 import unittest
 import uuid
@@ -255,6 +258,35 @@ class MaterialAlignment(unittest.TestCase):
         self.assertFalse(self.adapter.observe(['sim/ready'])['sim/ready']['boolean'])
         self.assertFalse(self.adapter.observe(['ready'])['ready']['boolean'])
         self.unchanged_rejection(lambda: self.execute('shelf-seat'))
+
+    def test_observation_and_custody_wait_for_a_coherent_writer_commit(self):
+        initial = self.adapter.state()
+        pending = copy.deepcopy(initial)
+        pending['pending'] = self.request('shelf-seat')[1]
+        started = [threading.Event(), threading.Event()]
+
+        def read(index):
+            started[index].set()
+            return self.adapter.observe(['ready']) if index == 0 else self.adapter.custody()
+
+        # Exit the writer context before joining workers even if an assertion fails.
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            with (self.root / 'state.lock').open('rb') as writer:
+                fcntl.flock(writer, fcntl.LOCK_EX)
+                self.provider.save(self.root, pending)
+                futures = [pool.submit(read, index) for index in range(2)]
+                for event in started:
+                    self.assertTrue(event.wait(2), 'passive reader did not start')
+                for future in futures:
+                    self.assertFalse(future.done(), 'passive read bypassed the writer transaction')
+                self.provider.save(self.root, initial)
+                expected = (self.root / 'state.json').read_bytes()
+                fcntl.flock(writer, fcntl.LOCK_UN)
+            observed, custody = [future.result(timeout=2) for future in futures]
+        self.assertEqual(observed, {'ready': {'boolean': True}})
+        self.assertTrue(custody['no_pending_commands'] and custody['control_available'])
+        self.assertEqual(expected, (self.root / 'state.json').read_bytes())
+        self.assertEqual(self.effects(), [])
 
 
 if __name__ == '__main__':

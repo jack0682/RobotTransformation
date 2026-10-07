@@ -145,6 +145,16 @@ during state/journal persistence leaves pending state and conservative custody;
 there is no automatic replay, cleanup, reset or local settlement. Stable support
 does not mean an empty shelf. Failure evidence retains its actual support/occupancy.
 
+Python and native passive observers hold a shared `state.lock` while reading the
+device snapshot. Execute holds the exclusive lock across pending-marker, effect
+journal and final-state persistence, so an in-flight write-ahead marker cannot be
+published as a stable not-ready observation. The native timestamp is taken after
+the lock is acquired and the state bytes are read. A crashed writer releases its
+kernel lock; its persisted pending marker still produces ready=false and
+no_pending_commands=false. A hung writer can still cause the unchanged Host
+deadline to expire. This synchronization changes neither readiness meaning nor
+the existing admission/observation timing limits.
+
 For post-entry completion transmission loss, use the existing isolated result-link
 fixture around the real Host transport. It withholds the original completion; do
 not add fake success/unknown values, deadline extensions, or P journal mutations.

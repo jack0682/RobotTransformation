@@ -262,7 +262,7 @@ def exercise(site):
             execution.get_by_label('Simulation cell', exact=True).select_option(site.cell)
             execution.get_by_label('Execution record', exact=True).select_option(site.run)
             graph = page.get_by_role('region', name='Task action graph')
-            actions = graph.get_by_role('button')
+            actions = graph.get_by_role('button', name=re.compile(r'^Action [0-9]+:'))
             expect(actions).to_have_count(6)
             if site.case == 'completion-loss':
                 expect(actions.nth(0)).to_contain_text('UNKNOWN · original operation retained', timeout=20000)

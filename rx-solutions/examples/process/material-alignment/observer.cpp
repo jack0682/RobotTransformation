@@ -284,8 +284,21 @@ Json observe(const std::string& config_path, const std::string& native_directory
   const auto config = parse(read_owned(config_path));
   validate_config(config);
   auto state_root = owned_directory(text(config.at("state_directory")));
-  const auto raw = read_owned_at(state_root.get(), "state.json");
-  const auto acquired_at = now(clock);  // Timestamp this actual completed file-device read.
+  std::string raw;
+  Json acquired_at;
+  {
+    Descriptor state_lock(::openat(state_root.get(), "state.lock", O_RDONLY | O_NOFOLLOW | O_CLOEXEC));
+    owned_regular(state_lock.get());
+    int locked;
+    do {
+      locked = ::flock(state_lock.get(), LOCK_SH);
+    } while (locked != 0 && errno == EINTR);
+    require(locked == 0, "passive state lock unavailable");
+    // Do not publish execute's transient write-ahead marker as a stable reading.
+    // A writer crash releases LOCK_EX while retaining a real pending marker.
+    raw = read_owned_at(state_root.get(), "state.json");
+    acquired_at = now(clock);  // Timestamp the actual read after acquiring LOCK_SH.
+  }  // Release before inspecting native owner locks; no nested lock acquisition.
   const auto state = parse(raw);
   require(state.at("schema") == "rx.material-alignment-state.v1" &&
               state.at("environment") == "FILE_SIMULATION" &&

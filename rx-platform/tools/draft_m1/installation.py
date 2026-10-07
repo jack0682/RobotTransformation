@@ -295,6 +295,44 @@ class Installation:
     def preserve(self):
         self.record()
         self.d.capture_logs()
+        failures = []
+        if 'engineer' in getattr(self, 'users', {}):
+            try:
+                save(self.evidence / 'final-cell.json', self.users['engineer'].get('/api/v1/cell', id=self.cell))
+                save(self.evidence / 'final-overview.json', self.users['engineer'].get('/api/v1/overview'))
+            except Exception as error:
+                failures.append({'inspection': 'final P views', 'error': str(error)})
+        if 'h' in self.services:
+            # Whitelist only synthetic native facts and status; never archive Host DB/TLS/config.
+            reader = r'''
+import base64,hashlib,json,os,stat,uuid
+from pathlib import Path
+root=Path('/data/host/native-external'); records={}
+if root.is_dir() and not root.is_symlink():
+    directories=[p for p in root.iterdir() if p.is_dir() and not p.is_symlink()]
+    if len(directories)>128: raise ValueError('native evidence directory bound')
+    for directory in directories:
+        if str(uuid.UUID(directory.name))!=directory.name: raise ValueError('native operation identity')
+        for name in ('request.json','completion.json'):
+            path=directory/name
+            if not path.exists(): continue
+            info=path.lstat()
+            if not stat.S_ISREG(info.st_mode) or info.st_uid!=os.getuid() or info.st_size>1048576:
+                raise ValueError('bounded owned native evidence required')
+            raw=path.read_bytes()
+            records[str(path.relative_to(root))]={'sha256':hashlib.sha256(raw).hexdigest(),
+                'bytes_base64':base64.b64encode(raw).decode(), 'size_bytes':len(raw)}
+print(json.dumps(records,sort_keys=True))
+'''
+            try:
+                raw = self.d.run('exec', self.services['h'], '/opt/rx/python/python', '-I', '-S', '-B', '-c', reader)
+                save(self.evidence / 'original-native-facts.json', json.loads(raw))
+                raw = self.d.run('exec', self.services['h'], 'cat', '/run/rx-host/host-status.json')
+                save(self.evidence / 'final-host-status.json', json.loads(raw))
+            except Exception as error:
+                failures.append({'inspection': 'original Host/native facts', 'error': str(error)})
+        if failures:
+            save(self.evidence / 'preservation-inspection-errors.json', failures)
         # Never invoke Docker.cleanup(): it force-removes all state, including UNKNOWN custody.
         save(self.evidence / 'preservation.json', {'state': 'PRESERVED',
             'containers': self.d.containers, 'volumes': self.d.volumes,

@@ -168,6 +168,17 @@ class Adapter:
                 and state['configuration_digest'] == digest(self.config), 'scene identity differs')
         return state
 
+    def passive_state(self):
+        # Execute already owns LOCK_EX across pending/effect/final-state writes.
+        # Passive readers wait for that transaction, but a crashed writer leaves
+        # its durable pending marker visible after the kernel releases its lock.
+        descriptor = os.open(self.root / 'state.lock', os.O_RDONLY | os.O_NOFOLLOW)
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_SH)
+            return self.state()
+        finally:
+            os.close(descriptor)
+
     def inputs(self, envelope, correlation):
         require(set(envelope) == {'schema', 'inputs', 'templates_digest', 'candidate', 'slot',
                                  'node', 'task', 'primitive', 'values', 'done',
@@ -320,7 +331,7 @@ class Adapter:
 
     def observe(self, sources):
         require(set(sources) <= SOURCES, 'undeclared source')
-        state = self.state()
+        state = self.passive_state()
         values = {'ready': state['pending'] is None, 'sim/ready': state['pending'] is None,
                   'shelf.occupied': state['shelf_occupied'], 'shelf.stopped': state['shelf_stopped'],
                   'gripper.part_held': state['channels'][self.config['new_material_channel']]['holding'],
@@ -331,7 +342,7 @@ class Adapter:
         return {source: self.sdk.sample({'boolean': values[source]}) for source in sources}
 
     def custody(self):
-        state = self.state()
+        state = self.passive_state()
         stable = state['shelf_occupied'] or state['channels'][self.config['new_material_channel']]['holding']
         complete = state['pending'] is None
         return {'no_pending_commands': complete, 'control_available': complete,
