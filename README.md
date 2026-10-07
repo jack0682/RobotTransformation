@@ -1,8 +1,8 @@
 # RobotTransformation
 
-RobotTransformation is the product monorepo being prepared for RX: a vendor-neutral resident platform connecting heterogeneous robots, equipment, and services through common task, authority, state, result, and recovery contracts.
+RobotTransformation is the development home for RX: a vendor-neutral resident platform connecting heterogeneous robots, equipment, and services through common task, authority, state, result, and recovery contracts.
 
-**Status: M4 / CANONICAL_DOCUMENTS_TRANSITION.** Product documentation and semantic contracts now use their canonical paths. The exact candidate CI run is the evidence for executed checks; this routing change does not declare runtime acceptance, a released bundle, or physical qualification.
+**Status: Development source of truth, before the first RobotTransformation release.** Use this repository for new product work, current documentation and semantic contracts. Repository migration is separate from SDK/distribution acceptance, resolution of the preserved CP2 failure and physical qualification. Required CI and DCO verify each contribution; no release or runtime acceptance is implied by this status.
 
 The immutable M2 import is audited at signed ancestor `0cecec7516879584c4bd6d2ba24cbe5b3c8e54a0`. Current source is validated by the full Platform/Solutions gate union, same-candidate SDK and installed-skills checks, frozen compatibility tests, current-document integrity, and bounded compiled identity probes.
 
