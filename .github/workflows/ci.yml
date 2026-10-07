@@ -309,6 +309,7 @@ jobs:
           cache: npm
           cache-dependency-path: source/rx-solutions/apps/operator/package-lock.json
       - name: Run all original operator checks
+        id: operator_checks
         run: |
           npm ci
           npm run format:check
@@ -336,10 +337,13 @@ jobs:
           (cd ../../../rx-platform && cargo build -p rx-api --bin rx-platform-local --locked)
           "$RUNNER_TEMP/operator-browser-env/bin/python" tests/run_browser.py --platform-executable "$CARGO_TARGET_DIR/debug/rx-platform-local" --evidence-dir "$RUNNER_TEMP/operator-browser"
       - name: Build the device-free M1 integration candidate
+        id: m1_build
+        if: ${{ !cancelled() && steps.operator_checks.outcome == 'success' }}
         working-directory: source
         run: |
           docker build -f rx-platform/tools/draft_m1/Simulation.Dockerfile --build-context btcpp=https://github.com/BehaviorTree/BehaviorTree.CPP.git#6e469c6ba133aaa842dac9b096b41f2d33ee2b0e -t rx-draft-m1:current .
       - name: Verify real M1 browser runtime and negative cases
+        if: ${{ !cancelled() && steps.m1_build.outcome == 'success' }}
         working-directory: source
         run: |
           for scenario in normal changed-material groove-missing completion-loss lost-start-response; do

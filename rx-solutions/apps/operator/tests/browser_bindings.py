@@ -51,6 +51,7 @@ def check_bindings(page,context,origin,headers,output):
     stale=context.request.get(bindings_url).json();assert stale['stale']==['SOURCE_CHANGED'] and stale['binding']['source_revision']=='1'
     assert context.request.get(f'{origin}/api/v1/overview').json()['cells'][0]['cell']==before
     page.get_by_role('button',name='Operations',exact=True).click();page.get_by_role('button',name='Workflow design',exact=True).click()
+    open_library()
     page.get_by_role('button',name='Updated material supply',exact=False).click()
     page.locator('details.binding-details > summary').click()
     page.get_by_role('button',name='Review against current baseline',exact=True).click();page.get_by_role('button',name='Save bindings',exact=True).click()

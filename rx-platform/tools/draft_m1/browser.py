@@ -6,6 +6,7 @@ import time
 
 from common import *
 from commission import provider_effects
+from cell_delivery.api import Rejected
 from cell_delivery.commission import wait_for
 from runtime_client import Terminal
 from execution_client import ExecutionClient
@@ -34,6 +35,8 @@ def exercise(site):
     engineer = site.users['engineer']
     target_letter = 'b' if site.case == 'changed-material' else 'a'
     saved_receipts = []
+    saved_requests = []
+    state_flags = {'authenticated': False, 'navigating': False, 'read_loss': False}
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=True)
         context = browser.new_context(ignore_https_errors=True, viewport={'width': 1440, 'height': 1100},
@@ -45,7 +48,9 @@ def exercise(site):
             if message.type != 'error':
                 return
             path = message.location.get('url', '').split('?', 1)[0].removeprefix(site.origin)
-            expected = (path == '/api/v1/workflow-executions/objects' and '404' in message.text) or (
+            expected = (not state_flags['authenticated'] and path == '/api/v1/overview' and '401' in message.text) or (
+                state_flags['read_loss'] and path == '/api/v1/runtime-skill-result' and 'ERR_FAILED' in message.text) or (
+                path == '/api/v1/workflow-executions/objects' and '404' in message.text) or (
                 site.case == 'lost-start-response' and path == '/api/v1/workflow-executions/start'
                 and 'ERR_FAILED' in message.text)
             diagnostics['console_errors'].append({'path': path, 'text': message.text, 'expected': expected})
@@ -55,18 +60,28 @@ def exercise(site):
                 return
             path = response.url.split('?', 1)[0].removeprefix(site.origin)
             diagnostics['http_errors'].append({'path': path, 'status': response.status,
-                'expected': response.status == 404 and path == '/api/v1/workflow-executions/objects'})
+                'expected': (response.status == 404 and path == '/api/v1/workflow-executions/objects') or (
+                    not state_flags['authenticated'] and response.status == 401 and path == '/api/v1/overview')})
         page.on('response', http_response)
         page.on('requestfailed', lambda request: diagnostics['failed_requests'].append({
             'path': request.url.split('?', 1)[0].removeprefix(site.origin),
-            'error': request.failure, 'expected': site.case == 'lost-start-response'
-            and request.url.endswith('/api/v1/workflow-executions/start')}))
+            'error': request.failure, 'expected': (site.case == 'lost-start-response'
+            and request.url.endswith('/api/v1/workflow-executions/start')) or (
+                state_flags['read_loss'] and request.url.split('?', 1)[0].endswith('/api/v1/runtime-skill-result')) or (
+                state_flags['navigating'] and request.method == 'GET' and request.failure == 'net::ERR_ABORTED')}))
+        def reload_page():
+            state_flags['navigating'] = True
+            try:
+                page.reload(wait_until='networkidle')
+            finally:
+                state_flags['navigating'] = False
         try:
             page.goto(site.origin, wait_until='networkidle')
             page.get_by_label('Account', exact=True).fill('engineer')
             page.get_by_label('Password', exact=True).fill(site.browser['credentials']['engineer'])
             page.get_by_role('button', name='Sign in', exact=True).click()
             expect(page.get_by_role('button', name='Sign out', exact=True)).to_be_visible()
+            state_flags['authenticated'] = True
             page.get_by_role('button', name='Workflow design', exact=True).click()
             expect(page.get_by_role('heading', name='Configure a Task', exact=True)).to_be_visible()
             page.get_by_label('Authoring catalog', exact=True).select_option(site.workflow['workflow']['catalog'])
@@ -81,6 +96,7 @@ def exercise(site):
                 if not response.ok:
                     raise AssertionError('configuration save failed: ' + response.text())
                 receipt = response.json()
+                saved_requests.append(response.request.post_data_json)
                 saved_receipts.append(receipt)
                 return receipt
 
@@ -93,6 +109,20 @@ def exercise(site):
             original = save_configuration()
             if original['report']['request'] != site.requests[0]:
                 raise AssertionError('saved A configuration differs from approved candidate')
+            # T08: a changed body cannot reuse the original, already committed save identity.
+            conflict = json.loads(json.dumps(saved_requests[-1]))
+            conflict['command']['slot_index'] = '1'
+            try:
+                engineer._request('/api/v1/workflow-resolutions', encoded(conflict))
+            except Rejected as rejection:
+                if rejection.status != 409 or rejection.body.get('code') != 'KEY_CONFLICT':
+                    raise
+                save(output / 'same-request-conflict.json', {'request': conflict,
+                    'status': rejection.status, 'response': rejection.body})
+            else:
+                raise AssertionError('conflicting content replaced the original save request')
+            if provider_effects(site):
+                raise AssertionError('configuration conflict caused a native effect')
             selected = original
             if target_letter == 'b':
                 select_reference(page.get_by_label('part context', exact=True), site.refs['material.b'])
@@ -103,7 +133,7 @@ def exercise(site):
                 if prior != original:
                     raise AssertionError('old saved configuration changed')
             page.screenshot(path=str(output / 'configured.png'), full_page=True)
-            page.reload(wait_until='networkidle')
+            reload_page()
             page.get_by_role('button', name='Workflow design', exact=True).click()
             page.get_by_label('Authoring catalog', exact=True).select_option(site.workflow['workflow']['catalog'])
             page.get_by_text('Saved Task configurations', exact=True).click()
@@ -143,7 +173,7 @@ def exercise(site):
                 page.route('**/api/v1/workflow-executions/start', lose_reply, times=1)
                 execution.get_by_role('button', name='Run Task in simulation', exact=True).click()
                 expect(page.get_by_role('button', name='Check original request', exact=True)).to_be_visible()
-                page.reload(wait_until='networkidle')
+                reload_page()
                 with page.expect_request(lambda req: req.url.endswith('/api/v1/workflow-executions/start')) as retry:
                     page.get_by_role('button', name='Check original request', exact=True).click()
                 if retry.value.post_data_json != starts[0]:
@@ -223,7 +253,7 @@ def exercise(site):
                     and sources['shelf.occupied']['observation']['value'] == {'boolean': state['shelf_occupied']})
                 save(output / 'provider-observations-through-p.json', actual)
             # Restore original saved config/run after refresh and verify same graph result is visible.
-            page.reload(wait_until='networkidle')
+            reload_page()
             page.get_by_role('button', name='Workflow design', exact=True).click()
             page.get_by_label('Authoring catalog', exact=True).select_option(site.workflow['workflow']['catalog'])
             page.get_by_text('Saved Task configurations', exact=True).click()
@@ -231,8 +261,34 @@ def exercise(site):
             execution = page.get_by_role('region', name='Run saved Task')
             execution.get_by_label('Simulation cell', exact=True).select_option(site.cell)
             execution.get_by_label('Execution record', exact=True).select_option(site.run)
-            expect(page.get_by_text('UNKNOWN', exact=False).first if site.case == 'completion-loss'
-                   else execution.get_by_role('status')).to_be_visible(timeout=20000)
+            graph = page.get_by_role('region', name='Task action graph')
+            actions = graph.get_by_role('button')
+            expect(actions).to_have_count(6)
+            if site.case == 'completion-loss':
+                expect(actions.nth(0)).to_contain_text('UNKNOWN · original operation retained', timeout=20000)
+                graph.locator('li').first.locator('summary').click()
+                original_id = work[0]['operation']['operation_id']
+                expect(graph.get_by_text('Operation ' + original_id, exact=True)).to_be_visible()
+                state_flags['read_loss'] = True
+                page.route('**/api/v1/runtime-skill-result?*', lambda route: route.abort('failed'))
+                expect(graph.get_by_role('status')).to_contain_text('Last retrieved results', timeout=20000)
+                expect(actions.nth(0)).to_contain_text('UNKNOWN · original operation retained')
+                expect(graph.get_by_text('Operation ' + original_id, exact=True)).to_be_visible()
+                expect(execution.get_by_role('button', name='Run Task in simulation', exact=True)).to_have_count(0)
+                page.screenshot(path=str(output / 'unknown-during-read-loss.png'), full_page=True)
+                page.unroute('**/api/v1/runtime-skill-result?*')
+                state_flags['read_loss'] = False
+            elif site.case == 'groove-missing':
+                expect(actions.nth(0)).to_contain_text('SUCCEEDED', timeout=20000)
+                expect(actions.nth(1)).to_contain_text('FAILED')
+                expect(execution.locator('[data-source="shelf.occupied"]')).to_contain_text('True')
+                for index in range(2, 6):
+                    expect(actions.nth(index)).not_to_contain_text('SUCCEEDED')
+            else:
+                expect(execution.get_by_role('status')).to_contain_text('COMPLETED', timeout=20000)
+                for index in range(6):
+                    expect(actions.nth(index)).to_contain_text('SUCCEEDED')
+                expect(execution.locator('[data-source="shelf.occupied"]')).to_contain_text('False')
             page.screenshot(path=str(output / 'reopened-result.png'), full_page=True)
             if diagnostics['page_errors'] or any(not item['expected'] for key in (
                     'failed_requests', 'console_errors', 'http_errors') for item in diagnostics[key]):

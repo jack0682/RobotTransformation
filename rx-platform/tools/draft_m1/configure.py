@@ -115,6 +115,12 @@ def qualification_policy(site):
     unique = {(ref['sha256'], ref['schema_id']): ref for ref in refs}
     profile['dependencies'] = sorted(unique.values(), key=lambda r: (r['sha256'], r['schema_id']))
     policy['keys'][0]['validators'] = [site.validator]
+    # Match the existing policy's canonical digest recipe; this is not a new policy meaning.
+    policy['profiles'].sort(key=lambda p: (p['cell'], p['configuration']['sha256']))
+    policy['keys'].sort(key=lambda key: key['id'])
+    for declared in policy['profiles']:
+        declared['criteria'].sort(key=lambda criterion: criterion['id'])
+        declared['dependencies'].sort(key=lambda ref: (ref['sha256'], ref['schema_id']))
     for ref in references(policy).values():
         if artifact((pool / (ref['sha256'] + '.bin')).read_bytes(), ref['schema_id']) != ref:
             raise ValueError('qualification dependency bytes differ')
