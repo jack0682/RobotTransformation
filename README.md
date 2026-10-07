@@ -6,10 +6,24 @@ RobotTransformation is the development home for RX: a vendor-neutral resident pl
 
 The immutable M2 import is audited at signed ancestor `0cecec7516879584c4bd6d2ba24cbe5b3c8e54a0`. Current source is validated by the full Platform/Solutions gate union, same-candidate SDK and installed-skills checks, frozen compatibility tests, current-document integrity, and bounded compiled identity probes.
 
+## Product goal and progress
+
+The product goal is an operable, installable RX software draft: a solo SI developer/operator can configure, verify, simulate, change and recover supported heat-treatment workflows in the action graph with almost no manual code. This is a software-draft goal, not a claim of physical qualification or functional safety.
+
+| Find | Open |
+|---|---|
+| Final goal and capability epics | [Goal #25](https://github.com/jack0682/RobotTransformation/issues/25) / [Goals and epics](https://github.com/users/jack0682/projects/10/views/7) |
+| Current execution | [Current sprint](https://github.com/users/jack0682/projects/10/views/1) |
+| Planned tasks and unscheduled work | [Sprint planning](https://github.com/users/jack0682/projects/10/views/5) / [Product backlog](https://github.com/users/jack0682/projects/10/views/4) |
+| Acceptance checkpoints | [Milestones](https://github.com/jack0682/RobotTransformation/milestones) / [Acceptance queue](https://github.com/users/jack0682/projects/10/views/3) |
+| Delivery direction and cadence | [Product roadmap](https://github.com/jack0682/RobotTransformation/wiki/Product-Roadmap) / [Sprint plan](https://github.com/jack0682/RobotTransformation/wiki/Sprint-Plan) |
+
+The linked [RobotTransformation — Sprints project](https://github.com/users/jack0682/projects/10) is also available from this repository's **Projects** tab. Goal → Epic → Task is the work hierarchy; milestones are acceptance checkpoints and sprints are planning windows. The project mirrors actual issue/PR evidence, not assumed progress. Keep it current as part of every task, following [the synchronization rules](CONTRIBUTING.md#project-synchronization).
+
 ## Work and contribution
 
-- [Delivery project](https://github.com/users/jack0682/projects/10)
-- [Project wiki](https://github.com/jack0682/RobotTransformation/wiki)
+- [Sprint project](https://github.com/users/jack0682/projects/10)
+- [Project wiki and operating guide](https://github.com/jack0682/RobotTransformation/wiki)
 - [Contribution workflow](CONTRIBUTING.md)
 - [Repository governance](GOVERNANCE.md)
 - [Security policy](SECURITY.md)

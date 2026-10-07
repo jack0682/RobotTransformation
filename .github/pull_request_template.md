@@ -2,6 +2,13 @@
 
 Describe the bounded change and resulting behavior.
 
+## Work tracking
+
+- Task (`Refs #...` while required owner acceptance is pending):
+- Parent Epic / primary milestone / Sprint (or why not applicable):
+- Project status and evidence links reconciled for this candidate:
+- Remaining blocker, next action or carryover:
+
 ## Evidence
 
 - Exact revision/artifact and checks actually run:

@@ -16,6 +16,27 @@ A main-to-develop backmerge uses a PR. Only same-repository branches can use the
 
 Use merge commits. Squash, rebase, and automatic merge are disabled. Reviewed commit identity is preserved. Do not rewrite published history or replace a published tag.
 
+## Project synchronization
+
+All contributors, including agents, keep the [linked delivery project](https://github.com/users/jack0682/projects/10) synchronized with the work they actually perform. Updating tracking is part of the task handoff, not a separate optional cleanup. The issue owns scope, dependencies and evidence; the PR owns the proposed source change; Project fields summarize their current state. Product contracts and exact execution evidence remain authoritative.
+
+| Checkpoint | Required update |
+|---|---|
+| Before starting | Find the existing task before creating another. Link its parent Epic and relevant goal, set one `level:*` label plus appropriate work-type/area labels, record the accountable owner, primary milestone where applicable, and planned Sprint for leaf tasks only. Confirm scope and dependency readiness. |
+| Work starts | Set the task In progress and record the executing agent, host and branch separately from the human owner. Do not mark an entire Epic complete because one child starts or merges. |
+| Meaningful progress or scope change | Record the new user-visible behavior, source/PR, checks actually executed, failures, limits and next action. Adjust dependencies and estimates when evidence changes; do not overwrite earlier failures. |
+| Blocked | Set Blocked only for a concrete dependency/decision, with the owner and unblock condition. If an in-scope fix can proceed, keep In progress and preserve the failure evidence. |
+| PR or technical handoff | Link the task from the PR and the PR/evidence from the task. Move to Review only when a reviewable result and verification record exist. Keep owner acceptance Pending until explicitly decided. |
+| Acceptance, completion or carryover | Record the exact accepted artifact/revision and decision before setting Accepted/Done when required. Otherwise document why separate acceptance is Not required. Preserve original IDs/evidence and record why and where unfinished work moves. Update the parent Epic and milestone only from their own criteria. |
+
+Use `Refs #<task>` for contributions whose issue still requires owner acceptance; do not use auto-closing keywords to bypass that gate. A merge, closed PR, green CI run or elapsed Sprint is not acceptance. M1 technical handoff remains `USER_ACCEPTANCE_PENDING` until the owner accepts it. Failed and UNKNOWN execution results remain visible with original custody; board edits never settle or replay a Run.
+
+Milestone and Sprint are separate from the Goal → Epic → Task hierarchy. Keep priority, status, acceptance, size and Sprint in their Project fields; do not create duplicate issues or labels to represent another view. Do not double-count parent/child delivery. Repository automation may add issues to Backlog, but it does not choose their scope, Sprint, evidence or acceptance.
+
+At the end of an active work session, reconcile the task's actual state, PR links, evidence and next action before reporting to the user. Do not change another active task's state without checking its latest evidence. If Project access is unavailable, update the accessible issue/PR with the exact pending field changes, report the synchronization gap, and do not claim it was applied. Use the authorized GitHub UI when a connector lacks Project permissions; do not broaden credentials silently.
+
+Current cadence, WIP and carryover rules are maintained in the [Project workflow](https://github.com/jack0682/RobotTransformation/wiki/Project-Workflow) and [Sprint plan](https://github.com/jack0682/RobotTransformation/wiki/Sprint-Plan). Changing planning dates does not authorize later milestones, releases, physical operation or semantic changes.
+
 ## Signing and author certification
 
 Every new commit, including merges, requires both its author's matching `Signed-off-by` trailer and a verified OpenPGP signature. Read the [Developer Certificate of Origin](https://developercertificate.org/) before signing off. DCO attests contribution rights; the signature authenticates the commit. Neither substitutes for the other. The new history has **zero historical DCO exceptions**, including for the maintainer, bots, merges, and imported snapshots.
