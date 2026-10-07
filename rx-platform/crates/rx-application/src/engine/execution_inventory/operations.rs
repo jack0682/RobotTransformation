@@ -42,7 +42,7 @@ fn current(
     )?;
     part.validate().map_err(StoreError::Integrity)?;
     let (_, binding): (_, data::RunBinding) = load(tx, "executionrun", &c.run, BINDING)?;
-    let object = object_current(tx, &cell, &binding, part.ordinal)?;
+    let (object, domain) = object_current_with_domain(tx, &cell, &binding, part.ordinal)?;
     if part.run != run.id
         || part.part != c.part
         || run.part_ids.last() != Some(&c.part)
@@ -74,8 +74,6 @@ fn current(
         }
     }
     process::eligible_node(tx, &run, &cell, &c.node, part.ordinal)?;
-    let domain = execution_configuration::domain(tx, &cell.configuration)?
-        .ok_or(StoreError::Rejected(Reject::UnsupportedSchema))?;
     Ok(Current {
         cell,
         run,
