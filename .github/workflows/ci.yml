@@ -331,8 +331,8 @@ jobs:
         env:
           CARGO_TARGET_DIR: ${{ runner.temp }}/operator-platform-target
         run: |
-          (cd ../../../rx-platform && cargo build -p rx-platformd --locked)
-          "$RUNNER_TEMP/operator-browser-env/bin/python" tests/run_browser.py --platform-executable "$CARGO_TARGET_DIR/debug/rx-platformd" --evidence-dir "$RUNNER_TEMP/operator-browser"
+          (cd ../../../rx-platform && cargo build -p rx-api --bin rx-platform-local --locked)
+          "$RUNNER_TEMP/operator-browser-env/bin/python" tests/run_browser.py --platform-executable "$CARGO_TARGET_DIR/debug/rx-platform-local" --evidence-dir "$RUNNER_TEMP/operator-browser"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
