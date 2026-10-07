@@ -323,7 +323,7 @@ jobs:
           git rev-parse HEAD >> "$RUNNER_TEMP/operator-browser/environment.txt"
           printf '%s\n' "${ImageOS:-unknown}" "${ImageVersion:-unknown}" >> "$RUNNER_TEMP/operator-browser/environment.txt"
           toolchain=$(python3 -c 'import tomllib; print(tomllib.load(open("../../../rx-platform/rust-toolchain.toml", "rb"))["toolchain"]["channel"])')
-          rustup toolchain install "$toolchain" --profile minimal
+          rustup toolchain install "$toolchain" --profile minimal --component rustfmt --component clippy
           python3 -m venv "$RUNNER_TEMP/operator-browser-env"
           "$RUNNER_TEMP/operator-browser-env/bin/pip" install -r tests/requirements-browser.txt
           "$RUNNER_TEMP/operator-browser-env/bin/python" -m playwright install --with-deps chromium
