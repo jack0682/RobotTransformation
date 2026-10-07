@@ -349,6 +349,7 @@ export function WorkflowResolution({
       <label>
         Authoring catalog
         <select
+          aria-label="Authoring catalog"
           disabled={locked || busy}
           value={catalog}
           onChange={(e) => setCatalog(e.target.value)}
@@ -364,6 +365,7 @@ export function WorkflowResolution({
       <label>
         Task library
         <select
+          aria-label="Task library"
           disabled={locked || busy}
           value={model ? refKey(model.reference) : ''}
           onChange={(e) => {

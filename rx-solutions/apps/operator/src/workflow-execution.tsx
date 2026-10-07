@@ -273,6 +273,7 @@ export function WorkflowExecution({
       <label>
         Simulation cell
         <select
+          aria-label="Simulation cell"
           value={cell}
           disabled={locked || busy || !!selectedRun}
           onChange={(e) => onSelectCell(e.target.value)}
@@ -301,6 +302,7 @@ export function WorkflowExecution({
           <label>
             Execution record
             <select
+              aria-label="Execution record"
               value={selectedRun}
               disabled={locked || busy}
               onChange={(e) => onSelectRun(e.target.value)}
@@ -340,6 +342,7 @@ export function WorkflowExecution({
               <label>
                 Material to use
                 <select
+                  aria-label="Material to use"
                   value={object}
                   disabled={locked || busy}
                   onChange={(e) => setObject(e.target.value)}

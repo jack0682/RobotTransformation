@@ -302,6 +302,8 @@ def exercise(site):
                 'owner_acceptance': 'USER_ACCEPTANCE_PENDING'})
         except Exception:
             page.screenshot(path=str(output / 'failure.png'), full_page=True)
+            if state_flags['authenticated']:
+                (output / 'failure-accessibility.txt').write_text(page.locator('body').aria_snapshot())
             raise
         finally:
             save(output / 'browser-diagnostics.json', diagnostics)
