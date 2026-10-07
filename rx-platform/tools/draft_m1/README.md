@@ -2,7 +2,7 @@
 
 This directory prepares a new installation and checks the actual operator bundle → P → Executor → Host → external provider path. It uses existing application APIs, signed package tools, Host acknowledgements and six-area qualification. It is a test harness, not a product service or a browser shell gateway. A passing run is a technical acceptance candidate; the owner still accepts the milestone explicitly.
 
-Run only on authorized isolated Linux. `run.py` refuses other operating systems. The preserved Mac is for editing and static inspection only. Every case requires a new private workspace, public evidence directory, installation identity, signing keys, TLS identities and Docker state. It never accesses the historical CP2 installation.
+Run only on authorized isolated Linux. `run.py` refuses other operating systems. The preserved Mac is for editing and static inspection only. Every case requires a new private workspace, public evidence directory, installation identity, signing keys, TLS identities and Docker state. CI assigns each case a separate Ubuntu runner; no later case shares CPU/I/O with preserved earlier services. This removes a known test-environment interaction, not proof that load caused the historical preentry failures. It never accesses the historical CP2 installation.
 
 ## Build from this repository
 

@@ -281,6 +281,12 @@ jobs:
           persist-credentials: false
       - name: Install pinned client build dependencies
         run: |
+          # Keep Ubuntu suites and signing keys; use the reachable official archive.
+          for apt_source in /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
+            if [ -f "$apt_source" ]; then
+              sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' "$apt_source"
+            fi
+          done
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends cmake libprotobuf-dev protobuf-compiler libgrpc++-dev protobuf-compiler-grpc nlohmann-json3-dev python3-venv
           python3 -m venv "$RUNNER_TEMP/rx-client-env"
@@ -291,9 +297,13 @@ jobs:
           "$RUNNER_TEMP/rx-client-env/bin/python" -B tools/test_client_packages.py --work "$RUNNER_TEMP/rx-client-check"
 
   operator:
-    name: Operator application
+    name: Operator application (${{ matrix.scenario }})
     runs-on: ubuntu-24.04
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario: [normal, changed-material, groove-missing, completion-loss, lost-start-response]
     defaults:
       run:
         working-directory: source/rx-solutions/apps/operator
@@ -318,6 +328,12 @@ jobs:
           npm run build
       - name: Prepare the isolated Linux browser environment
         run: |
+          # Keep Ubuntu suites and signing keys; use the reachable official archive.
+          for apt_source in /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
+            if [ -f "$apt_source" ]; then
+              sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' "$apt_source"
+            fi
+          done
           mkdir -p "$RUNNER_TEMP/operator-browser"
           uname -a > "$RUNNER_TEMP/operator-browser/environment.txt"
           lscpu >> "$RUNNER_TEMP/operator-browser/environment.txt"
@@ -338,11 +354,7 @@ jobs:
       - name: Verify real M1 browser runtime and negative cases
         working-directory: source
         run: |
-          failed=0
-          for scenario in normal changed-material groove-missing completion-loss lost-start-response; do
-            "$RUNNER_TEMP/operator-browser-env/bin/python" -B rx-platform/tools/draft_m1/run.py --platform-image rx-draft-m1:current --solutions-image rx-draft-m1:current --workspace "$RUNNER_TEMP/m1-private-$scenario" --evidence-dir "$RUNNER_TEMP/m1-evidence/$scenario" --case "$scenario" || failed=1
-          done
-          exit "$failed"
+          "$RUNNER_TEMP/operator-browser-env/bin/python" -B rx-platform/tools/draft_m1/run.py --platform-image rx-draft-m1:current --solutions-image rx-draft-m1:current --workspace "$RUNNER_TEMP/m1-private-${{ matrix.scenario }}" --evidence-dir "$RUNNER_TEMP/m1-evidence/${{ matrix.scenario }}" --case "${{ matrix.scenario }}"
       - name: Verify browser authoring against the actual Platform API
         env:
           CARGO_TARGET_DIR: ${{ runner.temp }}/operator-platform-target
@@ -352,14 +364,14 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: draft-m1-public-evidence
+          name: draft-m1-public-evidence-${{ matrix.scenario }}
           if-no-files-found: warn
           retention-days: 14
           path: ${{ runner.temp }}/m1-evidence/**
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: operator-browser
+          name: operator-browser-${{ matrix.scenario }}
           if-no-files-found: error
           retention-days: 14
           path: ${{ runner.temp }}/operator-browser/**
@@ -379,6 +391,12 @@ jobs:
           persist-credentials: false
       - name: Build protocol-only helper and exercise direct-caller refusals
         run: |
+          # Keep Ubuntu suites and signing keys; use the reachable official archive.
+          for apt_source in /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
+            if [ -f "$apt_source" ]; then
+              sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' "$apt_source"
+            fi
+          done
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends nlohmann-json3-dev
           cmake -S native/dynamixel -B "$RUNNER_TEMP/rx-dynamixel-build" -DCMAKE_BUILD_TYPE=Release

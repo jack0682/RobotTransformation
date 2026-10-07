@@ -312,6 +312,12 @@ export function WorkflowResolution({
     setReportModel(null);
     const reference = result?.report.request.workflow;
     if (!reference) return () => control.abort();
+    // Save/reopen already loaded this immutable model. Reuse its exact pin rather
+    // than starting a redundant read that the next receipt would dispose.
+    if (model && refKey(model.reference) === refKey(reference)) {
+      setReportModel(model);
+      return () => control.abort();
+    }
     const params = new URLSearchParams({
       catalog: reference.catalog,
       id: reference.id,
@@ -328,7 +334,7 @@ export function WorkflowResolution({
         if (!control.signal.aborted) setError(explain(e));
       });
     return () => control.abort();
-  }, [result]);
+  }, [result, model]);
   const names = Object.fromEntries(
     (result?.report.definitions ?? []).map((d) => [refKey(d.reference), d.label]),
   );
