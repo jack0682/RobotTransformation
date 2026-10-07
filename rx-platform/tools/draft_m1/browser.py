@@ -524,8 +524,8 @@ def exercise(site):
                         const evidence = details.getBoundingClientRect();
                         return { evidenceBottom: evidence.bottom, itemBottom: box.bottom,
                             evidenceRight: evidence.right, itemRight: box.right,
-                            graphBottom: graph.bottom, contentWidth: item.scrollWidth,
-                            availableWidth: item.clientWidth };
+                            graphBottom: graph.bottom, contentWidth: details.scrollWidth,
+                            availableWidth: details.clientWidth };
                     });
                 }''')
                 if not layout or any(row['evidenceBottom'] > min(row['itemBottom'], row['graphBottom']) + 1
