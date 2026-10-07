@@ -281,6 +281,7 @@ def exercise(site):
             elif site.case == 'groove-missing':
                 expect(actions.nth(0)).to_contain_text('SUCCEEDED', timeout=20000)
                 expect(actions.nth(1)).to_contain_text('FAILED')
+                expect(graph.get_by_text('Native result: m1/alignment-result / 10', exact=True)).to_be_visible()
                 expect(execution.locator('[data-source="shelf.occupied"]')).to_contain_text('True')
                 for index in range(2, 6):
                     expect(actions.nth(index)).not_to_contain_text('SUCCEEDED')

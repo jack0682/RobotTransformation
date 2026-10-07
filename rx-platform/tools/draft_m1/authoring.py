@@ -81,8 +81,8 @@ def generate(scenario, case):
         'can_align': {'boolean': True}, 'implementation': {'text': scenario['implementation']},
         'version': {'text': scenario['version']}}})
     add('pattern.shelf', {'kind': 'POINT_PATTERN', 'resource_type': ref('type.shelf'),
-        'origin': 'origin', 'frame': 'frame', 'axes': [{'count': 'count', 'pitch': 'pitch', 'direction': [1, 0, 0]}],
-        'orientation': None}, 'Single simulation shelf seat custody slot')
+        'origin': 'origin', 'frame': 'frame', 'axes': [{'count': 'count', 'pitch': 'pitch', 'direction': [1, 0, 0]}]},
+        'Single simulation shelf seat custody slot')
     contexts = {'part': {'label': 'Material', 'kind': 'OBJECT', 'accepted_types': [ref('type.material')],
                         'required': True, 'multiple': False}}
     defaults = {'part': [ref('material.a')]}
@@ -122,7 +122,20 @@ def author(site):
     journal = site.root / 'authoring-client'
     definitions, model = generate(site.scenario, site.case)
     save(site.evidence / 'definitions-input.json', definitions)
-    refs = Definitions(terminal, journal).apply(definitions, {}, uid())['references']
+    request = uid()
+    save(site.evidence / 'definitions-request-identity.json', {'request_id': request, 'catalog': definitions['catalog']})
+    try:
+        refs = Definitions(terminal, journal).apply(definitions, {}, request)['references']
+    except Exception:
+        # Preserve the original identity and inspect only; never replay a failed setup mutation.
+        for entry in definitions['definitions']:
+            if entry['body']['kind'] == 'POINT_PATTERN':
+                try:
+                    current = terminal.get('/api/v1/definition', catalog=definitions['catalog'], id=entry['id'])
+                    save(site.evidence / 'failed-definition-readback.json', current)
+                except Exception as error:
+                    save(site.evidence / 'failed-definition-readback-error.json', {'error': str(error)})
+        raise
     workflow = Workflows(terminal, journal).apply(model, refs, uid())
     saved_model = Workflows(terminal, journal).model(workflow['workflow'])
     requests = []

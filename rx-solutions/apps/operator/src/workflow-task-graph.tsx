@@ -68,6 +68,13 @@ export function WorkflowTaskGraph({
                         : 'Configure action'}
                 </span>
               </button>
+              {work.flatMap((w) =>
+                w.native_results.map((native) => (
+                  <p key={native.evidence} className="task-native-result">
+                    Native result: {native.status_schema} / {native.status}
+                  </p>
+                )),
+              )}
               {work.map((w) => (
                 <details key={w.operation.operation_id}>
                   <summary>Operation evidence and custody</summary>
