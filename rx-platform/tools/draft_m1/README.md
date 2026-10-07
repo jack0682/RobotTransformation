@@ -2,7 +2,7 @@
 
 This directory prepares a new installation and checks the actual operator bundle → P → Executor → Host → external provider path. It uses existing application APIs, signed package tools, Host acknowledgements and six-area qualification. It is a test harness, not a product service or a browser shell gateway. A passing run is a technical acceptance candidate; the owner still accepts the milestone explicitly.
 
-Run only on authorized isolated Linux. `run.py` refuses other operating systems. The preserved Mac is for editing and static inspection only. Every case requires a new private workspace, public evidence directory, installation identity, signing keys, TLS identities and Docker state. CI assigns each case a separate Ubuntu runner; no later case shares CPU/I/O with preserved earlier services. This removes a known test-environment interaction, not proof that load caused the historical preentry failures. It never accesses the historical CP2 installation.
+Automated cases run only on authorized isolated Linux; `run.py` retains that default restriction. An explicit, separately authorized Mac Docker preparation mode is described below. Every case requires a new private workspace, public evidence directory, installation identity, signing keys, TLS identities and Docker state. CI assigns each case a separate Ubuntu runner; no later case shares CPU/I/O with preserved earlier services. This removes a known test-environment interaction, not proof that load caused the historical preentry failures. It never accesses the historical CP2 installation.
 
 ## Build from this repository
 
@@ -37,6 +37,25 @@ One immutable image supplies distinct P, Host and Executor containers. Runtime s
 Each case preinstalls a single bounded execution domain containing material A and B. The browser's saved request must exactly match an approved candidate. The one pattern slot represents the simulation shelf seat because the existing v2 inventory contract requires a pattern resource; it does not add a tray workflow. Other configurations require the existing installation and qualification procedure.
 
 The harness performs a missing-material negative UI check before any Run. Existing Rust tests cover broader revision/authority/package changes; a browser PASS alone does not claim all T01–T10 regressions passed. `--prepare-only` leaves an installation ready for inspection and explicitly makes no browser/runtime completion claim.
+
+## Explicit Mac Docker preparation for manual inspection
+
+Use this mode only with the owner's explicit authorization for M1 Docker operations on the Mac. The Mac acts as an API/deployment controller. Actual P, Executor, Host, package tools, signing fixture binary and provider execute in new Linux Docker containers. This mode does not run a native Mac product build/test or the automatic browser suite, and does not authorize those actions. Docker Desktop shares the Mac's CPU and memory; it is not an isolated physical machine.
+
+Use an already prepared controller Python environment and the exact already built Linux candidate image. From the repository root:
+
+```sh
+python3 rx-platform/tools/draft_m1/run.py \
+  --platform-image rx-draft-m1:current --solutions-image rx-draft-m1:current \
+  --workspace /tmp/rx-m1-manual-private --evidence-dir /tmp/rx-m1-manual-evidence \
+  --case normal --prepare-only --macos-docker-prepare
+```
+
+The flag requires Darwin, `--prepare-only`, `--case normal`, and selected Docker daemon `OSType=linux`. Each selected image is also checked as Linux. Without this flag, Darwin remains rejected; every automated browser case still requires Linux. Evidence records the actual controller OS/architecture separately from the Linux runtime image OS/architecture. `source_sha`/`controller_source_sha` name the controller checkout. Image IDs and any OCI source-revision labels are recorded separately; labels without corresponding build evidence are not source verification.
+
+After `PREPARED_NOT_BROWSER_VERIFIED`, use the separately authorized registered-terminal browser launcher with the private workspace's `browser-ready.json`. It identifies the HTTPS origin, registered terminal certificate paths, account credential-file path and installed workflow. Keep those files private. In the UI, open **Workflow design**, select the Task and material A or B, save/reopen its configuration, then prepare and run that saved Task.
+
+The normal preparation installs both qualified A/B candidates. Both configurations may be saved and inspected before execution, but the simulation has one held material and one shelf slot. To execute the other material after a completed run, prepare a separate fresh installation with new workspace/evidence paths. Do not reset or replay the existing scene. Original CP2 containers, volumes, identities and historical images are outside this preparation's scope and must remain untouched.
 
 ## Evidence and preservation
 

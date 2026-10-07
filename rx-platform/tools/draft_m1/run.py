@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""One new isolated Linux M1 installation and an actual browser/runtime roundtrip."""
+"""One new Linux M1 installation; automated browser checks require Linux."""
 from __future__ import annotations
 
 import argparse
@@ -9,7 +9,6 @@ from common import *
 
 
 def main():
-    linux_only()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--platform-image', required=True)
     parser.add_argument('--solutions-image', required=True)
@@ -17,7 +16,19 @@ def main():
     parser.add_argument('--evidence-dir', type=Path, required=True, help='New PUBLIC evidence directory; safe artifact scope')
     parser.add_argument('--case', choices=['normal', 'changed-material', 'groove-missing', 'completion-loss', 'lost-start-response'], required=True)
     parser.add_argument('--prepare-only', action='store_true', help='Install and qualify the bounded domain, but make no UI/runtime acceptance claim')
+    parser.add_argument('--macos-docker-prepare', action='store_true',
+        help='Explicitly authorized Darwin API/deployment controller only; requires --prepare-only --case normal and a Linux Docker daemon')
     args = parser.parse_args()
+    daemon_os_type = None
+    if args.macos_docker_prepare:
+        if platform.system() != 'Darwin' or not args.prepare_only or args.case != 'normal':
+            parser.error('--macos-docker-prepare requires Darwin, --prepare-only and --case normal')
+        os.umask(0o077)
+        daemon_os_type = command(['docker', 'info', '--format', '{{.OSType}}']).strip()
+        if daemon_os_type != 'linux':
+            parser.error('--macos-docker-prepare requires the selected Docker daemon OSType=linux')
+    else:
+        linux_only()
     workspace, evidence = args.workspace.resolve(), args.evidence_dir.resolve()
     if workspace == evidence or workspace.is_relative_to(evidence) or evidence.is_relative_to(workspace):
         parser.error('private workspace and public evidence must be disjoint directories')
@@ -32,6 +43,12 @@ def main():
     from execution_client import ExecutionClient
     from runtime_client import Terminal
     source = source_identity()
+    source.update(controller_source_sha=source['source_sha'],
+        controller_os=platform.system(), controller_architecture=platform.machine(),
+        runtime_os='Linux', macos_docker_prepare=args.macos_docker_prepare)
+    if args.macos_docker_prepare:
+        source.update(docker_daemon_os_type=daemon_os_type,
+            controller_scope='Darwin API/deployment controller; product binaries execute only in new Linux Docker containers')
     save(evidence / 'source.json', source)
     stage = 'created'
     def progress(value):
@@ -45,6 +62,9 @@ def main():
         site = Installation(workspace, evidence, args.platform_image, args.solutions_image, args.case)
         save(evidence / 'environment.json', {**source, 'case': args.case, 'platform_image': site.p,
             'solutions_image': site.s, 'image_architecture': site.simage['Architecture'],
+            'runtime_image_os': site.simage['Os'], 'runtime_architecture': site.simage['Architecture'],
+            'platform_image_source_revision': (site.pimage.get('Config', {}).get('Labels') or {}).get('org.opencontainers.image.revision'),
+            'solutions_image_source_revision': (site.simage.get('Config', {}).get('Labels') or {}).get('org.opencontainers.image.revision'),
             'scope': 'Actual separate P/Host/Executor containers; external finite FILE_SIMULATION provider; no physical devices'})
         site.prepare(read(SOLUTIONS / 'examples/process/material-alignment/scenario.json'))
         progress('authoring')
