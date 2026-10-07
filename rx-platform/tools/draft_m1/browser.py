@@ -515,6 +515,24 @@ def exercise(site):
                 for index in range(6):
                     expect(actions.nth(index)).to_contain_text('SUCCEEDED')
                 expect(execution.locator('[data-source="shelf.occupied"]')).to_contain_text('False')
+            if site.case == 'completion-loss':
+                layout = graph.evaluate('''(element) => {
+                    const graph = element.getBoundingClientRect();
+                    return [...element.querySelectorAll('details[open]')].map((details) => {
+                        const item = details.closest('li');
+                        const box = item.getBoundingClientRect();
+                        const evidence = details.getBoundingClientRect();
+                        return { evidenceBottom: evidence.bottom, itemBottom: box.bottom,
+                            evidenceRight: evidence.right, itemRight: box.right,
+                            graphBottom: graph.bottom, contentWidth: item.scrollWidth,
+                            availableWidth: item.clientWidth };
+                    });
+                }''')
+                if not layout or any(row['evidenceBottom'] > min(row['itemBottom'], row['graphBottom']) + 1
+                        or row['evidenceRight'] > row['itemRight'] + 1
+                        or row['contentWidth'] > row['availableWidth'] + 1 for row in layout):
+                    raise AssertionError('expanded operation evidence overlaps the next settings or escapes its card')
+                save(output / 'expanded-evidence-layout.json', layout)
             page.screenshot(path=str(output / 'reopened-result.png'), full_page=True)
             if diagnostics['page_errors'] or any(not item['expected'] for key in (
                     'failed_requests', 'console_errors', 'http_errors') for item in diagnostics[key]):

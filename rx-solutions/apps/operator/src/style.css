@@ -22,12 +22,14 @@
 }
 .task-graph li {
   position: relative;
+  min-width: 0;
+  align-self: start;
 }
 .task-graph li:not(:last-child)::after {
   content: '→';
   position: absolute;
   right: -19px;
-  top: 45%;
+  top: 48px;
   color: var(--muted);
 }
 .task-graph button {
@@ -35,8 +37,17 @@
   grid-template-columns: 28px 1fr;
   gap: 8px;
   width: 100%;
-  height: 100%;
+  min-height: 110px;
   text-align: left;
+}
+.task-graph details {
+  margin-top: 8px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.task-graph pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .task-graph button[aria-pressed='true'] {
   border-color: var(--ink);
