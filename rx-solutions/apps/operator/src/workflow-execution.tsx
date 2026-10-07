@@ -130,6 +130,9 @@ export function WorkflowExecution({
     onFresh(false);
     if (!selectedRun || !installed) return;
     const inspect = async () => {
+      // Preserve the last evidence while this new read is still unverified.
+      setResultFresh(false);
+      onFresh(false);
       try {
         const binding = executionRunSchema.parse(
           await api(`${executionBase}runs?${new URLSearchParams({ run: selectedRun })}`),

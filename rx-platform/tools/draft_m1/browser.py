@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import re
 import time
+from urllib.parse import parse_qs, urlsplit
 
 from common import *
 from commission import provider_effects
@@ -25,6 +26,112 @@ def select_reference(locator, ref):
     if len(matches) != 1:
         raise AssertionError('exact pinned option missing or ambiguous')
     locator.select_option(matches[0])
+
+
+def unknown_custody(receipt, initial_work, resources):
+    """Check existing P records only; this helper issues no command or release."""
+    result, binding = receipt['result'], receipt['binding']
+    if len(result['work']) != 1:
+        raise AssertionError('UNKNOWN admitted later work or lost the original operation')
+    work = result['work'][0]
+    original_id = initial_work['operation']['operation_id']
+    selection = initial_work['execution']['selection']
+    if (work['operation']['operation_id'] != original_id
+            or work['invocation'] != initial_work['invocation']
+            or work['execution'] != initial_work['execution']
+            or work['part'] != selection['part'] or selection['node'] != 'shelf-seat'
+            or work['operation']['execution_knowledge'] != 'UNKNOWN'
+            or work['operation']['outcome'] != 'NONE'
+            or work['operation']['phase'] != 'RECONCILING'
+            or work['operation']['disposition'] != 'QUARANTINED'
+            or work['operation']['integrity'] != 'VALID'
+            or result['details_truncated'] or result['run']['value']['state'] == 'COMPLETED'
+            or result['run']['value']['part_ids'] != [selection['part']]):
+        raise AssertionError('UNKNOWN original identity or unfinished Part was not preserved')
+    resource_values = {r['value']['id']: r['value'] for r in work['resources']}
+    if (not resources or set(resource_values) != set(resources)
+            or len(resource_values) != len(work['resources'])
+            or any(r['holder'] != original_id for r in resource_values.values())):
+        raise AssertionError('UNKNOWN lost an original P resource holder')
+    parts = result['parts']
+    if (len(parts) != 1 or parts[0]['value']['id'] != selection['part']
+            or parts[0]['value']['disposition'] == 'CONFIRMED_COMPLETED'):
+        raise AssertionError('UNKNOWN Part was completed, replaced or advanced')
+    if binding['run'] != selection['run'] or len(binding['slots']) != 1:
+        raise AssertionError('UNKNOWN Run slot binding differs')
+    slot = binding['slots'][0]
+    if (slot['index'] != selection['slot'] or slot['ordinal'] != selection['ordinal']
+            or slot['slot_ordinal'] != selection['slot_ordinal']):
+        raise AssertionError('UNKNOWN original slot identity differs')
+    pins = {ref_key(pin['resource']): pin for pin in binding['pools']}
+    pools = {ref_key(pool['resource']): pool for pool in receipt['slot_pools']}
+    expected_hold = {'run': selection['run'], 'ordinal': selection['ordinal'],
+        'slot_ordinal': selection['slot_ordinal'], 'part': selection['part'], 'consumed': False}
+    if not pins or set(pins) != set(pools) or len(pools) != len(receipt['slot_pools']):
+        raise AssertionError('UNKNOWN lost an original slot pool')
+    for key, pool in pools.items():
+        if (pool['generation'] != pins[key]['generation']
+                or pool['layout_digest'] != pins[key]['layout_digest']
+                or pool['holds'] != {str(selection['slot']): expected_hold}):
+            raise AssertionError('UNKNOWN slot hold was released, consumed or reinitialized')
+    return {'binding': binding, 'resources': resource_values, 'slot_pools': pools}
+
+
+def completed_loss_audit(site):
+    # A log row is complete only after its newline is present; an in-flight append
+    # must not become either a failed proof or a fabricated completed loss.
+    reader = r'''
+import json,os,stat
+from pathlib import Path
+p=Path('/data/material-alignment/withheld.jsonl'); raw=b''
+if p.exists():
+    info=p.lstat()
+    if not stat.S_ISREG(info.st_mode) or info.st_uid!=os.getuid() or info.st_size>1048576:
+        raise ValueError('bounded owned test-link audit required')
+    raw=p.read_bytes()
+complete=not raw or raw.endswith(b'\n')
+print(json.dumps([json.loads(line) for line in raw.splitlines()] if complete else []))
+'''
+    raw = site.d.run('exec', site.services['h'], '/opt/rx/python/python', '-I', '-S', '-B', '-c', reader)
+    return json.loads(raw)
+
+
+def verify_withheld_completion(site, work, effect, rows, output):
+    """Join real loss audit and SDK durable capture by their original identities."""
+    operation = work['operation']['operation_id']
+    if str(uuid.UUID(operation)) != operation:
+        raise AssertionError('original native operation is not a canonical UUID')
+    if (not rows or any(row['mode'] not in ('execute', 'lookup')
+            or row['operation'] != operation or row['invocation'] != work['invocation']
+            or row['provider_exit'] != 0 or type(row['withheld_bytes']) is not int
+            or not 0 < row['withheld_bytes'] <= 1048576
+            or not re.fullmatch('[0-9a-f]{64}', row['request_sha256'])
+            or not re.fullmatch('[0-9a-f]{64}', row['withheld_sha256']) for row in rows)):
+        raise AssertionError('native result-loss audit lacks the original completed invocation')
+    executions = [row for row in rows if row['mode'] == 'execute']
+    if (len(executions) != 1 or executions[0]['native_entry_forwarded'] is not True
+            or any(row['native_entry_forwarded'] is not False for row in rows if row['mode'] == 'lookup')):
+        raise AssertionError('native result loss lacks one original forwarded entry')
+    root = '/data/host/native-external/' + operation
+    original = json.loads(site.d.run('exec', site.services['h'], 'cat', root + '/request.json'))
+    completed = json.loads(site.d.run('exec', site.services['h'], 'cat', root + '/completion.json'))
+    save(output / 'withheld-original-request.json', original)
+    save(output / 'withheld-durable-completion.json', completed)
+    dispatch = original['dispatch']
+    capture = completed['capture']
+    if (original['schema'] != 'rx.external-native-request.v1'
+            or original['dispatch_digest'] != digest(encoded(dispatch))
+            or completed['schema'] != 'rx.external-native-fact.v1' or completed['original'] != original
+            or dispatch['operation'] != operation or dispatch['invocation'] != work['invocation']
+            or dispatch['input']['binding'] != work['execution']
+            or original['profile_digest'] != dispatch['intent']['profile_digest']
+            or capture['native_id'] != work['invocation']
+            or capture['device_session'] != dispatch['device_session']
+            or capture['status_schema'] != effect['status_schema'] or capture['status'] != effect['status']
+            or capture['status_schema'] != 'm1/alignment-result' or capture['status'] != 0
+            or capture['captured_at']['clock_id'] != dispatch['admitted_at']['clock_id']
+            or int(capture['captured_at']['ticks_ns']) < int(dispatch['admitted_at']['ticks_ns'])):
+        raise AssertionError('withheld completion is not the actual original native capture')
 
 
 def exercise(site):
@@ -63,13 +170,31 @@ def exercise(site):
                 'expected': (response.status == 404 and path == '/api/v1/workflow-executions/objects') or (
                     not state_flags['authenticated'] and response.status == 401 and path == '/api/v1/overview')})
         page.on('response', http_response)
-        page.on('requestfailed', lambda request: diagnostics['failed_requests'].append({
-            'path': request.url.split('?', 1)[0].removeprefix(site.origin),
-            'error': request.failure, 'expected': (site.case == 'lost-start-response'
-            and request.url.endswith('/api/v1/workflow-executions/start')) or (
-                state_flags['read_loss'] and request.url.split('?', 1)[0].endswith('/api/v1/runtime-skill-result')) or (
-                state_flags['navigating'] and request.method == 'GET' and request.failure == 'net::ERR_ABORTED')}))
+        active_reads = set()
+        superseded_reads = set()
+        def request_started(request):
+            if request.method == 'GET':
+                active_reads.add(request)
+        def request_finished(request):
+            active_reads.discard(request)
+            superseded_reads.discard(request)
+        page.on('request', request_started)
+        page.on('requestfinished', request_finished)
+        def request_failed(request):
+            superseded = request in superseded_reads
+            diagnostics['failed_requests'].append({
+                'path': request.url.split('?', 1)[0].removeprefix(site.origin),
+                'error': request.failure, 'superseded_read': superseded,
+                'expected': (site.case == 'lost-start-response'
+                and request.url.endswith('/api/v1/workflow-executions/start')) or (
+                    state_flags['read_loss'] and request.url.split('?', 1)[0].endswith('/api/v1/runtime-skill-result')) or (
+                    (state_flags['navigating'] or superseded) and request.method == 'GET'
+                    and request.failure == 'net::ERR_ABORTED')})
+            request_finished(request)
+        page.on('requestfailed', request_failed)
         def reload_page():
+            # Cancellation events can arrive after navigation has already completed.
+            superseded_reads.update(active_reads)
             state_flags['navigating'] = True
             try:
                 page.reload(wait_until='networkidle')
@@ -89,6 +214,9 @@ def exercise(site):
             expect(page.get_by_label('part context', exact=True)).to_be_enabled()
 
             def save_configuration():
+                # Replacing the receipt disposes its original report-model read.
+                superseded_reads.update(request for request in active_reads
+                    if urlsplit(request.url).path == '/api/v1/workflow-model')
                 with page.expect_response(lambda response: response.url.endswith('/api/v1/workflow-resolutions')
                                            and response.request.method == 'POST') as pending:
                     page.get_by_role('button', name='Save configuration and check values', exact=True).click()
@@ -189,10 +317,42 @@ def exercise(site):
             client = ExecutionClient(Terminal(site.connections['engineer']), site.root / 'inspection-client')
             def inspect():
                 return client.inspect_execution(site.run, reports=True)
+            loss_operation = None
+            prior_loss_custody = None
             def terminal(receipt):
+                nonlocal loss_operation, prior_loss_custody
                 result = receipt['result']
                 if site.case == 'completion-loss':
-                    return any(w['operation']['execution_knowledge'] == 'UNKNOWN' for w in result['work'])
+                    if not result['work']:
+                        return False
+                    if len(result['work']) != 1:
+                        raise AssertionError('completion loss admitted later work before the loss proof')
+                    first = result['work'][0]
+                    operation = first['operation']
+                    if loss_operation is None:
+                        loss_operation = operation['operation_id']
+                    if operation['operation_id'] != loss_operation or operation['outcome'] != 'NONE':
+                        raise AssertionError('completion loss replaced or settled its original operation')
+                    if (operation['execution_knowledge'] != 'UNKNOWN'
+                            or operation['phase'] != 'RECONCILING'
+                            or operation['disposition'] != 'QUARANTINED'):
+                        prior_loss_custody = None
+                        return False
+                    rows = completed_loss_audit(site)
+                    if not any(row.get('mode') == 'execute' for row in rows):
+                        prior_loss_custody = None
+                        return False
+                    applied = provider_effects(site)
+                    if (len(applied) != 1 or applied[0]['operation'] != loss_operation
+                            or applied[0]['invocation'] != first['invocation']
+                            or applied[0]['selection'] != first['execution']['selection']):
+                        raise AssertionError('completed loss audit lacks its one correlated native effect')
+                    verify_withheld_completion(site, first, applied[0], rows, output)
+                    current = unknown_custody(receipt, first,
+                        site.templates['shelf-seat']['action']['intent']['resource_set'])
+                    stable = current == prior_loss_custody
+                    prior_loss_custody = current
+                    return stable
                 return result['run']['value']['state'] not in ('PREPARED', 'EXECUTING')
             receipt = wait_for(inspect, terminal, timeout=90)
             save(output / 'runtime-receipt.json', receipt)
@@ -228,15 +388,18 @@ def exercise(site):
                         or any(w['operation']['execution_knowledge'] == 'UNKNOWN' for w in work)):
                     raise AssertionError('known groove failure was hidden or changed to UNKNOWN')
             elif site.case == 'completion-loss':
-                operation = work[0]['operation']
-                if operation['execution_knowledge'] != 'UNKNOWN' or operation['disposition'] == 'RELEASED':
-                    raise AssertionError('native completion loss did not preserve UNKNOWN custody')
-                withheld = site.d.run('exec', site.services['h'], 'cat', '/data/material-alignment/withheld.jsonl')
-                save(output / 'withheld-native-results.json', [json.loads(line) for line in withheld.splitlines()])
+                if len(work) != 1 or effects[0]['node'] != 'shelf-seat':
+                    raise AssertionError('completion loss admitted work beyond the original A1')
+                required_resources = site.templates['shelf-seat']['action']['intent']['resource_set']
+                custody = unknown_custody(receipt, work[0], required_resources)
+                save(output / 'unknown-original-custody.json', custody)
+                loss_records = completed_loss_audit(site)
+                save(output / 'withheld-native-results.json', loss_records)
+                verify_withheld_completion(site, work[0], effects[0], loss_records, output)
                 time.sleep(1)
                 again = inspect()
-                if provider_effects(site) != effects or again['result']['work'][0]['operation']['operation_id'] != operation['operation_id']:
-                    raise AssertionError('UNKNOWN inspection replayed work or replaced the operation')
+                if provider_effects(site) != effects or unknown_custody(again, work[0], required_resources) != custody:
+                    raise AssertionError('UNKNOWN inspection changed effects, identity or resource/slot custody')
                 save(output / 'unknown-original-reinspection.json', again)
             else:
                 if receipt['result']['run']['value']['state'] != 'COMPLETED' or state['shelf_occupied'] or not state['ft']['seated']:
@@ -269,6 +432,35 @@ def exercise(site):
                 graph.locator('li').first.locator('summary').click()
                 original_id = work[0]['operation']['operation_id']
                 expect(graph.get_by_text('Operation ' + original_id, exact=True)).to_be_visible()
+                expect(graph.get_by_role('status')).to_have_count(0, timeout=10000)
+                delayed = []
+                def delay_read(route):
+                    if (route.request.method != 'GET'
+                            or parse_qs(urlsplit(route.request.url).query) != {'run': [site.run]}):
+                        raise AssertionError('delayed read does not name the original Run')
+                    delayed.append((route, time.monotonic()))
+                    # Leave this real browser request pending without fetching/fabricating a reply.
+                page.route('**/api/v1/runtime-skill-result?*', delay_read, times=1)
+                deadline = time.monotonic() + 10
+                while not delayed and time.monotonic() < deadline:
+                    page.wait_for_timeout(50)
+                if len(delayed) != 1:
+                    raise AssertionError('original result read was not intercepted for the delay check')
+                expect(graph.get_by_role('status')).to_contain_text('Last retrieved results', timeout=3000)
+                expect(actions.nth(0)).to_contain_text('UNKNOWN · original operation retained')
+                expect(graph.get_by_text('Operation ' + original_id, exact=True)).to_be_visible()
+                expect(execution.get_by_role('button', name='Run Task in simulation', exact=True)).to_have_count(0)
+                page.screenshot(path=str(output / 'unknown-during-pending-read.png'), full_page=True)
+                elapsed_ms = (time.monotonic() - delayed[0][1]) * 1000
+                save(output / 'pending-result-read.json', {'run': site.run, 'operation': original_id,
+                    'elapsed_ms': elapsed_ms, 'browser_api_timeout_ms': 15000,
+                    'original_unknown_visible': True, 'last_retrieved_label_visible': True,
+                    'request_still_withheld': True})
+                if elapsed_ms >= 15000:
+                    raise AssertionError('pending-read label was not verified before the existing API timeout')
+                delayed[0][0].continue_()
+                page.unroute('**/api/v1/runtime-skill-result?*', delay_read)
+                expect(graph.get_by_role('status')).to_have_count(0, timeout=10000)
                 state_flags['read_loss'] = True
                 page.route('**/api/v1/runtime-skill-result?*', lambda route: route.abort('failed'))
                 expect(graph.get_by_role('status')).to_contain_text('Last retrieved results', timeout=20000)
@@ -278,6 +470,11 @@ def exercise(site):
                 page.screenshot(path=str(output / 'unknown-during-read-loss.png'), full_page=True)
                 page.unroute('**/api/v1/runtime-skill-result?*')
                 state_flags['read_loss'] = False
+                final_unknown = inspect()
+                if (unknown_custody(final_unknown, work[0], required_resources) != custody
+                        or provider_effects(site) != effects):
+                    raise AssertionError('browser fault checks changed original UNKNOWN work or custody')
+                save(output / 'unknown-after-browser-read-faults.json', final_unknown)
             elif site.case == 'groove-missing':
                 expect(actions.nth(0)).to_contain_text('SUCCEEDED', timeout=20000)
                 expect(actions.nth(1)).to_contain_text('FAILED')

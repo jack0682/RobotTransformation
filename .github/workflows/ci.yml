@@ -338,9 +338,11 @@ jobs:
       - name: Verify real M1 browser runtime and negative cases
         working-directory: source
         run: |
+          failed=0
           for scenario in normal changed-material groove-missing completion-loss lost-start-response; do
-            "$RUNNER_TEMP/operator-browser-env/bin/python" -B rx-platform/tools/draft_m1/run.py --platform-image rx-draft-m1:current --solutions-image rx-draft-m1:current --workspace "$RUNNER_TEMP/m1-private-$scenario" --evidence-dir "$RUNNER_TEMP/m1-evidence/$scenario" --case "$scenario"
+            "$RUNNER_TEMP/operator-browser-env/bin/python" -B rx-platform/tools/draft_m1/run.py --platform-image rx-draft-m1:current --solutions-image rx-draft-m1:current --workspace "$RUNNER_TEMP/m1-private-$scenario" --evidence-dir "$RUNNER_TEMP/m1-evidence/$scenario" --case "$scenario" || failed=1
           done
+          exit "$failed"
       - name: Verify browser authoring against the actual Platform API
         env:
           CARGO_TARGET_DIR: ${{ runner.temp }}/operator-platform-target

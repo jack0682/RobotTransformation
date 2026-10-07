@@ -303,6 +303,28 @@ class Installation:
             except Exception as error:
                 failures.append({'inspection': 'final P views', 'error': str(error)})
         if 'h' in self.services:
+            # Capture independent provider facts even when browser inspection timed out.
+            provider_reader = r'''
+import base64,hashlib,json,os,stat
+from pathlib import Path
+root=Path('/data/material-alignment'); records={}
+if root.is_dir() and not root.is_symlink():
+    for name in ('state.json','effects.jsonl','withheld.jsonl'):
+        path=root/name
+        if not path.exists(): continue
+        info=path.lstat()
+        if not stat.S_ISREG(info.st_mode) or info.st_uid!=os.getuid() or info.st_size>4194304:
+            raise ValueError('bounded owned provider evidence required')
+        raw=path.read_bytes()
+        records[name]={'sha256':hashlib.sha256(raw).hexdigest(),
+            'bytes_base64':base64.b64encode(raw).decode(), 'size_bytes':len(raw)}
+print(json.dumps(records,sort_keys=True))
+'''
+            try:
+                raw = self.d.run('exec', self.services['h'], '/opt/rx/python/python', '-I', '-S', '-B', '-c', provider_reader)
+                save(self.evidence / 'original-provider-facts.json', json.loads(raw))
+            except Exception as error:
+                failures.append({'inspection': 'independent provider facts', 'error': str(error)})
             # Whitelist only synthetic native facts and status; never archive Host DB/TLS/config.
             reader = r'''
 import base64,hashlib,json,os,stat,uuid
