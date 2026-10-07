@@ -292,7 +292,7 @@ jobs:
   operator:
     name: Operator application
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 45
     defaults:
       run:
         working-directory: source/rx-solutions/apps/operator
@@ -314,6 +314,32 @@ jobs:
           npm test
           npm run test:bundle
           npm run build
+      - name: Prepare the isolated Linux browser environment
+        run: |
+          mkdir -p "$RUNNER_TEMP/operator-browser"
+          uname -a > "$RUNNER_TEMP/operator-browser/environment.txt"
+          lscpu >> "$RUNNER_TEMP/operator-browser/environment.txt"
+          free -b >> "$RUNNER_TEMP/operator-browser/environment.txt"
+          git rev-parse HEAD >> "$RUNNER_TEMP/operator-browser/environment.txt"
+          printf '%s\n' "${ImageOS:-unknown}" "${ImageVersion:-unknown}" >> "$RUNNER_TEMP/operator-browser/environment.txt"
+          toolchain=$(python3 -c 'import tomllib; print(tomllib.load(open("../../../rx-platform/rust-toolchain.toml", "rb"))["toolchain"]["channel"])')
+          rustup toolchain install "$toolchain" --profile minimal
+          python3 -m venv "$RUNNER_TEMP/operator-browser-env"
+          "$RUNNER_TEMP/operator-browser-env/bin/pip" install -r tests/requirements-browser.txt
+          "$RUNNER_TEMP/operator-browser-env/bin/python" -m playwright install --with-deps chromium
+      - name: Verify browser authoring against the actual Platform API
+        env:
+          CARGO_TARGET_DIR: ${{ runner.temp }}/operator-platform-target
+        run: |
+          (cd ../../../rx-platform && cargo build -p rx-platformd --locked)
+          "$RUNNER_TEMP/operator-browser-env/bin/python" tests/run_browser.py --platform-executable "$CARGO_TARGET_DIR/debug/rx-platformd" --evidence-dir "$RUNNER_TEMP/operator-browser"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: operator-browser
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/operator-browser/**
 
   dynamixel:
     name: Pinned DYNAMIXEL helper boundaries
