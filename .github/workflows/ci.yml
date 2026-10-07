@@ -173,6 +173,7 @@ jobs:
           python3 -B tools/test_python_environment.py
           python3 -B tools/test_python_host_runner.py
           python3 -B tools/test_external_adapter.py
+          python3 -B tools/test_material_alignment.py
           python3 -B apps/operator/tests/test_with_servers.py
       - name: Run content invariant and native provenance gates
         run: |

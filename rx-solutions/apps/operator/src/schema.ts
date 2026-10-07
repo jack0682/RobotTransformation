@@ -96,7 +96,7 @@ export const runSchema = z.object({
   part_ids: z.array(id),
   pending_attempt: id.nullable().optional(),
 });
-const operation = z.object({
+export const operationSchema = z.object({
   operation_id: id,
   revision: counter,
   phase: z.enum(['ADMITTED', 'ACTIVE', 'RECONCILING', 'SETTLED']),
@@ -124,7 +124,13 @@ export const overviewSchema = z.object({
       diagnostics: diagnosticsSchema,
       runs: z.array(z.object({ revision: counter, value: runSchema })),
       work: z.array(
-        z.object({ cell: z.string(), run: id, part: id.nullable(), host: z.string(), operation }),
+        z.object({
+          cell: z.string(),
+          run: id,
+          part: id.nullable(),
+          host: z.string(),
+          operation: operationSchema,
+        }),
       ),
       runs_truncated: z.boolean(),
       work_truncated: z.boolean(),
@@ -198,6 +204,9 @@ export const pendingSchema = z
       '/api/v1/definition-catalogs',
       '/api/v1/definitions',
       '/api/v1/workflow-resolutions',
+      '/api/v1/workflow-executions/runs',
+      '/api/v1/workflow-executions/objects',
+      '/api/v1/workflow-executions/start',
       '/api/v1/process-draft-bindings',
       '/api/v1/package-intakes',
       '/api/v1/process-reviews',
@@ -246,7 +255,8 @@ export const pendingSchema = z
         });
     }
     if (
-      value.route === '/api/v1/runs/start' &&
+      (value.route === '/api/v1/runs/start' ||
+        value.route === '/api/v1/workflow-executions/start') &&
       (!value.start_review || !startCommandSchema.safeParse(value.command).success)
     ) {
       context.addIssue({

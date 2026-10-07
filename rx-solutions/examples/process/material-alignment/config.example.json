@@ -1,0 +1,12 @@
+{
+  "schema": "rx.material-alignment-simulation.v1",
+  "environment": "FILE_SIMULATION",
+  "state_directory": "/data/material-alignment",
+  "material_models": ["sim/material-a", "sim/material-b"],
+  "robot_id": "sim/robot",
+  "new_material_channel": "new-material",
+  "other_channel": "other",
+  "shelf_id": "sim/rotating-shelf",
+  "vision_id": "sim/d405",
+  "ft_id": "sim/ft"
+}

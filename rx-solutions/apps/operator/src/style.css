@@ -10,6 +10,57 @@
   --accent: #ddf078;
   --warning: #a35d25;
 }
+.task-graph {
+  margin-block: 24px;
+}
+.task-graph ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+}
+.task-graph li {
+  position: relative;
+}
+.task-graph li:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  right: -19px;
+  top: 45%;
+  color: var(--muted);
+}
+.task-graph button {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+}
+.task-graph button[aria-pressed='true'] {
+  border-color: var(--ink);
+  box-shadow: inset 0 3px var(--accent);
+}
+.task-graph button > .muted,
+.task-graph button > .error {
+  grid-column: 2;
+}
+.task-step-number {
+  grid-row: span 2;
+  color: var(--muted);
+}
+@media (max-width: 520px) {
+  .task-graph ol {
+    grid-template-columns: 1fr;
+  }
+  .task-graph li:not(:last-child)::after {
+    content: '↓';
+    top: auto;
+    right: 50%;
+    bottom: -22px;
+  }
+}
 * {
   box-sizing: border-box;
 }
