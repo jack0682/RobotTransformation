@@ -60,6 +60,10 @@ RUN npm run build
 FROM python:3.12-slim-bookworm@sha256:392307d22300de8b5986851a12d9176dfc0fc073e65bf6523ebd7dcbeb23564e
 RUN apt-get update && apt-get install -y --no-install-recommends libstdc++6 libzmq5 libssl3 && rm -rf /var/lib/apt/lists/* && \
     mkdir -p /data /run/rx /run/rx-host /opt/rx/bin /opt/rx/test && chown -R 10001:10001 /data /run/rx /run/rx-host
+RUN python3 -m pip install --no-cache-dir grpcio==1.84.0 grpcio-tools==1.84.0 protobuf==7.36.2
+COPY rx-solutions/sdk/proto/ /opt/rx/result-link/proto/
+RUN mkdir /opt/rx/result-link/generated && python3 -m grpc_tools.protoc -I/opt/rx/result-link/proto --python_out=/opt/rx/result-link/generated $(find /opt/rx/result-link/proto -name '*.proto' | sort)
+COPY rx-solutions/deployment/simulation/result-link/link.py /opt/rx/result-link/link.py
 COPY --from=p-build /out/rx-platformd /out/rx-package-store /usr/local/bin/
 COPY --from=p-build /out/delivery_fixture /opt/rx/test/delivery_fixture
 RUN chmod 755 /opt/rx/test/delivery_fixture

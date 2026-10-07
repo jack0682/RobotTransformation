@@ -163,6 +163,10 @@ def start_services(site):
     save(folder / 'bindings.json', [binding])
     host['bindings']['sha256'] = sha(folder / 'bindings.json')
     host['publisher']['store_generation'] = site.installation['store_generation']
+    if site.case == 'completion-loss':
+        if host['publisher']['uri'] != 'https://p:7443' or host['publisher']['server_name'] != 'p':
+            raise ValueError('expected original Host publisher transport required')
+        host['publisher']['uri'] = 'https://loss-link:7443'
     shutil.copytree(site.author / 'package', folder / 'templates')
     shutil.copytree(site.root / 'provider', folder, dirs_exist_ok=True)
     policy = read(site.author / 'policy.json')

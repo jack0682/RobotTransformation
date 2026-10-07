@@ -111,6 +111,8 @@ class Installation:
         self.cell = self.initial['id']
         self.scenario = scenario
         self._external_package()
+        if self.case == 'completion-loss':
+            self._prepare_loss_link()
         self._start_platform()
 
     def _external_package(self):
@@ -133,17 +135,12 @@ class Installation:
         self.d.put(self.s, self.volumes['provider'], provider)
         self.d.prepare_permissions(self.s, [self.volumes['provider'] + ':/config',
                                    self.volumes['author-data'] + ':/data', self.volumes['author'] + ':/work'])
-        program_file = 'adapter.py'
-        if self.case == 'completion-loss':
-            shutil.copyfile(Path(__file__).with_name('completion_link.py'), provider / 'completion_link.py')
-            program_file = 'completion_link.py'
-            self.d.put(self.s, self.volumes['provider'], provider)
-        args = ['--python', '/opt/rx/python/python', '--adapter', '/config/host/' + program_file, '--config', '/config/host/m1-provider.json',
+        # T06 loses the existing Host/P transport after entry. Native completion
+        # must reach Host normally; the historical native wrapper is not selected.
+        args = ['--python', '/opt/rx/python/python', '--adapter', '/config/host/adapter.py', '--config', '/config/host/m1-provider.json',
                 '--sdk', '/config/host/rx_external_adapter.py']
         dependencies = ['/opt/rx/python/python', '/config/host/adapter.py', '/config/host/m1-provider.json',
                         '/config/host/rx_external_adapter.py']
-        if self.case == 'completion-loss':
-            dependencies.append('/config/host/completion_link.py')
         save(author / 'arguments.json', args)
         save(author / 'dependencies.json', dependencies)
         self.d.put(self.s, self.volumes['author'], author)
@@ -248,6 +245,108 @@ class Installation:
         startup['package_intake']['policy']['sha256'] = sha(self.final / 'config/package-policy.json')
         replace_generated(self.final / 'config/startup.json', startup)
 
+    def _prepare_loss_link(self):
+        """Private test transport material only; no product ledger or native mounts."""
+        folder = self.root / 'result-link'
+        (folder / 'pki').mkdir(parents=True)
+        for source, names in [('config', ('ca.pem', 'p-server.pem', 'p-server.key',
+                                         'p-host-client.pem', 'p-host-client.key')),
+                              ('host-config', ('h-server.pem', 'h-server.key',
+                                               'h-publisher.pem', 'h-publisher.key'))]:
+            for name in names:
+                shutil.copyfile(self.final / source / 'pki' / name, folder / 'pki' / name)
+        def tls(name):
+            return '/config/result-link/pki/' + name
+        relays = [
+            {'listen': '0.0.0.0:7444', 'upstream': 's:7444', 'server_name': 's',
+             'ca': tls('ca.pem'), 'server_key': tls('h-server.key'),
+             'server_certificate': tls('h-server.pem'), 'client_key': tls('p-host-client.key'),
+             'client_certificate': tls('p-host-client.pem'), 'allowed_peer': tls('p-host-client.pem')},
+            {'listen': '0.0.0.0:7443', 'upstream': 'p:7443', 'server_name': 'p',
+             'ca': tls('ca.pem'), 'server_key': tls('p-server.key'),
+             'server_certificate': tls('p-server.pem'), 'client_key': tls('h-publisher.key'),
+             'client_certificate': tls('h-publisher.pem'), 'allowed_peer': tls('h-publisher.pem')},
+        ]
+        save(folder / 'config.json', {'environment': 'SIMULATION', 'relays': relays})
+        startup = read(self.final / 'config/startup.json')
+        selected = [link for link in startup['host_links'] if link['cell'] == self.cell]
+        if len(selected) != 1 or selected[0]['uri'] != 'https://s:7444' or selected[0]['server_name'] != 's':
+            raise ValueError('expected original simulation Host transport required')
+        selected[0]['uri'] = 'https://loss-link:7444'
+        replace_generated(self.final / 'config/startup.json', startup)
+        for name in ('loss-config', 'loss-data', 'loss-work'):
+            self.volume(name)
+        self.d.put(self.s, self.volumes['loss-config'], folder)
+        self.d.prepare_permissions(self.s, [self.volumes['loss-config'] + ':/config',
+            self.volumes['loss-data'] + ':/data', self.volumes['loss-work'] + ':/work'])
+
+    def _start_loss_link(self):
+        mounts = [self.volumes['loss-config'] + ':/config/result-link:ro',
+                  self.volumes['loss-data'] + ':/data']
+        self.services['loss'] = self.d.start(self.s, 'loss', 'loss-link', '/usr/bin/env',
+            ['PYTHONPATH=/opt/rx/result-link/generated', '/usr/local/bin/python3', '-B',
+             '/opt/rx/result-link/link.py', '--state', '/data/control', 'serve',
+             '--config', '/config/result-link/config.json'], mounts)
+        def ready():
+            status = self.d.state(self.services['loss'])
+            if not status['State']['Running']:
+                raise RuntimeError('existing result-link fixture exited before readiness')
+            return self.d.run('logs', self.services['loss'])
+        wait_for(ready, lambda log: 'SIM result-link ready' in log, timeout=30)
+        source = SOLUTIONS / 'deployment/simulation/result-link/link.py'
+        installed = self.d.run('exec', self.services['loss'], 'sha256sum', '/opt/rx/result-link/link.py').split()[0]
+        if installed != sha(source):
+            raise ValueError('installed result-link differs from unchanged source')
+        save(self.evidence / 'loss-link-fixture.json', {'source': str(source.relative_to(REPOSITORY)),
+            'sha256': installed, 'image': self.s, 'environment': 'SIMULATION',
+            'p_to_host': 'https://loss-link:7444', 'host_publisher_to_p': 'https://loss-link:7443',
+            'native_storage_mounted': False, 'product_database_mounted': False,
+            'signing_seeds_mounted': False, 'private_tls_uploaded': False})
+        self.record()
+
+    def loss_evidence(self):
+        """Read control and completed audit rows without calling the mutating control CLI."""
+        if 'loss' not in self.services:
+            raise ValueError('this fresh scene has no result-link fixture')
+        reader = r'''
+import base64,hashlib,json,os,stat
+from pathlib import Path
+root=Path('/data/control'); files={}; raw={}
+if not root.is_dir() or root.is_symlink() or root.stat().st_uid!=os.getuid():
+    raise ValueError('owned result-link control directory required')
+for name in ('fault.json','transport.jsonl'):
+    p=root/name
+    if not p.exists(): continue
+    info=p.lstat()
+    if not stat.S_ISREG(info.st_mode) or info.st_uid!=os.getuid() or info.st_size>4194304:
+        raise ValueError('bounded owned result-link evidence required')
+    data=p.read_bytes(); raw[name]=data
+    files[name]={'sha256':hashlib.sha256(data).hexdigest(),'size_bytes':len(data),
+                 'bytes_base64':base64.b64encode(data).decode()}
+transport=raw.get('transport.jsonl',b''); pending=bool(transport and not transport.endswith(b'\n'))
+lines=transport.splitlines()
+if pending: lines=lines[:-1]
+print(json.dumps({'control':json.loads(raw['fault.json']) if 'fault.json' in raw else None,
+    'transport':[json.loads(line) for line in lines], 'transport_pending':pending, 'raw_files':files},sort_keys=True))
+'''
+        return json.loads(self.d.run('exec', self.services['loss'], '/usr/local/bin/python3',
+                                    '-I', '-S', '-B', '-c', reader))
+
+    def arm_loss_link(self):
+        if self.case != 'completion-loss':
+            return
+        previous = self.loss_evidence()['control']
+        if previous is not None:
+            raise ValueError('result-link may only be armed once in this fresh scene')
+        raw = self.d.run('exec', self.services['loss'], '/usr/local/bin/python3', '-B',
+            '/opt/rx/result-link/link.py', '--state', '/data/control', 'arm',
+            '--publication', self.publication['reference']['id'], '--ordinal', '1', '--node', 'shelf-seat')
+        control = json.loads(raw)
+        if (control['phase'] != 'ARMED' or control['publication'] != self.publication['reference']['id']
+                or control['ordinal'] != 1 or control['node'] != 'shelf-seat'):
+            raise ValueError('result-link selector differs from this publication and A1')
+        save(self.evidence / 'loss-link-armed.json', control)
+
     def _start_platform(self):
         for name in ('p-config', 'p-data', 'p-work', 'imports', 'ui'):
             self.volume(name)
@@ -259,6 +358,8 @@ class Installation:
                         self.volumes['imports'] + ':/import:ro', self.volumes['ui'] + ':/operator:ro']
         self.d.command(self.p, '/usr/local/bin/rx-platformd', ['init', '/config/startup.json'], self.pmounts, 'p-init')
         self.d.make_network()
+        if self.case == 'completion-loss':
+            self._start_loss_link()
         self.services['p'] = self.d.start(self.p, 'p', 'p', '/usr/local/bin/rx-platformd',
             ['run', '/config/startup.json'], self.pmounts, [f'127.0.0.1:{self.port}:8443'])
         self.record()
@@ -302,6 +403,27 @@ class Installation:
                 save(self.evidence / 'final-overview.json', self.users['engineer'].get('/api/v1/overview'))
             except Exception as error:
                 failures.append({'inspection': 'final P views', 'error': str(error)})
+            if getattr(self, 'run', None):
+                try:
+                    terminal = Terminal(self.connections['engineer'])
+                    receipt = ExecutionClient(terminal, self.root / 'final-inspection-client').inspect_execution(self.run, reports=True)
+                    save(self.evidence / 'final-execution-receipt.json', receipt)
+                except Exception as error:
+                    failures.append({'inspection': 'final Run/resources/slot holds', 'error': str(error)})
+        try:
+            from diagnostics import preserve_host_dispatch
+            failures.extend(preserve_host_dispatch(self))
+        except Exception as error:
+            failures.append({'inspection': 'Host dispatch diagnostic collector', 'error': str(error)})
+        if 'loss' in self.services:
+            try:
+                loss = self.loss_evidence()
+                save(self.evidence / 'loss-link-control.json', loss['control'])
+                save(self.evidence / 'loss-link-transport.json', {'records': loss['transport'],
+                    'trailing_append_pending': loss['transport_pending']})
+                save(self.evidence / 'original-loss-link-facts.json', loss['raw_files'])
+            except Exception as error:
+                failures.append({'inspection': 'original result-link control/audit', 'error': str(error)})
         if 'h' in self.services:
             # Capture independent provider facts even when browser inspection timed out.
             provider_reader = r'''

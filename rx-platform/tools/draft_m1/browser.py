@@ -77,41 +77,31 @@ def unknown_custody(receipt, initial_work, resources):
     return {'binding': binding, 'resources': resource_values, 'slot_pools': pools}
 
 
-def completed_loss_audit(site):
-    # A log row is complete only after its newline is present; an in-flight append
-    # must not become either a failed proof or a fabricated completed loss.
-    reader = r'''
-import json,os,stat
-from pathlib import Path
-p=Path('/data/material-alignment/withheld.jsonl'); raw=b''
-if p.exists():
-    info=p.lstat()
-    if not stat.S_ISREG(info.st_mode) or info.st_uid!=os.getuid() or info.st_size>1048576:
-        raise ValueError('bounded owned test-link audit required')
-    raw=p.read_bytes()
-complete=not raw or raw.endswith(b'\n')
-print(json.dumps([json.loads(line) for line in raw.splitlines()] if complete else []))
-'''
-    raw = site.d.run('exec', site.services['h'], '/opt/rx/python/python', '-I', '-S', '-B', '-c', reader)
-    return json.loads(raw)
-
-
-def verify_withheld_completion(site, work, effect, rows, output):
-    """Join real loss audit and SDK durable capture by their original identities."""
+def verify_withheld_completion(site, work, effect, loss, output):
+    """Join existing mTLS loss-link audit and original durable SDK capture."""
     operation = work['operation']['operation_id']
     if str(uuid.UUID(operation)) != operation:
         raise AssertionError('original native operation is not a canonical UUID')
-    if (not rows or any(row['mode'] not in ('execute', 'lookup')
-            or row['operation'] != operation or row['invocation'] != work['invocation']
-            or row['provider_exit'] != 0 or type(row['withheld_bytes']) is not int
-            or not 0 < row['withheld_bytes'] <= 1048576
-            or not re.fullmatch('[0-9a-f]{64}', row['request_sha256'])
-            or not re.fullmatch('[0-9a-f]{64}', row['withheld_sha256']) for row in rows)):
-        raise AssertionError('native result-loss audit lacks the original completed invocation')
-    executions = [row for row in rows if row['mode'] == 'execute']
-    if (len(executions) != 1 or executions[0]['native_entry_forwarded'] is not True
-            or any(row['native_entry_forwarded'] is not False for row in rows if row['mode'] == 'lookup')):
-        raise AssertionError('native result loss lacks one original forwarded entry')
+    control, rows = loss['control'], loss['transport']
+    authorize = '/rx.host.execution.v2.HostExecutionService/Authorize'
+    if (control.get('schema') != 'rx.sim-result-loss.v1' or control.get('phase') != 'BLOCKED'
+            or control.get('publication') != site.publication['reference']['id']
+            or control.get('ordinal') != 1 or control.get('node') != 'shelf-seat'
+            or control.get('run') != site.run or control.get('operation') != operation
+            or control.get('invocation') != work['invocation']
+            or control.get('native_entry_state') not in (
+                'HOST_RECEIPT_STATE_NATIVE_ACCEPTED', 'HOST_RECEIPT_STATE_RESULT_CAPTURED')
+            or not re.fullmatch('[0-9a-f]{64}', control.get('authorize_request_sha256', ''))):
+        raise AssertionError('result-loss link did not block this original entered invocation')
+    entries = [row for row in rows if row.get('event') == 'NATIVE_ENTRY_CONFIRMED']
+    if (len(entries) != 1 or entries[0].get('operation') != operation
+            or entries[0].get('invocation') != work['invocation']
+            or entries[0].get('method') != authorize
+            or any(row.get('environment') != 'SIMULATION' or row.get('operation') != operation for row in rows)
+            or not any(row.get('event') == 'WITHHELD' and row.get('method') == authorize
+                and row.get('generation') == control['generation'] for row in rows)):
+        raise AssertionError('transport audit lacks the original withheld Authorize response')
+    save(output / 'withheld-original-link-control.json', control)
     root = '/data/host/native-external/' + operation
     original = json.loads(site.d.run('exec', site.services['h'], 'cat', root + '/request.json'))
     completed = json.loads(site.d.run('exec', site.services['h'], 'cat', root + '/completion.json'))
@@ -226,6 +216,8 @@ def exercise(site):
                 receipt = response.json()
                 saved_requests.append(response.request.post_data_json)
                 saved_receipts.append(receipt)
+                save(output / f'saved-configuration-{len(saved_receipts)}.json',
+                    {'request': saved_requests[-1], 'receipt': receipt})
                 return receipt
 
             # T02: server validation from a genuinely incomplete UI selection, before any Run.
@@ -338,22 +330,37 @@ def exercise(site):
                             or operation['disposition'] != 'QUARANTINED'):
                         prior_loss_custody = None
                         return False
-                    rows = completed_loss_audit(site)
-                    if not any(row.get('mode') == 'execute' for row in rows):
+                    loss = site.loss_evidence()
+                    if not loss['control'] or loss['control'].get('phase') != 'BLOCKED' or loss['transport_pending']:
                         prior_loss_custody = None
                         return False
                     applied = provider_effects(site)
+                    if not applied:
+                        prior_loss_custody = None
+                        return False
+                    if str(uuid.UUID(loss_operation)) != loss_operation:
+                        raise AssertionError('original operation is not a canonical UUID')
+                    capture_ready = site.d.run('exec', site.services['h'], '/bin/sh', '-c',
+                        'if [ -f "$1" ]; then printf present; else printf pending; fi', 'capture-read',
+                        '/data/host/native-external/' + loss_operation + '/completion.json')
+                    if capture_ready != 'present':
+                        prior_loss_custody = None
+                        return False
                     if (len(applied) != 1 or applied[0]['operation'] != loss_operation
                             or applied[0]['invocation'] != first['invocation']
                             or applied[0]['selection'] != first['execution']['selection']):
                         raise AssertionError('completed loss audit lacks its one correlated native effect')
-                    verify_withheld_completion(site, first, applied[0], rows, output)
+                    verify_withheld_completion(site, first, applied[0], loss, output)
                     current = unknown_custody(receipt, first,
                         site.templates['shelf-seat']['action']['intent']['resource_set'])
                     stable = current == prior_loss_custody
                     prior_loss_custody = current
                     return stable
-                return result['run']['value']['state'] not in ('PREPARED', 'EXECUTING')
+                # Failed/held operations do not necessarily end the existing Run.
+                return (result['run']['value']['state'] not in ('PREPARED', 'EXECUTING')
+                    or any(w['operation']['execution_knowledge'] == 'UNKNOWN'
+                        or (w['operation']['execution_knowledge'] == 'ENDED'
+                            and w['operation']['outcome'] == 'FAILED') for w in result['work']))
             receipt = wait_for(inspect, terminal, timeout=90)
             save(output / 'runtime-receipt.json', receipt)
             effects = provider_effects(site)
@@ -384,6 +391,9 @@ def exercise(site):
                 if (effects[-1]['status'] != 10 or not state['shelf_occupied']
                         or failed['outcome'] != 'FAILED' or failed['execution_knowledge'] != 'ENDED'
                         or failed['phase'] != 'SETTLED' or first['outcome'] != 'SUCCEEDED'
+                        or receipt['result']['run']['value']['state'] == 'COMPLETED'
+                        or any(part['value']['disposition'] == 'CONFIRMED_COMPLETED'
+                            for part in receipt['result']['parts'])
                         or len(work) != 2 or {e['node'] for e in effects} != {'shelf-seat', 'groove-detect'}
                         or any(w['operation']['execution_knowledge'] == 'UNKNOWN' for w in work)):
                     raise AssertionError('known groove failure was hidden or changed to UNKNOWN')
@@ -393,9 +403,9 @@ def exercise(site):
                 required_resources = site.templates['shelf-seat']['action']['intent']['resource_set']
                 custody = unknown_custody(receipt, work[0], required_resources)
                 save(output / 'unknown-original-custody.json', custody)
-                loss_records = completed_loss_audit(site)
-                save(output / 'withheld-native-results.json', loss_records)
-                verify_withheld_completion(site, work[0], effects[0], loss_records, output)
+                loss = site.loss_evidence()
+                save(output / 'withheld-transport-results.json', loss)
+                verify_withheld_completion(site, work[0], effects[0], loss, output)
                 time.sleep(1)
                 again = inspect()
                 if provider_effects(site) != effects or unknown_custody(again, work[0], required_resources) != custody:
@@ -462,7 +472,24 @@ def exercise(site):
                 page.unroute('**/api/v1/runtime-skill-result?*', delay_read)
                 expect(graph.get_by_role('status')).to_have_count(0, timeout=10000)
                 state_flags['read_loss'] = True
-                page.route('**/api/v1/runtime-skill-result?*', lambda route: route.abort('failed'))
+                failed_read_count = len(diagnostics['failed_requests'])
+                aborted_reads = []
+                def abort_read(route):
+                    if (route.request.method != 'GET'
+                            or parse_qs(urlsplit(route.request.url).query) != {'run': [site.run]}):
+                        raise AssertionError('aborted read does not name the original Run')
+                    aborted_reads.append(route.request.url)
+                    route.abort('failed')
+                page.route('**/api/v1/runtime-skill-result?*', abort_read)
+                fault_deadline = time.monotonic() + 10
+                while time.monotonic() < fault_deadline:
+                    if aborted_reads and any(item['path'] == '/api/v1/runtime-skill-result'
+                            and item['error'] == 'net::ERR_FAILED'
+                            for item in diagnostics['failed_requests'][failed_read_count:]):
+                        break
+                    page.wait_for_timeout(50)
+                else:
+                    raise AssertionError('result read was not actually aborted')
                 expect(graph.get_by_role('status')).to_contain_text('Last retrieved results', timeout=20000)
                 expect(actions.nth(0)).to_contain_text('UNKNOWN · original operation retained')
                 expect(graph.get_by_text('Operation ' + original_id, exact=True)).to_be_visible()

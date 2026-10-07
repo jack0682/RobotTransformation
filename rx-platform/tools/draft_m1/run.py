@@ -33,18 +33,29 @@ def main():
     from runtime_client import Terminal
     source = source_identity()
     save(evidence / 'source.json', source)
+    stage = 'created'
+    def progress(value):
+        nonlocal stage
+        stage = value
+        print(json.dumps({'event': 'm1-stage', 'case': args.case,
+                          'source_sha': source['source_sha'], 'stage': value}), flush=True)
     site = None
     try:
+        progress('installing')
         site = Installation(workspace, evidence, args.platform_image, args.solutions_image, args.case)
         save(evidence / 'environment.json', {**source, 'case': args.case, 'platform_image': site.p,
             'solutions_image': site.s, 'image_architecture': site.simage['Architecture'],
             'scope': 'Actual separate P/Host/Executor containers; external finite FILE_SIMULATION provider; no physical devices'})
         site.prepare(read(SOLUTIONS / 'examples/process/material-alignment/scenario.json'))
+        progress('authoring')
         author(site)
         compile_process(site)
         qualification_policy(site)
+        progress('starting-services')
         start_services(site)
+        progress('qualifying')
         commission(site)
+        progress('qualified')
         client = ExecutionClient(Terminal(site.connections['engineer']), workspace / 'initial-inventory-client')
         pool = client.command('initialize-slots', {'cell': site.cell, 'resource': site.refs['resource.shelf'],
             'rule': site.refs['pattern.shelf'], 'expected_generation': None,
@@ -61,11 +72,16 @@ def main():
                 'source_sha': source['source_sha'], 'owner_acceptance': 'USER_ACCEPTANCE_PENDING'})
         else:
             from browser import exercise
+            site.arm_loss_link()
+            progress('browser')
             exercise(site)
             save(evidence / 'result.json', {'status': 'PASS_FOR_REPORTED_SCOPE', 'case': args.case,
                 'source_sha': source['source_sha'], 'run': site.run,
                 'evidence': 'browser/result.json', 'owner_acceptance': 'USER_ACCEPTANCE_PENDING'})
+        progress('finished')
     except Exception as error:
+        print(json.dumps({'event': 'm1-stage', 'case': args.case, 'source_sha': source['source_sha'],
+                          'stage': 'failed', 'failed_stage': stage}), flush=True)
         (evidence / 'failure.log').write_text(traceback.format_exc())
         save(evidence / 'failure.json', {'status': 'FAILED', 'case': args.case,
             'source_sha': source['source_sha'], 'error': str(error),
@@ -73,7 +89,9 @@ def main():
         raise
     finally:
         if site is not None:
+            progress('preserving')
             site.preserve()
+            progress('preserved')
 
 
 if __name__ == '__main__':
