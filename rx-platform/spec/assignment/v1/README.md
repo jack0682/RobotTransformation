@@ -1,0 +1,11 @@
+# Executor assignment discovery v1
+
+The separate optional binding `rx.executor.assignment.v1` lets the current Executor inspect the start relationships for its assigned cell. It does not change existing base/cell specifications or production v1 hashes. `InspectCell` checks the current mTLS/session/cell negotiation/executor assignment and permits only reads without request keys or expected revisions.
+
+From the same control cut, it returns installation/store/runtime, caller session, cell revision/epoch/scope, current definition, P time, and validity of at most 100ms. `NONE` means 0 candidates; `SINGLE` is a complete result for 1 candidate; `AMBIGUOUS` provides evidence of two distinct candidates. The two candidates are neither a priority order nor a selection result. The current storage adapter materializes the scan. Above 10,000 Run rows, inspection is rejected rather than replaced with NONE. This limit does not guarantee a bound on storage allocation. The wire payload limit is 65,536bytes.
+
+Candidates are EXECUTING/PAUSED/RECOVERY_REQUIRED runs for that cell and PREPARED runs with a pending StartAttempt. PREPARED runs for which start has not yet been requested and COMPLETED/ABANDONED runs are excluded. Expired attempts, old executor sessions, and historical configurations are not hidden from inspection. Pending attempts check the exact Run/Cell relationship, and historical configuration is read from Run-owned records. A corrupted relationship causes inspection failure, not absence of candidates. If two candidates exist for the cell, no further candidates are enumerated.
+
+Inspection creates no Run/StartAttempt/mandate/ledger. It returns neither admission_allowed nor start authorization. An unattached serial executor must subsequently revalidate SINGLE's current execution authority and actual process/ledger through the existing Production.Inspect. It must not start automatically in ARMING/PAUSED/RECOVERY_REQUIRED or an old session. An executor already attached to A does not withdraw A merely because an independent B appears. Existing scope/resource concurrency and P's final admission checks remain in force.
+
+DTOs and the binding manifest are pinned separately, and both sides validate state/cardinality/duplicate witnesses/time/cut. This contract does not add a globally single Run per cell or a scheduler policy.

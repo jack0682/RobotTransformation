@@ -1,11 +1,28 @@
 {
   "schema": "rx.validation-scope.v1",
-  "scope": "BOOTSTRAP_ONLY",
-  "product_source_imported": false,
-  "product_validation": "NOT_RUN",
+  "scope": "CI_SCOPE_DECLARED_NOT_YET_RUN",
+  "product_source_imported": true,
+  "product_validation": "SEE_EXACT_CI_RUN_EVIDENCE",
   "historical_dco_exceptions": 0,
   "required_jobs": [
     "repository",
-    "commit_policy"
-  ]
+    "commit_policy",
+    "import_fidelity",
+    "sdk_parity",
+    "static_identity",
+    "platform_repository",
+    "solutions_repository",
+    "document_integrity",
+    "platform_rust",
+    "solutions_rust",
+    "clients",
+    "operator",
+    "dynamixel",
+    "skills",
+    "skills_compatibility",
+    "compiled_identity"
+  ],
+  "import_origin_commit": "0cecec7516879584c4bd6d2ba24cbe5b3c8e54a0",
+  "import_manifest": "provenance/import/M2-source-manifest.json",
+  "import_payload_sha256": "c154b96c9bfb63d70d837dfefc2c41cc37e586bf26c754a9f6291e2e538be5fc"
 }

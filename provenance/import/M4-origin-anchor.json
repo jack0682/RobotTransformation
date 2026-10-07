@@ -1,0 +1,37 @@
+{
+  "schema": "rx.m4-origin-anchor.v1",
+  "source_repository": "jack0682/RobotTransformation",
+  "m3_commit": "da22697ba05262712e44acf23748ecac817e7d52",
+  "m3_tree": "f04bbf97d0f7c4a39c9abc062a8eb73f528a2053",
+  "m3_documents_tree": "9235c68703fa2b68496dae614d8c53744c71f096",
+  "m3_origin_index_sha256": "245f00ebc384de5cb4836eb9ecad761b9ddae4926490232e2fd674c3fc51aff2",
+  "m4_map_sha256": "bbe903fac1649a196f784b96cbe080ad2ca29cb9110c9c81ec9e464160774c99",
+  "signature_check_here": "OPENPGP_HEADER_PRESENT; actual cryptographic verification belongs to protected M3 commit/CI receipt",
+  "source_checkout_modified": false,
+  "m4_applied": false,
+  "staged_document_checks": {
+    "status": "DOCUMENT_CHECKS_OK",
+    "scope": "CURRENT_CANONICAL_DOCUMENTS_AND_SEPARATE_M3_ANCESTOR_PROOF",
+    "historical_origin_commit": "da22697ba05262712e44acf23748ecac817e7d52",
+    "canonical_layout": {
+      "moves": 121,
+      "hash_bound_documents": 18,
+      "v1_contract_mirrors": 24,
+      "exact_evidence_projections": 2,
+      "navigation_only_routes": 2,
+      "ordinary_current_bytes": "EDITABLE_NOT_FROZEN",
+      "scope": "CANONICAL_LAYOUT_NOT_RUNTIME_ACCEPTANCE"
+    },
+    "json_files": 6,
+    "markdown_files": 117,
+    "local_targets": 436,
+    "hash_bound_documents": 18,
+    "recorded_origins": 94,
+    "converted_occurrences": 120,
+    "changed_documents": 42,
+    "embedded_tables": 3,
+    "external_network_and_anchor_checks": "NOT_RUN",
+    "origin_proof_scope": "Pinned records verified from frozen original Git objects during preparation",
+    "product_builds_and_runtime": "NOT_RUN"
+  }
+}

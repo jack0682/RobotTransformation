@@ -461,6 +461,7 @@ class InstallerTests(Files):
 
 
 class BootstrapContentTests(Files):
+    """Keep the original G0 contract tested independently of the current M2 scope."""
     def setUp(self):
         super().setUp()
         self.root = self.directory / "scaffold"; self.root.mkdir()
@@ -468,9 +469,16 @@ class BootstrapContentTests(Files):
             source = ROOT / name
             target = self.root / name; target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
+        (self.root / ".github/validation-scope.json").write_text(json.dumps(repository.SCOPE))
+        (self.root / ".github/repository-policy.json").write_text(json.dumps({"schema": "rx.repository-content-policy.v1", "language": "en", "exclude_ai_artifacts": True}))
+        (self.root / "README.md").write_text("G0 fixture; no product source.\n")
+        workflow = (self.root / ".github/workflows/ci.yml")
+        workflow.write_text(workflow.read_text().replace(
+            "needs: [" + ", ".join(check_ci.FULL_SCOPE["required_jobs"]) + "]",
+            "needs: [repository, commit_policy]").replace("CI_SCOPE_DECLARED_NOT_YET_RUN", "BOOTSTRAP_ONLY"))
 
     def check(self):
-        return repository.check(self.root, [p for p in self.root.rglob("*") if p.is_file() or p.is_symlink()])
+        return repository.check_bootstrap(self.root, [p for p in self.root.rglob("*") if p.is_file() or p.is_symlink()])
 
     def test_current_scaffold_has_bootstrap_only_scope(self):
         self.assertEqual(self.check(), [])

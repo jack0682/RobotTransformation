@@ -1,6 +1,6 @@
 # Contributing
 
-RobotTransformation is a public Apache-2.0 personal project. G0 is a source-free governance scaffold. Product import, contract changes, releases, and acceptance retain their separate gates.
+RobotTransformation is a public Apache-2.0 personal project. M3 declares the full isolated CI union. Use exact run evidence for executed checks; releases and acceptance retain their separate gates.
 
 ## Branches
 
@@ -38,17 +38,22 @@ Local hooks and the root helpers refuse direct protected-branch pushes and old-r
 
 ### External fork contributors
 
-The origin-guarded helper commands above are for a maintainer clone whose origin is `jack0682/RobotTransformation`. Administrative helpers never manage a fork or another repository. Fork contributors use their own local Git signing configuration, make explicit `git commit -s -S` commits, and inspect them with `git verify-commit HEAD`; they do not install this canonical-origin hook set in a fork clone. Run `.github/test_governance.py` and `tools/governance/check_repository.py --filesystem` for G0 content checks, then push the work branch to the fork and open a PR to develop. The target repository's CI audits the complete PR-head ancestry, including matching author DCO. The same contribution requirements apply.
+The origin-guarded helper commands above are for a maintainer clone whose origin is `jack0682/RobotTransformation`. Administrative helpers never manage a fork or another repository. Fork contributors use their own local Git signing configuration, make explicit `git commit -s -S` commits, and inspect them with `git verify-commit HEAD`; they do not install this canonical-origin hook set in a fork clone. Run `.github/test_governance.py` and `tools/governance/check_repository.py --filesystem` for the current root content checks, then push the work branch to the fork and open a PR to develop. The target repository's CI audits the complete PR-head ancestry, including matching author DCO. The same contribution requirements apply.
 
 ## Review and checks
 
 Describe the concrete problem, resulting behavior, source and artifact identity, tests actually run, failures, unverified scope, dependencies, and rollback. Changes to authority, UNKNOWN, stopping, handover, or recovery need counterexamples and compatibility impact. A structural edit may change a source-based compiler, validator, or driver identity even when intended behavior stays the same.
 
-For G0:
+For root/M3 fixtures:
 
 ```sh
 python3 -B .github/test_governance.py
+python3 -B .github/test_import.py
+python3 -B .github/test_full_ci.py
+python3 -B .github/test_documents.py
 python3 -B tools/governance/check_repository.py
+python3 -B tools/migration/check_origin.py
+python3 -B rx-platform/tools/check_host_sdk.py rx-solutions/sdk
 python3 -B tools/governance/check_commit_policy.py --head HEAD
 ```
 
@@ -56,7 +61,7 @@ The last command uses trusted public keys in the local GPG keyring. GitHub-backe
 
 Required CI is the exact PR-head `CI` from GitHub Actions (app 15368), plus `DCO` from the DCO app (app 1861). A Branch CI result, stale head, other provider, cancelled child, or local test result does not substitute. Required review conversations must be resolved. Zero external approvals are required while the project has one maintainer; the maintainer still reviews the output and evidence.
 
-Product import must extend the validation scope through a reviewed change with import fidelity and identity gates. Unified product CI must retain all prior required contract, SDK, invariant, boundary, language, package, and runtime checks. Do not relabel BOOTSTRAP_ONLY as product conformance.
+M2 has a fixed snapshot-only contract: the manifest, file bytes/modes, SDK producer parity, and named static identities must match the reviewed baseline. Product-source work after import requires the documented M3 scope transition, anchoring frozen import evidence to its original commit while enforcing current-source gates. Unified product CI must retain all prior required contract, SDK, invariant, boundary, language, package, and runtime checks. Do not relabel static import verification as product conformance.
 
 ## Scope and publication
 
@@ -65,3 +70,5 @@ Use English for source, comments, UI, contribution material, and governance. The
 Preserve source provenance, licenses, notices, history, and historical evidence. A snapshot commit certifies the contributor's actual work and rights; it does not fabricate the original authors' signoffs. Package verification, review, qualification, activation, execution, and maintainer acceptance remain distinct. CI or a PR merge never accepts the preserved CP2 Run.
 
 Dependency updates are manual, focused, signed PRs. Vulnerability alerts remain enabled; automatic security-fix proposals are disabled. An unverified dependency upgrade is not bundled into repository migration.
+
+The full required workflow runs original Platform and Solutions Rust, client, native, operator, and installed-skills checks on separate Linux runners. Do not run heavy migration builds on the preserved CP2 host. The origin audit anchors the original import to its immutable commit; current code is validated through current-source gates. A changed compiler, validator, or driver identity requires explicit impact review instead of reusing historical approval.

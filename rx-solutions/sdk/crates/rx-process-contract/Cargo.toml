@@ -1,0 +1,15 @@
+[package]
+license.workspace = true
+name = "rx-process-contract"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+rx-domain = {path="../rx-domain"}
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+
+[lints]
+workspace = true

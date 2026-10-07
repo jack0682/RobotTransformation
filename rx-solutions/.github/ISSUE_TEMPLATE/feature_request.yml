@@ -1,0 +1,23 @@
+name: Feature request
+description: Propose an improvement to RX coordination of heterogeneous robots and infrastructure.
+title: '[Feature] '
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Describe the behavior needed by users, robots or operating domains.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal and completion criteria
+      description: State the concrete outcome and how it can be verified.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives and contract impact
+      description: Describe effects on authority, completion decisions, handover, recovery and other repositories.

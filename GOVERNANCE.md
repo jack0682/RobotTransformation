@@ -76,10 +76,55 @@ The bootstrap fixture suite uses isolated files and mocked GitHub/GPG results; i
 
 Later import and CI phases must preserve or strengthen existing product gates, including contract/binding hashes, SDK producer parity, invariant traceability, Engine boundaries, installed clients, and scoped runtime tests. Every scope transition needs its own checks and evidence. Wiki commits and project-status changes do not satisfy source PR checks or maintainer acceptance.
 
-## Required next scope transition: M2
+## M2 scope: source imported, product unvalidated
 
-G0 deliberately rejects product roots and keeps `BOOTSTRAP_ONLY`. The source-import PR must implement an explicit **SOURCE_IMPORTED_UNVALIDATED** stage together with its checks; merely deleting the bootstrap allowlist or changing the scope string is not acceptable.
+The retained G0 checker still rejects product roots under `BOOTSTRAP_ONLY`, and its original regression fixtures remain active. The explicit **SOURCE_IMPORTED_UNVALIDATED** branch accepts only the independently pinned 1,718-file import plus the named root governance and provenance files. It does not broadly allow arbitrary files under product prefixes.
 
-The M2 change must add a frozen source tuple and per-file repository/commit/path/blob/mode provenance, raw-import fidelity checks, static source-identity comparison, and same-commit SDK parity. The required aggregate must include those import/static jobs in addition to repository and full-head commit-policy checks, with negative controls for missing/extra files, mode or byte changes, stale SDK, and altered identity inputs. The source-import result must continue to state that product builds, runtime conformance, and acceptance are NOT_RUN until actually exercised.
+The M2 manifest records a frozen source tuple and per-file repository/commit/path/blob/mode provenance. The offline import checker pins its canonical payload SHA-256 to `c154b96c9bfb63d70d837dfefc2c41cc37e586bf26c754a9f6291e2e538be5fc`, independently recalculates actual file SHA-256 and Git blob/tree IDs, and refuses additions, missing files, mode changes, aliases, symlinks, or altered payloads. With `--git`, both the source and provenance manifest must also match the index and candidate HEAD.
 
-M3 then adds the full union of product checks under its separately reviewed validation scope. This sequence makes the M2 import PR reviewable before M3 without treating G0 or static import validation as product success. The current G0 does not implement either later stage.
+All five required jobs use the exact PR head or push SHA: `repository`, `commit_policy`, `import_fidelity`, `sdk_parity`, and `static_identity`. The aggregate rejects missing, failed, cancelled, skipped, or unlisted jobs. Static identity comparison consumes a hash-pinned baseline; unsupported required recipe evaluation is a failure. Explicit unmeasured compiled-binary and physical scope stays UNKNOWN/NOT_RUN. The unestablished workflow-execution/v2 consumed wire hash is a named limitation, not an invented digest.
+
+The root content checker validates root English policy and root-document links. It verifies frozen import membership but does not normalize imported documents or claim their historical evidence links are resolved. The required import-fidelity job establishes their exact bytes; M4 owns link reconciliation. Product builds, runtime conformance, and acceptance remain NOT_RUN until actually exercised.
+
+## Required next scope transition: M3
+
+M3 adds the full union of prior product checks under a separately reviewed validation scope. It must record the exact accepted M2 import commit, verify that commit's imported blobs/modes and provenance against this unchanged frozen manifest, and separately validate the current candidate's legitimate source changes. The historical import baseline must not be recomputed from later source. Do not leave the M2 requirement that the current product tree equal the original snapshot permanently enabled, and do not simply remove it without the historical-commit audit and replacement current-source gates.
+
+The M3 change must introduce a new explicit scope, preserve all governance/refusal checks, audit the M2 import commit's ancestry and provenance, and require the full contract/binding/SDK/invariant/Engine/client/package/runtime gate union for the current candidate. M2 itself does not run or claim those product checks. Frozen CP2 runtime state remains separate throughout.
+
+## Recorded bootstrap checkpoint — 2026-10-07
+
+The maintainer requested execution of the migration plan. Before creating G0,
+Codex and independent agent reviewers on the maintainer's Mac verified recovery
+of 319 source refs, 24 signed tags, and three dirty worktrees. Preservation also
+covers the recorded PR heads, bases and actual merge commits (854 locators),
+GitHub metadata, and 38 release assets. The original source refs, index and
+worktree contents remained unchanged. Historical exceptions retain their original
+repository identity and are not inherited here.
+
+Cryptographic re-verification covered the three import commits and 24 tags,
+plus the three available detached release-checksum signatures. This does not
+claim cryptographic re-verification of every historical commit. Private backup
+material stays outside this public source repository.
+
+The local preservation gate record has SHA-256 `74b16b6bab1dfda6e538305305db97a4cd03a49b4e9cb0c9d47b0c725c5620ea`.
+This is a preservation result, not user acceptance, a live CP2 backup, or a
+product/runtime validation result.
+
+G0 is `2a02ab9fb152e78ae7c948cb63fcb0924429a282`, published identically to
+main and develop with verified OpenPGP and author DCO. Five active rulesets
+matched the reviewed configuration. The [bootstrap CI run](https://github.com/jack0682/RobotTransformation/actions/runs/37497048372)
+passed for that exact G0 head with BOOTSTRAP_ONLY scope. Product import, full
+product CI, SDK qualification, cutover and legacy archival remain later gates.
+
+## M3 CI declaration and current source
+
+The declared stage is `CI_SCOPE_DECLARED_NOT_YET_RUN`; this source label is not a claim that hosted execution succeeded. The aggregate evaluates the exact sixteen required job results for each run. GitHub Actions run identity and artifacts establish what executed. CI success does not accept CP2 or authorize physical equipment.
+
+The import-fidelity job now verifies immutable ancestor `0cecec7516879584c4bd6d2ba24cbe5b3c8e54a0`, its complete source objects and provenance, and the unchanged identity baseline/evaluator. It verifies protected bytes using its own standard-library Git reader before executing the verified historical checker. Current product source is checked separately; the import manifest is never regenerated from evolved source.
+
+Platform and Solutions retain their original full required checks, including actual disposable Git/GPG hook tests on Linux. Current copied-document JSON, normative hashes, unique embedded table checks, and local links are required. An earlier set of missing evidence links was repaired in the copied ordinary documents before this gate; hash-bound documents and the original documentation repository were preserved.
+
+Every candidate job checks out the same head. Installed skills use current P by default and also test the frozen old-P compatibility pin on both amd64 and arm64. The compatibility checkout is a sibling of the product checkout. Cargo jobs are limited to two, including inside the skills Docker build, with component/architecture cache and target separation. Release records include repository, commit, component path and tree identity. CI artifacts with finite retention are not permanent acceptance evidence.
+
+M4 changes canonical documentation paths only through a further reviewed scope/path-map update. M5 establishes the declared distribution and consumer release scope. M7 handles changed implementation identities and fresh review/qualification explicitly; this M3 declaration does not assert those later gates passed.
