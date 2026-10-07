@@ -282,7 +282,7 @@ jobs:
       - name: Install pinned client build dependencies
         run: |
           # Keep Ubuntu suites and signing keys; use the reachable official archive.
-          for apt_source in /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
+          for apt_source in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
             if [ -f "$apt_source" ]; then
               sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' "$apt_source"
             fi
@@ -329,7 +329,7 @@ jobs:
       - name: Prepare the isolated Linux browser environment
         run: |
           # Keep Ubuntu suites and signing keys; use the reachable official archive.
-          for apt_source in /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
+          for apt_source in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
             if [ -f "$apt_source" ]; then
               sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' "$apt_source"
             fi
@@ -392,7 +392,7 @@ jobs:
       - name: Build protocol-only helper and exercise direct-caller refusals
         run: |
           # Keep Ubuntu suites and signing keys; use the reachable official archive.
-          for apt_source in /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
+          for apt_source in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
             if [ -f "$apt_source" ]; then
               sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' "$apt_source"
             fi
