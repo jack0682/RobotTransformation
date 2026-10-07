@@ -411,6 +411,11 @@ print(json.dumps({'control':json.loads(raw['fault.json']) if 'fault.json' in raw
                 except Exception as error:
                     failures.append({'inspection': 'final Run/resources/slot holds', 'error': str(error)})
         try:
+            from platform_diagnostics import preserve_platform_dispatch
+            failures.extend(preserve_platform_dispatch(self))
+        except Exception as error:
+            failures.append({'inspection': 'Platform dispatch diagnostic collector', 'error': str(error)})
+        try:
             from diagnostics import preserve_host_dispatch
             failures.extend(preserve_host_dispatch(self))
         except Exception as error:

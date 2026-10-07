@@ -133,6 +133,7 @@ def exercise(site):
     target_letter = 'b' if site.case == 'changed-material' else 'a'
     saved_receipts = []
     saved_requests = []
+    inspection_timing = []
     state_flags = {'authenticated': False, 'navigating': False, 'read_loss': False}
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=True)
@@ -308,7 +309,19 @@ def exercise(site):
             save(output / 'start-request.json', starts[0])
             client = ExecutionClient(Terminal(site.connections['engineer']), site.root / 'inspection-client')
             def inspect():
-                return client.inspect_execution(site.run, reports=True)
+                before = time.clock_gettime_ns(time.CLOCK_BOOTTIME)
+                value = client.inspect_execution(site.run, reports=True)
+                after = time.clock_gettime_ns(time.CLOCK_BOOTTIME)
+                if len(inspection_timing) < 512:
+                    inspection_timing.append({'started_ticks_ns': str(before),
+                        'returned_ticks_ns': str(after), 'elapsed_ns': str(after - before),
+                        'result_observed_at': value['result']['observed_at'],
+                        'run_state': value['result']['run']['value']['state'],
+                        'work': [{'operation': w['operation']['operation_id'],
+                            'node': w['execution']['selection']['node'],
+                            'knowledge': w['operation']['execution_knowledge'],
+                            'outcome': w['operation']['outcome']} for w in value['result']['work']]})
+                return value
             loss_operation = None
             prior_loss_custody = None
             def terminal(receipt):
@@ -548,5 +561,9 @@ def exercise(site):
                 (output / 'failure-accessibility.txt').write_text(page.locator('body').aria_snapshot())
             raise
         finally:
+            save(output / 'inspection-timing.json', {'schema': 'rx.m1-inspection-timing.v1',
+                'clock': 'CLOCK_BOOTTIME on the same Linux runner as the containers',
+                'scope': 'Existing inspection calls only; no extra polling or changed wait/deadline.',
+                'bound': 512, 'samples': inspection_timing})
             save(output / 'browser-diagnostics.json', diagnostics)
             browser.close()
