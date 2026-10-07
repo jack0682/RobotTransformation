@@ -104,6 +104,7 @@ class Installation:
         self.bundle = self.root / 'operator'
         holder = self.d.holder(self.s, [])
         self.d.run('cp', holder + ':/opt/rx/operator', str(self.bundle))
+        self.d.run('cp', holder + ':/data/observer-latency.json', str(self.evidence / 'observer-latency.json'))
         self.final = m.finalize(package, compiled, compiler, self.port, self.bundle, self.validator)
         self.browser = read(self.final / 'browser-fixture.json')
         self.initial = read(m.seed / 'initial-cell.json')
@@ -137,9 +138,9 @@ class Installation:
             shutil.copyfile(Path(__file__).with_name('completion_link.py'), provider / 'completion_link.py')
             program_file = 'completion_link.py'
             self.d.put(self.s, self.volumes['provider'], provider)
-        args = ['-I', '-S', '-B', '/config/host/' + program_file, '--config', '/config/host/m1-provider.json',
+        args = ['--python', '/opt/rx/python/python', '--adapter', '/config/host/' + program_file, '--config', '/config/host/m1-provider.json',
                 '--sdk', '/config/host/rx_external_adapter.py']
-        dependencies = ['/config/host/adapter.py', '/config/host/m1-provider.json',
+        dependencies = ['/opt/rx/python/python', '/config/host/adapter.py', '/config/host/m1-provider.json',
                         '/config/host/rx_external_adapter.py']
         if self.case == 'completion-loss':
             dependencies.append('/config/host/completion_link.py')
@@ -147,7 +148,7 @@ class Installation:
         save(author / 'dependencies.json', dependencies)
         self.d.put(self.s, self.volumes['author'], author)
         self.generated_command('/opt/rx/bin/rx-device-package', [
-            'external-program', '/opt/rx/python/python', '/author/arguments.json',
+            'external-program', '/opt/rx/bin/m1-observer', '/author/arguments.json',
             '/author/dependencies.json', '/author/program.json'], 'external-program')
         self.d.extract(self.s, self.volumes['author'], 'program.json', author / 'program.json')
         program = read(author / 'program.json')

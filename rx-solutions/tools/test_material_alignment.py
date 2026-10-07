@@ -70,6 +70,8 @@ class MaterialAlignment(unittest.TestCase):
         envelope = copy.deepcopy(self.inputs)
         envelope.update(node=primitive, primitive=primitive,
                         done={'observation': self.provider.STEPS[primitive][2],
+                              'property': {'catalog': self.selection['object']['catalog'], 'id': identifier(),
+                                           'revision': '1', 'digest': '9'*64},
                               'equals': {'unit': 'unitless', 'data': {'kind': 'BOOLEAN', 'value': True}}})
         selected = {**copy.deepcopy(self.selection), 'node': primitive,
                     'parameter': {'schema_id': 'rx.workflow-parameters.v2',
@@ -182,6 +184,7 @@ class MaterialAlignment(unittest.TestCase):
         invalid = copy.deepcopy(envelope)
         invalid['values']['ft_force_n']['value']['unit'] = 'mm'
         self.unchanged_rejection(lambda: self.adapter.execute(invalid, correlation))
+
         invalid = copy.deepcopy(envelope)
         invalid['values']['groove_angle_deg']['value']['data']['range']['max'] = 96
         self.unchanged_rejection(lambda: self.adapter.execute(invalid, correlation))
@@ -192,6 +195,16 @@ class MaterialAlignment(unittest.TestCase):
         invalid['values']['groove_found']['value']['data']['value'] = 1
         self.unchanged_rejection(lambda: self.adapter.execute(invalid, correlation))
         self.assertEqual(self.effects(), [])
+
+    def test_done_property_reference_matches_the_real_v2_envelope_shape(self):
+        envelope, correlation = self.request('shelf-seat')
+        missing = copy.deepcopy(envelope)
+        del missing['done']['property']
+        self.unchanged_rejection(lambda: self.adapter.execute(missing, correlation))
+        malformed = copy.deepcopy(envelope)
+        malformed['done']['property']['digest'] = 'not-a-digest'
+        self.unchanged_rejection(lambda: self.adapter.execute(malformed, correlation))
+        self.assertEqual(self.adapter.execute(envelope, correlation)['status'], 0)
 
     def test_changed_model_and_simulation_angle_are_consumed(self):
         self.override('material_model', 'sim/material-b')

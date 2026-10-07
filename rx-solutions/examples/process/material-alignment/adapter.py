@@ -177,8 +177,11 @@ class Adapter:
                 and envelope['on_unknown'] == 'HOLD_AND_RECONCILE', 'common envelope differs')
         primitive = envelope['primitive']
         require(primitive in STEPS, 'undeclared primitive')
-        require(envelope['done'] == {'observation': STEPS[primitive][2],
-                'equals': {'unit': 'unitless', 'data': {'kind': 'BOOLEAN', 'value': True}}},
+        done = envelope['done']
+        require(set(done) == {'observation', 'property', 'equals'}, 'done reference shape differs')
+        validate_reference(done['property'])
+        require(done['observation'] == STEPS[primitive][2]
+                and done['equals'] == {'unit': 'unitless', 'data': {'kind': 'BOOLEAN', 'value': True}},
                 'done observation differs')
         require(set(envelope['values']) == set(PARAMETERS), 'exact parameter set required')
         params = {key: quantity(envelope['values'][key], *spec) for key, spec in PARAMETERS.items()}

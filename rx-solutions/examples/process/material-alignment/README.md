@@ -76,6 +76,61 @@ Detected=false alone does not establish a completed miss. Read availability and
 detection together with the original A2 operation outcome and material identity;
 these observations do not settle an operation or replace its completion evidence.
 
+## Native passive observer candidate
+
+`observer.cpp` is a package-owned alternative to starting Python for each passive
+observation. It reads the same initialized file-device state and returns the
+existing `rx.external-native-snapshot.v1` message. It does not change Host/P code,
+observation bounds, the fixed admission snapshot deadline, native outcome mapping,
+or qualification. Earlier freshness failures remain failures of their original
+candidates; this changed provider needs its own measured Linux verification.
+
+Build on isolated Linux with nlohmann-json3-dev and libssl-dev available:
+
+```sh
+g++ -std=c++17 -O2 -Wall -Wextra -Werror observer.cpp -o m1-observer -lcrypto
+```
+
+The runtime needs the matching libcrypto shared library. Declare the observer as
+the external Program executable and retain the exact Python executable, adapter,
+SDK and configuration as pinned dependencies. Immutable Program arguments are:
+
+```text
+--python /opt/rx/python/python --adapter /config/host/adapter.py --config /config/host/m1-provider.json --sdk /config/host/rx_external_adapter.py
+```
+
+Host appends `observe|execute|lookup` and its native storage directory. In observe
+mode, the program validates the exact request shape, original challenge/session,
+kernel boot clock, configuration digest, and requested source names. Files are
+bounded, owned and regular; symlink path components are refused. Samples carry the
+actual file-read CLOCK_BOOTTIME timestamp. The native `owner.lock` inspection is
+the same passive custody check used by the SDK. There is no cached observation,
+retimestamped camera data, state rewrite, provider command or generated completion.
+
+For execute and lookup, the program does not read stdin. It uses `execv` to replace
+itself with the same pinned Python adapter using `-I -S -B`, preserving the original
+PID, process group, channel bytes and file descriptors. The SDK retains entry,
+completion, lookup and no-replay behavior; the observer does not interpret these
+requests. Initialization still uses the explicit Python `--initialize` command.
+
+From `rx-solutions/`, run the Linux-only process-equivalence checks:
+
+```sh
+RX_M1_OBSERVER_BINARY=/absolute/m1-observer \
+RX_M1_OBSERVER_DIAGNOSTICS=/absolute/new-observer-latency.json \
+python3 -B tools/test_material_alignment_observer.py
+```
+
+Without `RX_M1_OBSERVER_BINARY`, the tests compile the candidate using the command
+above in a temporary Linux directory. The diagnostic output path must be new and
+its parent must already exist. Tests compare actual Python SDK and C++ snapshots
+over initialized state, all six commands, completed miss, pending writes and live
+native ownership. They also check exact exec delegation, original passive lookup,
+malformed-input refusal and unchanged device/native files. Five process-latency
+samples for each implementation are recorded without a timing pass threshold or
+selecting successful retries. These timings are diagnostics; actual Host admission
+and the UI/runtime roundtrip remain separate acceptance evidence.
+
 ## Evidence and negative cases
 
 `state.json` and append-only `effects.jsonl` are provider-owned device records,
