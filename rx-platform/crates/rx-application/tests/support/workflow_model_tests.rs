@@ -364,6 +364,15 @@ fn execution_inputs_are_current_server_reads_and_do_not_create_resolution_receip
         app.prepare_execution_inputs(&owner, vec![request.clone()], 1)
             .is_ok()
     );
+    let mut alternate = request.clone();
+    alternate.overrides.insert(name("node"), [(name("target"), serde_json::from_value(
+        serde_json::json!({"unit":"mm","data":{"kind":"NUMBER","range":{"min":40,"max":40}}})
+    ).unwrap())].into());
+    let alternatives = vec![request.clone(), alternate];
+    let shared = app
+        .prepare_execution_inputs(&owner, alternatives.clone(), 1)
+        .unwrap();
+    assert!(shared.resolve(1, 0).unwrap().valid);
     let reference = report.definitions[0].reference.clone();
     let original = app
         .definition(&owner, &catalog.id, &reference.id, None)
@@ -373,15 +382,17 @@ fn execution_inputs_are_current_server_reads_and_do_not_create_resolution_receip
     revised.expected = Some(reference.revision);
     revised.label = "New revision with identical values".into();
     put(&mut app, &owner, revised);
-    let error = match app.prepare_execution_inputs(&owner, vec![request], 1) {
-        Ok(_) => panic!("stale value-bearing definition accepted"),
-        Err(e) => e.to_string(),
-    };
-    assert!(error.contains("STALE_EXECUTION_REFERENCE"), "{error}");
-    assert!(
-        error.contains("pinned 1") && error.contains("current 2"),
-        "{error}"
-    );
+    for requests in [vec![request], alternatives] {
+        let error = match app.prepare_execution_inputs(&owner, requests, 1) {
+            Ok(_) => panic!("stale value-bearing definition accepted"),
+            Err(e) => e.to_string(),
+        };
+        assert!(error.contains("STALE_EXECUTION_REFERENCE"), "{error}");
+        assert!(
+            error.contains("pinned 1") && error.contains("current 2"),
+            "{error}"
+        );
+    }
     // A precomputation snapshot stays reproducible, but is not execution admission.
     assert_eq!(
         canonical::bytes(&snapshot.resolve(0, 0).unwrap()).unwrap(),
