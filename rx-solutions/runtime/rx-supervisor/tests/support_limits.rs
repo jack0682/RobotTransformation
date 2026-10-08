@@ -182,7 +182,24 @@ if final:report('STOPPED')
             assert!(Instant::now() < end);
             std::thread::sleep(Duration::from_millis(10));
         };
-        assert_eq!(report.guarded_shutdown_confirmed, final_report);
+        // Preserve the first failed scene before its temporary directory is dropped.
+        let status_path = root.path().join("status.json");
+        let logs: BTreeMap<_, _> = std::fs::read_dir(root.path().join("logs"))
+            .unwrap()
+            .map(|entry| {
+                let path = entry.unwrap().path();
+                (
+                    path.file_name().unwrap().to_string_lossy().into_owned(),
+                    std::fs::read_to_string(&path).unwrap_or_default(),
+                )
+            })
+            .collect();
+        assert_eq!(
+            report.guarded_shutdown_confirmed,
+            final_report,
+            "scene={final_report}, report={report:?}, final_status={:?}, child_logs={logs:?}",
+            std::fs::read_to_string(status_path),
+        );
         assert_eq!(report.state.records[&n("service")].instance, instance);
         scenes.push(serde_json::json!({"final_report":final_report,"injected_delivery_failure":error,"status":report}));
     }

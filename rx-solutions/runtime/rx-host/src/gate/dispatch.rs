@@ -210,13 +210,20 @@ impl<N: NativeAdapter, C: Clock, H: BoundaryHook> Host<N, C, H> {
         }
         self.hooks.after_send_commit();
         // Still under the same gate: no handover/fence can interleave with submission.
+        let post_commit_at = self.clock.now();
         let guard = validate_current(
             &mut core,
             caller,
             &request,
-            &self.clock.now(),
+            &post_commit_at,
             input.as_ref(),
-        )?;
+        )
+        .inspect_err(|error| {
+            eprintln!(
+                "authorize post-send validation rejected: operation={}, at={post_commit_at:?}, expires={:?}, error={error}",
+                record.operation, request.permit.expires_at,
+            );
+        })?;
         if guard.device_session != record.device_session {
             return Err(HostError::Stale);
         }
@@ -229,12 +236,16 @@ impl<N: NativeAdapter, C: Clock, H: BoundaryHook> Host<N, C, H> {
                 request.permit.expires_at.clone()
             },
         };
-        let submission = core.native.begin_with_context(
-            &record.operation,
-            invocation,
-            &record.intent,
-            &context,
-        )?;
+        let begin_at = self.clock.now();
+        let submission = core
+            .native
+            .begin_with_context(&record.operation, invocation, &record.intent, &context)
+            .inspect_err(|error| {
+                eprintln!(
+                    "authorize native begin rejected: operation={}, begin_at={begin_at:?}, end_at={:?}, expires={:?}, error={error}",
+                    record.operation, self.clock.now(), context.expires_at,
+                );
+            })?;
         self.hooks.after_native_entry();
         let capture = match submission {
             NativeSubmission::Captured(capture) => capture,
