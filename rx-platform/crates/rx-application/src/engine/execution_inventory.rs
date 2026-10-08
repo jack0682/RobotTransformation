@@ -529,6 +529,14 @@ pub(super) fn object_current(
     binding: &data::RunBinding,
     ordinal: Counter,
 ) -> Result<data::ObjectBinding> {
+    object_current_with_domain(tx, cell, binding, ordinal).map(|(object, _)| object)
+}
+fn object_current_with_domain(
+    tx: &mut dyn Transaction,
+    cell: &Cell,
+    binding: &data::RunBinding,
+    ordinal: Counter,
+) -> Result<(data::ObjectBinding, execution_configuration::Domain)> {
     let object = object_reference_current(tx, cell, binding, ordinal)?;
     let domain = execution_configuration::domain(tx, &cell.configuration)?
         .ok_or(StoreError::Rejected(Reject::UnsupportedSchema))?;
@@ -546,7 +554,7 @@ pub(super) fn object_current(
             "actual object projection differs".into(),
         ));
     }
-    Ok(object)
+    Ok((object, domain))
 }
 
 /// Advisory reads call this only after active_run has checked the full current definition closure.

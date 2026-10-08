@@ -1,0 +1,38 @@
+{
+  "schema": "rx.material-alignment-scenario.v1",
+  "environment": "FILE_SIMULATION",
+  "implementation": "rx.simulation.material-alignment",
+  "version": "1.0.0",
+  "completion_rule": "m1/alignment-result",
+  "status_schema": "m1/alignment-result",
+  "outcomes": [
+    {"status_schema": "m1/alignment-result", "statuses": ["0"], "conclusion": "SUCCEEDED"},
+    {"status_schema": "m1/alignment-result", "statuses": ["10", "11", "12"], "conclusion": "FAILED"}
+  ],
+  "failure_codes": {"10": "GROOVE_NOT_DETECTED", "11": "ALIGNMENT_NOT_CONFIRMED", "12": "FT_SEATING_NOT_CONFIRMED"},
+  "observation": {"source": "sim/ready", "schema": "boolean/v1", "unit": "unitless", "value_type": "BOOLEAN", "maximum_age_ns": "1000000000", "maximum_uncertainty_ns": "0"},
+  "parameters": {
+    "material_model": {"unit": "unitless", "value_type": "TEXT", "frame": null, "default": "sim/material-a"},
+    "robot_id": {"unit": "unitless", "value_type": "TEXT", "frame": null, "default": "sim/robot"},
+    "gripper_channel": {"unit": "unitless", "value_type": "TEXT", "frame": null, "default": "new-material"},
+    "shelf_id": {"unit": "unitless", "value_type": "TEXT", "frame": null, "default": "sim/rotating-shelf"},
+    "vision_id": {"unit": "unitless", "value_type": "TEXT", "frame": null, "default": "sim/d405"},
+    "ft_id": {"unit": "unitless", "value_type": "TEXT", "frame": null, "default": "sim/ft"},
+    "groove_found": {"unit": "unitless", "value_type": "BOOLEAN", "frame": null, "default": true},
+    "groove_angle_deg": {"unit": "deg", "value_type": "NUMBER", "frame": null, "default": 95},
+    "alignment_tolerance_deg": {"unit": "deg", "value_type": "NUMBER", "frame": null, "default": 0.5},
+    "fixed_orientation": {"unit": "unitless", "value_type": "VECTOR", "frame": null, "default": [0, 0, 0, 1]},
+    "ft_force_n": {"unit": "N", "value_type": "NUMBER", "frame": null, "default": 25},
+    "ft_min_n": {"unit": "N", "value_type": "NUMBER", "frame": null, "default": 20},
+    "ft_max_n": {"unit": "N", "value_type": "NUMBER", "frame": null, "default": 30},
+    "timeout_s": {"unit": "s", "value_type": "NUMBER", "frame": null, "default": 30}
+  },
+  "steps": [
+    {"id": "shelf-seat", "label": "A1 Move to shelf and transfer support", "done": "shelf.part_supported"},
+    {"id": "groove-detect", "label": "A2 D405 simulated groove detection", "done": "vision.groove_detected"},
+    {"id": "shelf-rotate", "label": "A3 Rotate the shelf from detection", "done": "shelf.rotation_applied"},
+    {"id": "alignment-check", "label": "A4 Confirm alignment and stopped shelf", "done": "shelf.aligned_stopped"},
+    {"id": "fixed-regrasp", "label": "A5 Regrasp with fixed robot orientation", "done": "gripper.part_regrasped"},
+    {"id": "ft-seat-check", "label": "A6 FT seating check and clear shelf occupancy", "done": "ft.part_seated"}
+  ]
+}

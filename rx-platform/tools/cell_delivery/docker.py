@@ -7,12 +7,14 @@ from pathlib import Path
 
 
 class Docker:
-    def __init__(self, evidence: Path):
+    def __init__(self, evidence: Path, *, network_subnet: str | None = None, terminal_subnet: str | None = None):
         self.prefix = 'rx-delivery-' + uuid.uuid4().hex[:12]
         self.evidence = evidence
         self.containers: list[str] = []
         self.volumes: list[str] = []
         self.network = self.prefix + '-network'
+        self.network_subnet = network_subnet
+        self.terminal_subnet = terminal_subnet
         self.network_created = False
         self.front_network = None
         self.serial = 0
@@ -36,7 +38,10 @@ class Docker:
         return name
 
     def make_network(self) -> None:
-        self.run('network', 'create', '--internal', self.network)
+        args = ['network', 'create', '--internal']
+        if self.network_subnet is not None:
+            args += ['--subnet', self.network_subnet]
+        self.run(*args, self.network)
         self.network_created = True
 
     def holder(self, image: str, mounts: list[str]) -> str:
@@ -76,7 +81,10 @@ class Docker:
         if ports:
             if self.front_network is None:
                 self.front_network=self.prefix+'-terminal-network'
-                self.run('network','create',self.front_network)
+                network_args=['network','create']
+                if self.terminal_subnet is not None:
+                    network_args+=['--subnet',self.terminal_subnet]
+                self.run(*network_args,self.front_network)
             network=self.front_network
         args=['create','--name',name,'--network',network,'--network-alias',alias,'--read-only','--cap-drop','ALL','--security-opt','no-new-privileges','--user','10001:10001','--tmpfs','/tmp:rw,uid=10001,gid=10001,mode=700']
         for mount in mounts: args+=['-v',mount]

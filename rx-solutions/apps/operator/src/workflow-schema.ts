@@ -263,6 +263,16 @@ export type WorkflowModel = z.infer<typeof workflowModelSchema>;
 export type WorkflowReceipt = z.infer<typeof workflowReceiptSchema>;
 export type WorkflowRequest = z.infer<typeof workflowRequestSchema>;
 export type Quantity = z.infer<typeof quantitySchema>;
+/** Reopen only the exact model pinned by the saved server request. */
+export function reopenWorkflowRequest(
+  model: WorkflowModel,
+  receipt: WorkflowReceipt,
+): WorkflowRequest {
+  const saved = workflowRequestSchema.parse(receipt.report.request);
+  if (refKey(model.reference) !== refKey(saved.workflow))
+    throw new Error('Saved configuration belongs to a different workflow revision');
+  return structuredClone(saved);
+}
 export function workflowRoute(route: string) {
   return route === '/api/v1/workflow-resolutions';
 }

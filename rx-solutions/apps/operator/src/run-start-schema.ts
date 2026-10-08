@@ -51,7 +51,7 @@ export const startContextSchema = z
     environment: z.enum(['SIMULATION', 'PHYSICAL']),
     commissioning: z.enum(['NOT_COMMISSIONED', 'COMMISSIONED', 'REVALIDATION_REQUIRED']).nullable(),
     envelope: artifactSchema,
-    recipe: artifactSchema.extend({ schema_id: z.literal('rx.resolved-process.v1') }),
+    recipe: artifactSchema,
     site_config_digest: digest,
     maximum_budget: counter,
     run_revision: counter,
@@ -63,6 +63,11 @@ export const startContextSchema = z
   .superRefine((value, context) => {
     if (value.can_request !== (value.blocking_reason === null))
       context.addIssue({ code: 'custom', message: 'Candidate decision is inconsistent.' });
+    if (value.can_request && value.recipe.schema_id !== 'rx.resolved-process.v1')
+      context.addIssue({
+        code: 'custom',
+        message: 'This start panel cannot execute this recipe schema.',
+      });
   });
 export const startAttemptSchema = z
   .object({
@@ -255,7 +260,8 @@ export function validateStartReceipt(record: Pending, raw: unknown, expectedId?:
   const review = record.start_review;
   const value = startAttemptSchema.parse(raw);
   requireMatch(
-    record.route === '/api/v1/runs/start' &&
+    (record.route === '/api/v1/runs/start' ||
+      record.route === '/api/v1/workflow-executions/start') &&
       !!review &&
       value.cell === review.cell &&
       value.run === request.run &&

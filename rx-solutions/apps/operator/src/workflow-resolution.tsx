@@ -10,6 +10,10 @@ import {
   type DefinitionSummary,
 } from './definition-schema';
 import { DefinitionName } from './definition-name';
+import { WorkflowTaskGraph } from './workflow-task-graph';
+import { WorkflowExecution } from './workflow-execution';
+import type { ExecutionReceipt, ExecutionResult } from './workflow-execution-schema';
+import type { Overview, Pending } from './schema';
 import {
   workflowModelSchema,
   workflowsSchema,
@@ -19,6 +23,7 @@ import {
   violationProperty,
   readableViolation,
   workflowReceiptSchema,
+  reopenWorkflowRequest,
   parseQuantity,
   quantityText,
   violationNode,
@@ -34,6 +39,14 @@ type Props = {
   locked: boolean;
   receipt: { key: string; value: WorkflowReceipt } | null;
   onSubmit: (command: WorkflowRequest) => Promise<void>;
+  data: Overview;
+  cell: string;
+  onSelectCell: (cell: string) => void;
+  selectedRun: string;
+  onSelectRun: (run: string) => void;
+  onExecute: (request: Pending) => Promise<void>;
+  executionReceipt: ExecutionReceipt | null;
+  canExecute: boolean;
 };
 export function WorkflowResolution({
   principal,
@@ -42,6 +55,14 @@ export function WorkflowResolution({
   locked,
   receipt,
   onSubmit,
+  data,
+  cell,
+  onSelectCell,
+  selectedRun,
+  onSelectRun,
+  onExecute,
+  executionReceipt,
+  canExecute,
 }: Props) {
   const [catalogs, setCatalogs] = useState<Catalog[]>([]);
   const [catalog, setCatalog] = useState('');
@@ -55,7 +76,12 @@ export function WorkflowResolution({
   const [input, setInput] = useState('');
   const [unit, setUnit] = useState('');
   const [overrides, setOverrides] = useState<WorkflowRequest['overrides']>({});
+  const [inputs, setInputs] = useState<WorkflowRequest['inputs']>({});
+  const [propertySets, setPropertySets] = useState<WorkflowRequest['property_sets']>([]);
   const [result, setResult] = useState<WorkflowReceipt | null>(null);
+  const [execution, setExecution] = useState<ExecutionResult | null>(null);
+  const [executionFresh, setExecutionFresh] = useState(false);
+  useEffect(() => setExecution(null), [result]);
   const [selected, setSelected] = useState('');
   const [propertyTarget, setPropertyTarget] = useState<{
     node: string;
@@ -203,6 +229,8 @@ export function WorkflowResolution({
         setModel(value);
         setContexts(value.spec.defaults);
         setOverrides({});
+        setInputs({});
+        setPropertySets([]);
         setResult(null);
         setNode(value.spec.steps[0]?.id ?? '');
         setProperty('');
@@ -247,7 +275,28 @@ export function WorkflowResolution({
       const value = workflowReceiptSchema.parse(await api(`/api/v1/workflow-resolution?${params}`));
       if (refKey(value.reference) !== refKey(reference))
         throw new Error('Resolution reference differs');
+      const pin = value.report.request.workflow;
+      const savedModel = workflowModelSchema.parse(
+        await api(
+          `/api/v1/workflow-model?${new URLSearchParams({
+            catalog: pin.catalog,
+            id: pin.id,
+            revision: pin.revision,
+          })}`,
+        ),
+      );
+      const saved = reopenWorkflowRequest(savedModel, value);
       if (g === generation.current) {
+        setModel(savedModel);
+        setContexts(saved.contexts);
+        setOverrides(saved.overrides);
+        setInputs(saved.inputs);
+        setPropertySets(saved.property_sets);
+        setSlot(saved.slot_index);
+        setNode(savedModel.spec.steps[0]?.id ?? '');
+        setProperty('');
+        setInput('');
+        setUnit('');
         setResult(value);
         setPropertyTarget(null);
         setSelected(value.report.steps[0]?.node ?? '');
@@ -263,6 +312,12 @@ export function WorkflowResolution({
     setReportModel(null);
     const reference = result?.report.request.workflow;
     if (!reference) return () => control.abort();
+    // Save/reopen already loaded this immutable model. Reuse its exact pin rather
+    // than starting a redundant read that the next receipt would dispose.
+    if (model && refKey(model.reference) === refKey(reference)) {
+      setReportModel(model);
+      return () => control.abort();
+    }
     const params = new URLSearchParams({
       catalog: reference.catalog,
       id: reference.id,
@@ -279,7 +334,7 @@ export function WorkflowResolution({
         if (!control.signal.aborted) setError(explain(e));
       });
     return () => control.abort();
-  }, [result]);
+  }, [result, model]);
   const names = Object.fromEntries(
     (result?.report.definitions ?? []).map((d) => [refKey(d.reference), d.label]),
   );
@@ -287,10 +342,10 @@ export function WorkflowResolution({
   const step = result?.report.steps.find((s) => s.node === selected);
   return (
     <section className="panel" aria-label="Workflow resolution">
-      <h2>Versioned workflow resolution</h2>
+      <h2>Configure a Task</h2>
       <p>
-        Resolve package-defined tasks on the server. These reports do not publish or execute device
-        work.
+        Choose a saved Task, select its material and equipment, then save and check its settings.
+        Running a Task also requires an installed, qualified execution configuration.
       </p>
       {error && (
         <p role="alert" className="notice error">
@@ -300,6 +355,7 @@ export function WorkflowResolution({
       <label>
         Authoring catalog
         <select
+          aria-label="Authoring catalog"
           disabled={locked || busy}
           value={catalog}
           onChange={(e) => setCatalog(e.target.value)}
@@ -313,8 +369,9 @@ export function WorkflowResolution({
         </select>
       </label>
       <label>
-        Workflow model
+        Task library
         <select
+          aria-label="Task library"
           disabled={locked || busy}
           value={model ? refKey(model.reference) : ''}
           onChange={(e) => {
@@ -322,7 +379,12 @@ export function WorkflowResolution({
             if (v) void openModel(v.reference);
           }}
         >
-          <option value="">Select saved workflow</option>
+          <option value="">Select a Task</option>
+          {model && !models.some((m) => refKey(m.reference) === refKey(model.reference)) && (
+            <option value={refKey(model.reference)}>
+              {model.label} · saved r{model.reference.revision}
+            </option>
+          )}
           {models.map((m) => (
             <option key={refKey(m.reference)} value={refKey(m.reference)}>
               {m.label} · r{m.reference.revision}
@@ -331,8 +393,22 @@ export function WorkflowResolution({
         </select>
       </label>
       {model && (
+        <WorkflowTaskGraph
+          model={model}
+          receipt={result}
+          selected={selected || node}
+          execution={execution}
+          executionFresh={executionFresh}
+          onSelect={(id) => {
+            setSelected(id);
+            setNode(id);
+            setProperty('');
+          }}
+        />
+      )}
+      {model && (
         <fieldset disabled={locked || busy || !editable}>
-          <legend>Resolution inputs · saved model r{model.reference.revision}</legend>
+          <legend>Task settings · model r{model.reference.revision}</legend>
           {Object.entries(model.spec.contexts).map(([key, s]) => (
             <label key={key}>
               {s.label} context
@@ -354,6 +430,13 @@ export function WorkflowResolution({
                 }}
               >
                 {!s.multiple && <option value="">Not bound</option>}
+                {(contexts[key] ?? [])
+                  .filter((ref) => !definitions.some((d) => refKey(d.reference) === refKey(ref)))
+                  .map((ref) => (
+                    <option key={refKey(ref)} value={refKey(ref)}>
+                      Saved selection · r{ref.revision} · {ref.id}
+                    </option>
+                  ))}
                 {definitions
                   .filter((d) =>
                     s.kind === 'OBJECT'
@@ -468,20 +551,20 @@ export function WorkflowResolution({
               void onSubmit({
                 workflow: model.reference,
                 contexts,
-                property_sets: [],
+                property_sets: propertySets,
                 overrides,
-                inputs: {},
+                inputs,
                 slot_index: slot,
               });
             }}
           >
-            Resolve saved model
+            Save configuration and check values
           </button>
         </fieldset>
       )}
       {catalog && (
         <details>
-          <summary>Saved resolution reports</summary>
+          <summary>Saved Task configurations</summary>
           <button
             disabled={busy || locked}
             onClick={() => void reports().catch((e) => setError(explain(e)))}
@@ -534,6 +617,22 @@ export function WorkflowResolution({
             </button>
           )}
         </details>
+      )}
+      {result?.report.valid && result.report.concrete && (
+        <WorkflowExecution
+          data={data}
+          receipt={result}
+          locked={locked}
+          cell={cell}
+          onSelectCell={onSelectCell}
+          selectedRun={selectedRun}
+          onSelectRun={onSelectRun}
+          onSubmit={onExecute}
+          latest={executionReceipt}
+          onResult={setExecution}
+          onFresh={setExecutionFresh}
+          canExecute={canExecute}
+        />
       )}
       {result && (
         <section aria-label="Stored workflow resolution">

@@ -12,6 +12,7 @@ export const definitionKinds = [
   'PROPERTY',
   'OBJECT_TYPE',
   'OBJECT_MODEL',
+  'OBJECT_INSTANCE',
   'RESOURCE_TYPE',
   'RESOURCE_MODEL',
   'RESOURCE_INSTANCE',
@@ -102,6 +103,7 @@ export const definitionBodySchema = z.discriminatedUnion('kind', [
     })
     .strict(),
   z.object({ kind: z.literal('OBJECT_MODEL'), object_type: definitionRefSchema, values }).strict(),
+  z.object({ kind: z.literal('OBJECT_INSTANCE'), base: definitionRefSchema, values }).strict(),
   z
     .object({ kind: z.literal('RESOURCE_MODEL'), resource_type: definitionRefSchema, values })
     .strict(),
