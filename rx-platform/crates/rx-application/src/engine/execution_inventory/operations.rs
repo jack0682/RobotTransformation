@@ -181,7 +181,6 @@ impl<R: Repository, C: Clock, A: QualificationAuthority> Engine<R, C, A> {
         let meta = &self.installation;
         let clock = &self.clock;
         self.repository.transact(|tx| {
-            let diagnostic_started = std::time::Instant::now();
             let t = &prepared.ticket;
             let now = clock.now();
             let context = || ProcessingContext {
@@ -316,12 +315,6 @@ impl<R: Repository, C: Clock, A: QualificationAuthority> Engine<R, C, A> {
                 context(),
             )?;
             remember(tx, &scope, digest, WORK, &work)?;
-            eprintln!(
-                "execution diagnostic admission: operation={}, node={}, issued_at={now:?}, elapsed_us={}",
-                work.operation.id(),
-                t.command.node,
-                diagnostic_started.elapsed().as_micros(),
-            );
             Ok(work)
         })
     }
