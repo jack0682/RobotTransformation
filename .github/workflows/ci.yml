@@ -116,7 +116,7 @@ jobs:
         env:
           CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-static-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --reviewed-context provenance/verification/m1-admission-context-review.json --static-only
+          python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-static-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --reviewed-context provenance/verification/m1-prerequisite-context-review.json --static-only
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -245,6 +245,7 @@ jobs:
           cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
           cargo test --workspace --all-features --locked
 
+
   solutions_rust:
     name: rx-solutions full Rust workspace
     runs-on: ubuntu-24.04
@@ -270,77 +271,13 @@ jobs:
             ~/.cargo/git/db
             ${{ runner.temp }}/rx-solutions-target
           key: ${{ runner.os }}-${{ runner.arch }}-rx-solutions-${{ hashFiles('source/rx-solutions/Cargo.lock', 'source/rx-solutions/rust-toolchain.toml', 'source/rx-solutions/sdk/source-lock.json') }}
-      - name: Prepare bounded tracing for the existing external-process test
-        env:
-          RX_EXTERNAL_TRACE_DIR: ${{ runner.temp }}/rx-external-process-trace
-        run: |
-          if ! command -v strace >/dev/null; then
-            for apt_source in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
-              if [ -f "$apt_source" ]; then
-                sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' "$apt_source"
-              fi
-            done
-            sudo apt-get update
-            sudo apt-get install -y --no-install-recommends strace
-          fi
-          mkdir "$RX_EXTERNAL_TRACE_DIR"
-          strace --version > "$RX_EXTERNAL_TRACE_DIR/strace-version.txt"
-          cat > "$RX_EXTERNAL_TRACE_DIR/runner" <<'SH'
-          #!/bin/bash
-          set -euo pipefail
-          case "${1##*/}" in
-            external_process-*)
-              printf '%s\n' "$@" > "$RX_EXTERNAL_TRACE_DIR/test-command.txt"
-              cat /proc/self/limits > "$RX_EXTERNAL_TRACE_DIR/test-process-limits.txt"
-              cat /proc/self/cgroup > "$RX_EXTERNAL_TRACE_DIR/test-process-cgroup.txt"
-              for name in pids.current pids.max memory.current memory.max; do
-                if test -r "/sys/fs/cgroup/$name"; then
-                  cat "/sys/fs/cgroup/$name" > "$RX_EXTERNAL_TRACE_DIR/$name"
-                fi
-              done
-              exec strace -ff -ttt -T -yy -e trace=%process,%network,read,write,flock,fsync -e raw=read,write,recvfrom,recvmsg,sendto,sendmsg -o "$RX_EXTERNAL_TRACE_DIR/syscalls" "$@"
-              ;;
-            *) exec "$@" ;;
-          esac
-          SH
-          chmod 700 "$RX_EXTERNAL_TRACE_DIR/runner"
       - name: Format lint and test the complete original workspace
         env:
           CARGO_TARGET_DIR: ${{ runner.temp }}/rx-solutions-target
-          CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUNNER: ${{ runner.temp }}/rx-external-process-trace/runner
-          RX_EXTERNAL_TRACE_DIR: ${{ runner.temp }}/rx-external-process-trace
         run: |
           cargo fmt --all -- --check
           cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
-          cargo test --workspace --all-features --locked
-      - name: Record diagnostic interpreter and host identity
-        if: always()
-        env:
-          RX_EXTERNAL_TRACE_DIR: ${{ runner.temp }}/rx-external-process-trace
-        run: |
-          mkdir -p "$RX_EXTERNAL_TRACE_DIR"
-          python3 - <<'PY_INFO'
-          import hashlib,json,os,platform,resource,sys
-          from pathlib import Path
-          executable=Path(sys.executable).resolve()
-          trace_dir=Path(os.environ['RX_EXTERNAL_TRACE_DIR'])
-          info={'scope':'Intended diagnostic scope: trace the existing external-process test once in its ordinary workspace invocation, without changing assertions/deadlines or adding retries. Presence of the wrapper marker does not prove the test ran; inspect raw logs/traces. Tracing perturbs timing/process topology; a pass does not resolve the retained original EAGAIN failure.',
-            'wrapper_entered':(trace_dir/'test-command.txt').is_file(),
-            'trace_files':[p.name for p in sorted(trace_dir.glob('syscalls.*'))],
-            'cgroup_scope':'Raw root cgroup snapshots; consult test-process-cgroup.txt before inferring effective hierarchical limits.',
-            'python_executable':str(executable),'python_version':sys.version,
-            'python_size_bytes':executable.stat().st_size,'python_sha256':hashlib.sha256(executable.read_bytes()).hexdigest(),
-            'os':platform.system(),'kernel':platform.release(),'architecture':platform.machine(),
-            'process_limit':resource.getrlimit(resource.RLIMIT_NPROC),'file_limit':resource.getrlimit(resource.RLIMIT_NOFILE)}
-          Path(os.environ['RX_EXTERNAL_TRACE_DIR'],'environment.json').write_text(json.dumps(info,indent=2)+'\n')
-          PY_INFO
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: always()
-        with:
-          name: external-process-syscall-diagnostic
-          if-no-files-found: warn
-          retention-days: 14
-          path: ${{ runner.temp }}/rx-external-process-trace/
+          cargo test --workspace --all-features --locked --no-fail-fast
 
   clients:
     name: Installed Python and C++ clients
@@ -589,7 +526,7 @@ jobs:
         env:
           CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --reviewed-context provenance/verification/m1-admission-context-review.json --execute
+          python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --reviewed-context provenance/verification/m1-prerequisite-context-review.json --execute
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

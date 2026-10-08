@@ -46,6 +46,7 @@ fn definitions(
     tx: &mut dyn Transaction,
     catalog: &Id,
     refs: Vec<Reference>,
+    known: &BTreeMap<Reference, Definition>,
 ) -> Result<BTreeMap<Reference, Definition>> {
     let mut result = BTreeMap::new();
     let mut pending = refs;
@@ -59,10 +60,14 @@ fn definitions(
         if result.len() >= 512 {
             return reject(Reject::InvalidInput);
         }
-        if definition_version(tx, catalog, &r.id, None)?.archived {
-            return reject(Reject::InvalidInput);
-        }
-        let value = definition_version(tx, catalog, &r.id, Some(r.revision))?.definition;
+        let value = if let Some(value) = known.get(&r) {
+            value.clone()
+        } else {
+            if definition_version(tx, catalog, &r.id, None)?.archived {
+                return reject(Reject::InvalidInput);
+            }
+            definition_version(tx, catalog, &r.id, Some(r.revision))?.definition
+        };
         if value.reference != r {
             return reject(Reject::InvalidInput);
         }
@@ -71,7 +76,11 @@ fn definitions(
     }
     Ok(result)
 }
-fn snapshot(tx: &mut dyn Transaction, request: workflow_data::Request) -> Result<Snapshot> {
+fn snapshot(
+    tx: &mut dyn Transaction,
+    request: workflow_data::Request,
+    known: &BTreeMap<Reference, Definition>,
+) -> Result<Snapshot> {
     let r = &request.workflow;
     let model = version(tx, &r.catalog, &r.id, Some(r.revision))?;
     if model.reference != *r {
@@ -80,7 +89,7 @@ fn snapshot(tx: &mut dyn Transaction, request: workflow_data::Request) -> Result
     let mut refs = model.spec.references();
     refs.extend(request.contexts.values().flatten().cloned());
     refs.extend(request.property_sets.iter().cloned());
-    let definitions = definitions(tx, &r.catalog, refs)?;
+    let definitions = definitions(tx, &r.catalog, refs, known)?;
     Ok(Snapshot {
         model,
         request,
@@ -131,7 +140,9 @@ pub(super) fn current_snapshot(
         {
             return reject(Reject::InvalidInput);
         }
-        let candidate = snapshot(tx, input.clone())?;
+        // Earlier candidates verified these exact references in this same transaction.
+        // Reuse their immutable bytes; this cache never survives the current snapshot.
+        let candidate = snapshot(tx, input.clone(), &closure)?;
         for (reference, definition) in &candidate.definitions {
             if checked.insert(reference.clone()) {
                 let current = definition_version(tx, &reference.catalog, &reference.id, None)?;
@@ -237,7 +248,12 @@ impl<R: Repository, C: Clock, A: QualificationAuthority> Engine<R, C, A> {
                 }
                 _ => return reject(Reject::StaleRevision),
             };
-            definitions(tx, &input.catalog, input.spec.references())?;
+            definitions(
+                tx,
+                &input.catalog,
+                input.spec.references(),
+                &BTreeMap::new(),
+            )?;
             let digest = Version::digest(
                 &input.catalog,
                 &input.id,
@@ -358,7 +374,11 @@ impl<R: Repository, C: Clock, A: QualificationAuthority> Engine<R, C, A> {
             if let Some(saved) = prior(tx, &scope, fingerprint, RECEIPT)? {
                 return Ok(Preparation::Recorded(Box::new(saved)));
             }
-            Ok(Preparation::Pending(Box::new(snapshot(tx, input)?)))
+            Ok(Preparation::Pending(Box::new(snapshot(
+                tx,
+                input,
+                &BTreeMap::new(),
+            )?)))
         })
     }
     pub fn save_workflow_resolution(
@@ -381,7 +401,7 @@ impl<R: Repository, C: Clock, A: QualificationAuthority> Engine<R, C, A> {
                 return Ok(saved);
             }
             // Current access/archive checks are repeated after the CPU worker. Pinned records are immutable.
-            snapshot(tx, input.clone())?;
+            snapshot(tx, input.clone(), &BTreeMap::new())?;
             let id = id();
             let digest = canonical::digest("RX-WORKFLOW-RESOLUTION-v1", &prepared.report)
                 .map_err(domain_error)?;

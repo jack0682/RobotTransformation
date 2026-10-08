@@ -73,12 +73,18 @@ Dependency updates are manual, focused, signed PRs. Vulnerability alerts remain 
 
 The full required workflow runs original Platform and Solutions Rust, client, native, operator, and installed-skills checks on separate Linux runners. Do not run heavy migration builds on the preserved CP2 host. The origin audit anchors the original import to its immutable commit; current code is validated through current-source gates. A changed compiler, validator, or driver identity requires explicit impact review instead of reusing historical approval.
 
-The current M1 admission optimization has a bounded impact review in
-`provenance/verification/m1-admission-context-review.json`. The existing identity
-runner pins that review, its exact parent/change commits and the two old/new file
-hashes. It retains the frozen evaluator's original `UNKNOWN_CONTEXT_CHANGED`
-report, then separately checks that only the reviewed context differs and that
-all named values, binding/source proofs and SDK inventory remain unchanged.
-Actual public identity probes still compare against the original frozen baseline;
-all required product and runtime checks remain mandatory. This review is not
-maintainer acceptance or a general exemption for future Rust changes.
+The current M1 prerequisite changes have a bounded impact review in
+`provenance/verification/m1-prerequisite-context-review.json`. It includes the
+previous two-file admission review plus three implementation/test files. The
+existing runner pins the new document, exact base/end commits and old/new bytes
+of all five files. It verifies the base/end ancestry and exact Rust/Cargo diff;
+this preserves the signed diagnostic and correction history without squashing.
+The earlier `m1-admission-context-review.json` remains historical evidence.
+
+The runner retains the frozen evaluator's original `UNKNOWN_CONTEXT_CHANGED`
+report and rejects any extra source-context change, named identity/input/proof
+change, binding-closure change or SDK drift. Actual public identity probes still
+compare against the original unchanged baseline. Other source, UI, controller
+and CI changes retain every required current-source check. This scoped review is
+not maintainer acceptance, failure closure or a general exemption for future
+Rust changes.

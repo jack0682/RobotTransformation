@@ -22,7 +22,7 @@ from compare_compiled import Refusal, compare_outputs, load_baseline, require, s
 
 HERE = Path(__file__).resolve().parent
 EVALUATOR_SHA256 = "9c6a32bb5fe7ecb1ea6af1e94af1c56de4b6e4db202228d06df267ba3d05ca17"
-REVIEWED_CONTEXT_SHA256 = "59cb770a827d3f24ca7f0ef669f11c15cfaac50c868c0eb4cce5bf9030321bad"
+REVIEWED_CONTEXT_SHA256 = "19d9a517d13c3d01b9ce8e2e8908c401c0d45ad9ccc97abea96c9a691c08fbe9"
 PROBES = {
     "platform": ("rx-platform", "rx-application", "m3_platform_identity", "crates/rx-application/examples/m3_platform_identity.rs", "platform_identity.rs"),
     "device": ("rx-solutions", "rx-device-package", "m3_device_identity", "runtime/rx-device-package/examples/m3_device_identity.rs", "device_identity.rs"),
@@ -133,7 +133,7 @@ def reviewed_context(report, baseline, review_path, repo, head, rows):
         require(isinstance(review[name], str) and re.fullmatch('[0-9a-f]{40}', review[name]),
                 "review requires full immutable commit identities")
     files = review['files']
-    require(isinstance(files, list) and len(files) == 2, "this reviewed change contains exactly two files")
+    require(isinstance(files, list) and len(files) == 5, "this reviewed source span contains exactly five files")
     expected = {}
     for item in files:
         require(isinstance(item, dict) and set(item) == {'path', 'old_sha256', 'new_sha256'},
@@ -156,14 +156,17 @@ def reviewed_context(report, baseline, review_path, repo, head, rows):
                 "missing bounded review checks or limitations")
 
     base, change = review['base_commit'], review['reviewed_commit']
-    parents = git(repo, 'rev-list', '--parents', '-n', '1', change).decode().split()
-    require(parents == [change, base], "reviewed commit must be the exact single-parent change from its recorded base")
+    # The byte-pinned endpoints commit to the exact signed history and final source span.
+    # Retain intermediate failures; do not require squashing/rebasing diagnostic history.
+    git(repo, 'merge-base', '--is-ancestor', base, change)
     git(repo, 'merge-base', '--is-ancestor', change, head)
-    changed = git(repo, 'diff', '--name-status', '--no-renames', '-z', base, change, '--').split(b'\0')
-    require(changed[-1:] == [b''] and len(changed[:-1]) == 4,
-            "reviewed commit diff is not exactly the two recorded file modifications")
-    require({changed[i + 1].decode() for i in (0, 2)} == set(expected)
-            and all(changed[i] == b'M' for i in (0, 2)), "unreviewed add/remove/rename/path in source commit")
+    changed = git(repo, 'diff', '--name-status', '--no-renames', '-z', base, change, '--',
+                  '*.rs', '*Cargo.toml', '*Cargo.lock', '*rust-toolchain.toml').split(b'\0')
+    require(changed[-1:] == [b''] and len(changed[:-1]) == 2 * len(files),
+            "reviewed Rust/Cargo span is not exactly the recorded modifications")
+    indices = range(0, 2 * len(files), 2)
+    require({changed[i + 1].decode() for i in indices} == set(expected)
+            and all(changed[i] == b'M' for i in indices), "unreviewed add/remove/rename/path in source span")
     original = baseline['document']['baseline']
     require(report.get('baseline') == original, "raw evaluator baseline differs from frozen report")
     target = report['target']

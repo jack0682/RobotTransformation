@@ -78,7 +78,7 @@ impl Drop for LostDelivery {
 #[test]
 fn failed_guarded_delivery_never_settles_without_owned_exit_and_current_final_report() {
     let mut scenes = vec![];
-    for final_report in [false, true] {
+    for final_report in std::iter::once(false).chain(std::iter::repeat_n(true, 16)) {
         let root = tempfile::tempdir().unwrap();
         let script = root.path().join("service.py");
         let exit = root.path().join("exit");
@@ -94,6 +94,9 @@ def report(kind):
  v={'schema':'rx.protocol-guarded-status.v1','scope':scope,'instance':os.environ['RX_PROCESS_INSTANCE_ID'],'pid':os.getpid(),'sequence':str(seq),'observed_at':{'clock_id':clock,'ticks_ns':str(time.clock_gettime_ns(time.CLOCK_BOOTTIME))},'state':state}
  tmp=path.with_suffix('.tmp');tmp.write_text(json.dumps(v));tmp.replace(path)
 while not exit.exists():report('READY');time.sleep(.01)
+# A retry may arrive after STOPPED, including during interpreter teardown.
+# SIG_IGN survives Python's handler cleanup; the owned child still exits normally.
+signal.signal(signal.SIGTERM,signal.SIG_IGN)
 if final:report('STOPPED')
 "#).unwrap();
         let binding = GuardedStatusBinding::Host {
@@ -182,7 +185,27 @@ if final:report('STOPPED')
             assert!(Instant::now() < end);
             std::thread::sleep(Duration::from_millis(10));
         };
-        assert_eq!(report.guarded_shutdown_confirmed, final_report);
+        // Preserve the first failed scene before its temporary directory is dropped.
+        let status_path = root
+            .path()
+            .join(format!("status.{}.json", instance.as_ref().unwrap()));
+        let logs: BTreeMap<_, _> = std::fs::read_dir(root.path().join("logs"))
+            .unwrap()
+            .map(|entry| {
+                let path = entry.unwrap().path();
+                (
+                    path.file_name().unwrap().to_string_lossy().into_owned(),
+                    std::fs::read_to_string(&path).unwrap_or_default(),
+                )
+            })
+            .collect();
+        assert_eq!(
+            report.guarded_shutdown_confirmed,
+            final_report,
+            "scene={final_report}, report={report:?}, final_status={:?}, child_logs={logs:?}",
+            std::fs::read_to_string(status_path),
+        );
+        assert_eq!(report.state.records[&n("service")].exit_code, Some(0));
         assert_eq!(report.state.records[&n("service")].instance, instance);
         scenes.push(serde_json::json!({"final_report":final_report,"injected_delivery_failure":error,"status":report}));
     }
