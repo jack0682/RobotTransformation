@@ -368,6 +368,7 @@ fn validate_emission(
 ) -> Result<()> {
     match payload {
         Delivery::Prepare { operation, .. } | Delivery::Authorize { operation, .. } => {
+            let diagnostic_started = std::time::Instant::now();
             let (_, work): (_, Work) = load(tx, "work", operation, WORK)?;
             let (_, run): (_, Run) = load(tx, "run", &work.run, RUN)?;
             let (_, cell): (_, Cell) = load(tx, "cell", &work.cell, CELL)?;
@@ -416,6 +417,12 @@ fn validate_emission(
                 return reject(Reject::CapabilityMissing);
             }
             evaluate(tx, &cell, &step.conditions, now)?;
+            eprintln!(
+                "execution diagnostic emission: operation={}, prepare={}, checked_at={now:?}, elapsed_us={}",
+                operation,
+                matches!(payload, Delivery::Prepare { .. }),
+                diagnostic_started.elapsed().as_micros(),
+            );
         }
         Delivery::Arm {
             attempt,

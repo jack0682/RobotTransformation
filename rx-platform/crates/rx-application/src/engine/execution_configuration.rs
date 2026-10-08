@@ -33,6 +33,7 @@ pub(super) fn verify(tx: &mut dyn Transaction, c: &CellConfiguration) -> Result<
     domain(tx, c).map(|_| ())
 }
 pub(super) fn domain(tx: &mut dyn Transaction, c: &CellConfiguration) -> Result<Option<Domain>> {
+    let diagnostic_started = std::time::Instant::now();
     let Some(plan) = plan(c)? else {
         return Ok(None);
     };
@@ -105,6 +106,11 @@ pub(super) fn domain(tx: &mut dyn Transaction, c: &CellConfiguration) -> Result<
         return reject(Reject::StaleRevision);
     }
     tx.require_workflow_execution_reader()?;
+    eprintln!(
+        "execution diagnostic domain: cell={}, elapsed_us={}",
+        c.id,
+        diagnostic_started.elapsed().as_micros(),
+    );
     Ok(Some(Domain {
         policy,
         inputs,

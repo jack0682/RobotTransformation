@@ -317,7 +317,7 @@ jobs:
         run: |
           cargo fmt --all -- --check
           cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
-          cargo test --workspace --all-features --locked
+          cargo test --workspace --all-features --locked --no-fail-fast
       - name: Record diagnostic interpreter and host identity
         if: always()
         env:
