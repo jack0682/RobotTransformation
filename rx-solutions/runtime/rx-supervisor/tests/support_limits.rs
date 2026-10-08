@@ -94,6 +94,9 @@ def report(kind):
  v={'schema':'rx.protocol-guarded-status.v1','scope':scope,'instance':os.environ['RX_PROCESS_INSTANCE_ID'],'pid':os.getpid(),'sequence':str(seq),'observed_at':{'clock_id':clock,'ticks_ns':str(time.clock_gettime_ns(time.CLOCK_BOOTTIME))},'state':state}
  tmp=path.with_suffix('.tmp');tmp.write_text(json.dumps(v));tmp.replace(path)
 while not exit.exists():report('READY');time.sleep(.01)
+# A retry may arrive after STOPPED, including during interpreter teardown.
+# SIG_IGN survives Python's handler cleanup; the owned child still exits normally.
+signal.signal(signal.SIGTERM,signal.SIG_IGN)
 if final:report('STOPPED')
 "#).unwrap();
         let binding = GuardedStatusBinding::Host {
@@ -202,6 +205,7 @@ if final:report('STOPPED')
             "scene={final_report}, report={report:?}, final_status={:?}, child_logs={logs:?}",
             std::fs::read_to_string(status_path),
         );
+        assert_eq!(report.state.records[&n("service")].exit_code, Some(0));
         assert_eq!(report.state.records[&n("service")].instance, instance);
         scenes.push(serde_json::json!({"final_report":final_report,"injected_delivery_failure":error,"status":report}));
     }
