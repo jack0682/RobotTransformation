@@ -116,7 +116,7 @@ jobs:
         env:
           CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-static-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --reviewed-context provenance/verification/m1-admission-context-review.json --static-only
+          python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-static-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --reviewed-context provenance/verification/m1-prerequisite-context-review.json --static-only
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -526,7 +526,7 @@ jobs:
         env:
           CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --reviewed-context provenance/verification/m1-admission-context-review.json --execute
+          python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --reviewed-context provenance/verification/m1-prerequisite-context-review.json --execute
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

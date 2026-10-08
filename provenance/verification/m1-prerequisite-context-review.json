@@ -1,0 +1,55 @@
+{
+  "baseline_report_sha256": "e2016d2af1bdb63cdef079738ffba5ebaf47a66f78ae0391b8ed02e85a0334f5",
+  "base_commit": "f500edab60c9f81151d84e0bb68500347b78fffe",
+  "reviewed_commit": "792bfb162e3e21f9c0d6fc488f60582e3b366f85",
+  "files": [
+    {
+      "path": "rx-platform/crates/rx-application/src/engine/execution_inventory.rs",
+      "old_sha256": "fba435b095e32e18544cc304857b12a66b2705419582906a18e9e9678afcbce7",
+      "new_sha256": "954e25bbf4f5824517109b5e58cc0a53a79750fd1dde3eadb421e9aa44a83232"
+    },
+    {
+      "path": "rx-platform/crates/rx-application/src/engine/execution_inventory/operations.rs",
+      "old_sha256": "b5da2dd7cc92e17e9f21af634ed3ac797ff7ff59195406f58ba968dc6fa78f5e",
+      "new_sha256": "c97cc29bd52fe53d9b261302a1c4ecd334c5213a17606d45ed0608d68cb7030c"
+    },
+    {
+      "path": "rx-platform/crates/rx-application/src/engine/workflow_model.rs",
+      "old_sha256": "fc984e876e0e4aaccad54961c7c15c51fa08f798ef398a8cccfc9427dc6a81cb",
+      "new_sha256": "fbbab3b9a57079b658902d612014f7a3f8a53925ce0da78955be155b23a4838e"
+    },
+    {
+      "path": "rx-platform/crates/rx-application/tests/support/workflow_model_tests.rs",
+      "old_sha256": "ba4a2b2b195e4c3207444147e05ba67e4d277ad9ea42b8c49628100e3a1c2fa0",
+      "new_sha256": "d88620f7ee980e7d1f2c23bb37a817920c06d90d2feef6d5f68feb764c1c7816"
+    },
+    {
+      "path": "rx-solutions/runtime/rx-supervisor/tests/support_limits.rs",
+      "old_sha256": "7e67515e74e7d816e955801ab0e1bd0340c8c5286a5ac10460a4db3443583f3c",
+      "new_sha256": "08a1b3d321e2f235ce96429bbeb26a3a898dafcd1ed0ca8dd009ec56fce95567"
+    }
+  ],
+  "impact_review": {
+    "text": "Retain the previously reviewed two-file admission Domain reuse and review three additional Rust files: reuse exact, already current-checked definition bytes between candidates within one SQLite IMMEDIATE snapshot; extend the public API stale-reference regression; make the guarded test child ignore repeated TERM during normal interpreter shutdown. There are no definition writes between candidate reads and no cache across calls/transactions. The multi-commit source span includes retained diagnostic and correction history; its final Rust/Cargo delta is exactly the five byte-pinned modifications. Non-context UI/controller/CI changes remain subject to all other required jobs. Temporary Host/P runtime diagnostics have been removed, restoring their accepted bytes. The historical comparator remains UNKNOWN_CONTEXT_CHANGED; this is a current implementation impact review, not rewriting the frozen baseline.",
+    "preserved_checks": [
+      "First definition closure/currentness and object projection validation",
+      "Part, configuration, publication, policy, object and slot identity checks",
+      "Pool hold and process eligibility checks in their original order",
+      "First workflow-execution reader barrier; its removed second PRAGMA user_version raise is idempotent on the current SQLite implementation",
+      "All permit, authority, freshness/deadline, native entry/completion and UNKNOWN rules",
+      "Original named identity formulas, source closures, SDK inventory, frozen baseline and evaluator",
+      "Catalog identity, per-candidate closure bounds/reachable references, historical definition integrity and complete Reference equality",
+      "Current workflow/definition head and archive checks, canonical input-closure equality and caller/qualification/operation authorization",
+      "Guarded owned zero exit plus valid current terminal report; missing report stays unconfirmed; no product Supervisor change",
+      "Every original named identity, input/proof object, binding closure, SDK inventory and actual compiled comparison against the unchanged baseline"
+    ],
+    "limitations": [
+      "Current source/context review only; no new clock, authority, UNKNOWN, native entry/completion or compatibility semantics are approved.",
+      "The original A4 first rejecting predicate was not timestamped. Measured verification-cost reduction and successful new runs do not by themselves prove its exact historical cause or unconditional liveness.",
+      "Definition reuse does not preserve occurrence/timing of faults in eliminated redundant reads; the production repository supplies a consistent SQLite IMMEDIATE transaction.",
+      "Candidate60cbb04 full Platform/Solutions tests and five real M1 scenes passed their reported scopes; two bounded guard mutants compiled and failed actual public API assertions. The final uninstrumented source still requires exact-head CI and compiled identity probes.",
+      "Original M1 acceptance, original failures/UNKNOWN/custody, the frozen evaluator/baseline and the earlier two-file review remain intact. This record is not owner acceptance, physical qualification or merge/release approval."
+    ],
+    "reviewer": "Codex root source-impact audit using actual SQLite isolation/call paths, Linux behavior logs and cargo-mutants assertion evidence; no independent human review or renewed owner acceptance is claimed."
+  }
+}

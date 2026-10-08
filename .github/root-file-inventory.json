@@ -159,6 +159,7 @@
     "provenance/import/M4-canonical-document-map.json",
     "provenance/import/M4-origin-anchor.json",
     "provenance/verification/m1-admission-context-review.json",
+    "provenance/verification/m1-prerequisite-context-review.json",
     "references/execution_v2_design_2026-10-02/legacy-freeze.json",
     "references/execution_v2_design_2026-10-02/sizing.json",
     "repository-settings.json",
