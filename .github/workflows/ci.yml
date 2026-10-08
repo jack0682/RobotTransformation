@@ -300,6 +300,11 @@ jobs:
               done
               exec strace -ff -ttt -T -yy -e trace=%process,%network,read,write,flock,fsync -e raw=read,write,recvfrom,recvmsg,sendto,sendmsg -o "$RX_EXTERNAL_TRACE_DIR/syscalls" "$@"
               ;;
+            support_limits-*)
+              mkdir -p "$RX_EXTERNAL_TRACE_DIR/guarded-shutdown"
+              printf '%s\n' "$@" > "$RX_EXTERNAL_TRACE_DIR/guarded-shutdown/test-command.txt"
+              exec strace -ff -ttt -T -e trace=%process,%signal,openat,rename,renameat -o "$RX_EXTERNAL_TRACE_DIR/guarded-shutdown/syscalls" "$@"
+              ;;
             *) exec "$@" ;;
           esac
           SH

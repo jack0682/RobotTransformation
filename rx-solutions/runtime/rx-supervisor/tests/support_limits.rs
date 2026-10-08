@@ -78,7 +78,7 @@ impl Drop for LostDelivery {
 #[test]
 fn failed_guarded_delivery_never_settles_without_owned_exit_and_current_final_report() {
     let mut scenes = vec![];
-    for final_report in [false, true] {
+    for final_report in std::iter::once(false).chain(std::iter::repeat_n(true, 16)) {
         let root = tempfile::tempdir().unwrap();
         let script = root.path().join("service.py");
         let exit = root.path().join("exit");
@@ -183,7 +183,9 @@ if final:report('STOPPED')
             std::thread::sleep(Duration::from_millis(10));
         };
         // Preserve the first failed scene before its temporary directory is dropped.
-        let status_path = root.path().join("status.json");
+        let status_path = root
+            .path()
+            .join(format!("status.{}.json", instance.as_ref().unwrap()));
         let logs: BTreeMap<_, _> = std::fs::read_dir(root.path().join("logs"))
             .unwrap()
             .map(|entry| {
