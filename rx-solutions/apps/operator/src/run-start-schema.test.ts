@@ -88,6 +88,22 @@ const receipt = {
   terminal: null,
 };
 const record = freezeStartRequest(candidate, data, uuid('a'));
+it('renders a blocked placeholder recipe without permitting unsupported execution', () => {
+  const blocked = structuredClone(candidate);
+  blocked.recipe.schema_id = 'rx.development.placeholder.v1';
+  blocked.can_request = false;
+  blocked.blocking_reason = 'FORBIDDEN';
+  expect(startContextSchema.parse(blocked).can_request).toBe(false);
+  blocked.can_request = true;
+  blocked.blocking_reason = null;
+  expect(() => startContextSchema.parse(blocked)).toThrow();
+});
+it('retains reviewed identity and request recovery for the v2 start endpoint', () => {
+  const v2 = { ...record, route: '/api/v1/workflow-executions/start' as const };
+  expect(validateStartReceipt(v2, receipt).run).toBe(candidate.run.id);
+  expect(() => pendingSchema.parse({ ...v2, start_review: undefined })).toThrow();
+  expect(() => validateStartReceipt(v2, { ...receipt, run: uuid('f') })).toThrow();
+});
 const attemptView: AttemptContext = {
   installation,
   checked_at: { clock_id: 'clock/a', ticks_ns: '150' },

@@ -4,8 +4,13 @@ import uuid
 from playwright.sync_api import expect
 
 def check_bindings(page,context,origin,headers,output):
+    def open_library():
+        library = page.locator('.workflow-library-panel')
+        if library.get_attribute('open') is None:
+            library.locator('summary').click()
     cell='cell/demo';before=context.request.get(f'{origin}/api/v1/overview').json()['cells'][0]['cell']
     page.get_by_role('button',name='Workflow design',exact=True).click()
+    open_library()
     page.get_by_role('button',name='Material supply copy',exact=False).click()
     expect(page.get_by_label('Draft title',exact=True)).to_have_value('Material supply copy')
     drafts=context.request.get(f'{origin}/api/v1/process-drafts?cell=cell%2Fdemo').json()['drafts'];draft=next(d for d in drafts if d['title']=='Material supply copy')
@@ -27,7 +32,7 @@ def check_bindings(page,context,origin,headers,output):
     def recover(route):recovered.append(route.request.post_data_json);route.continue_()
     page.route('**/api/v1/process-draft-bindings',recover,times=1)
     page.get_by_role('button',name='Check original request',exact=True).click();expect(page.get_by_text('The request outcome needs verification',exact=True)).not_to_be_visible();assert sent==recovered
-    page.get_by_role('button',name='Workflow design',exact=True).click();page.get_by_role('button',name='Material supply copy',exact=False).click()
+    page.get_by_role('button',name='Workflow design',exact=True).click();open_library();page.get_by_role('button',name='Material supply copy',exact=False).click()
     page.locator('details.binding-details > summary').click()
     expect(page.locator('.draft-bindings .badge')).to_have_text('All bindings selected')
     with page.expect_download() as download:page.get_by_role('button',name='Export compiler input',exact=True).click()
@@ -46,6 +51,7 @@ def check_bindings(page,context,origin,headers,output):
     stale=context.request.get(bindings_url).json();assert stale['stale']==['SOURCE_CHANGED'] and stale['binding']['source_revision']=='1'
     assert context.request.get(f'{origin}/api/v1/overview').json()['cells'][0]['cell']==before
     page.get_by_role('button',name='Operations',exact=True).click();page.get_by_role('button',name='Workflow design',exact=True).click()
+    open_library()
     page.get_by_role('button',name='Updated material supply',exact=False).click()
     page.locator('details.binding-details > summary').click()
     page.get_by_role('button',name='Review against current baseline',exact=True).click();page.get_by_role('button',name='Save bindings',exact=True).click()

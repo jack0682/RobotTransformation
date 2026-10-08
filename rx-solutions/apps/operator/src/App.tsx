@@ -1,4 +1,10 @@
 import { WorkflowResolution } from './workflow-resolution';
+import {
+  executionMutation,
+  validateExecutionReceipt,
+  executionRunSchema,
+  type ExecutionReceipt,
+} from './workflow-execution-schema';
 import { workflowRoute, validateWorkflowReceipt, type WorkflowReceipt } from './workflow-schema';
 import { definitionConflict } from './definition-names';
 import { Definitions } from './definitions';
@@ -61,6 +67,7 @@ import {
 import { readPending, savePending, clearPending, canRecover, requestBody } from './pending';
 
 export function App() {
+  const [executionReceipt, setExecutionReceipt] = useState<ExecutionReceipt | null>(null);
   const [phase, setPhase] = useState<'checking' | 'signed-out' | 'active'>('checking');
   const [data, setData] = useState<Overview | null>(null);
   const [packageBuffers, setPackageBuffers] = useState<Record<string, PackageBuffer>>({});
@@ -128,6 +135,7 @@ export function App() {
         setPackageReceipt(null);
         setDefinitionReceipt(null);
         setWorkflowReceipt(null);
+        setExecutionReceipt(null);
         setDefinitionDirty(false);
         setDraftReceipt(null);
         setBindingReceipt(null);
@@ -381,7 +389,15 @@ export function App() {
       sent = true;
       const result = await api(record.route, { body: requestBody(record) });
       try {
-        if (workflowRoute(record.route)) {
+        if (executionMutation(record.route)) {
+          const value = validateExecutionReceipt(record, result);
+          setExecutionReceipt({ route: record.route, command: record.command, value });
+          if (record.route === '/api/v1/workflow-executions/runs') {
+            const binding = executionRunSchema.parse((value as { binding: unknown }).binding);
+            setRunSelections((old) => ({ ...old, [binding.cell]: binding.run }));
+            setSelected(binding.cell);
+          }
+        } else if (workflowRoute(record.route)) {
           setWorkflowReceipt({
             key: record.request_key,
             value: validateWorkflowReceipt(record, result),
@@ -454,7 +470,10 @@ export function App() {
             throw new Error('run correlation');
           setRunSelections((old) => ({ ...old, [run.cell]: run.id }));
           setSelected(run.cell);
-        } else if (record.route === '/api/v1/runs/start') {
+        } else if (
+          record.route === '/api/v1/runs/start' ||
+          record.route === '/api/v1/workflow-executions/start'
+        ) {
           const receipt = validateStartReceipt(record, result);
           // The unchanged POST receipt has no budget/configuration fields. Read the same
           // attempt and Run before releasing the durable unknown-request record.
@@ -791,6 +810,14 @@ export function App() {
               principal={data.user.principal}
               terminal={data.user.terminal}
               canEdit={canSaveDraft}
+              data={data}
+              cell={selected}
+              onSelectCell={setSelected}
+              selectedRun={runSelections[selected] ?? ''}
+              onSelectRun={(run) => setRunSelections((old) => ({ ...old, [selected]: run }))}
+              onExecute={(request) => submit(undefined, request)}
+              executionReceipt={executionReceipt}
+              canExecute={canRequest}
               locked={!!pending || working || storageError}
               receipt={workflowReceipt}
               onSubmit={(command) =>

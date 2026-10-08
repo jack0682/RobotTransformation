@@ -10,7 +10,10 @@ import {
   violationNode,
   workflowReceiptSchema,
   type WorkflowReceipt,
+  type WorkflowModel,
+  reopenWorkflowRequest,
 } from './workflow-schema';
+import { matchingCandidate } from './workflow-execution-schema';
 import type { Pending } from './schema';
 const ref = {
   catalog: 'a0000000-0000-4000-8000-000000000001',
@@ -80,6 +83,34 @@ const pending: Pending = {
   label: 'Resolve',
   command: request,
 };
+it('reopens the exact stored configuration without dropping inputs or property sets', () => {
+  const saved = structuredClone(receipt);
+  saved.report.request.inputs.angle = parseQuantity('95', 'deg');
+  saved.report.request.property_sets = [ref];
+  const model = { reference: ref } as WorkflowModel;
+  const reopened = reopenWorkflowRequest(model, saved);
+  expect(reopened).toEqual(saved.report.request);
+  reopened.inputs.angle = parseQuantity('120', 'deg');
+  expect(saved.report.request.inputs.angle).toEqual(parseQuantity('95', 'deg'));
+  expect(() =>
+    reopenWorkflowRequest({ ...model, reference: { ...ref, digest: 'f'.repeat(64) } }, saved),
+  ).toThrow();
+});
+it('allows only the exact installed configuration and refuses ambiguous or changed candidates', () => {
+  const inputs = {
+    schema: 'rx.execution-input-closure.v2' as const,
+    workflow: ref,
+    requests: [request],
+  };
+  expect(matchingCandidate(receipt, inputs)).toBe(0);
+  const changed = structuredClone(receipt);
+  changed.report.request.overrides.first = { value: parseQuantity('2', 'mm') };
+  expect(() => matchingCandidate(changed, inputs)).toThrow();
+  expect(() => matchingCandidate(receipt, { ...inputs, requests: [request, request] })).toThrow();
+  expect(() =>
+    matchingCandidate(receipt, { ...inputs, workflow: { ...ref, revision: '2' } }),
+  ).toThrow();
+});
 it('correlates the complete original resolution request and actor', () => {
   expect(validateWorkflowReceipt(pending, receipt).reference.id).toBe(receipt.reference.id);
   for (const change of ['workflow', 'contexts', 'override', 'slot', 'actor']) {

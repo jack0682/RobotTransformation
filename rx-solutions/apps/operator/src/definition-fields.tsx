@@ -41,6 +41,8 @@ export function newBody(kind: DefinitionBody['kind']): DefinitionBody {
       return { kind, parent: null, fields: {} };
     case 'OBJECT_MODEL':
       return { kind, object_type: emptyRef(), values: {} };
+    case 'OBJECT_INSTANCE':
+      return { kind, base: emptyRef(), values: {} };
     case 'RESOURCE_MODEL':
       return { kind, resource_type: emptyRef(), values: {} };
     case 'RESOURCE_INSTANCE':
@@ -513,7 +515,10 @@ function ModelEditor({
   options,
   onChange,
 }: {
-  body: Extract<DefinitionBody, { kind: 'OBJECT_MODEL' | 'RESOURCE_MODEL' | 'RESOURCE_INSTANCE' }>;
+  body: Extract<
+    DefinitionBody,
+    { kind: 'OBJECT_MODEL' | 'OBJECT_INSTANCE' | 'RESOURCE_MODEL' | 'RESOURCE_INSTANCE' }
+  >;
   options: DefinitionSummary[];
   onChange: (b: DefinitionBody) => void;
 }) {
@@ -541,14 +546,16 @@ function ModelEditor({
   return (
     <>
       <ReferenceSelect
-        title={body.kind === 'RESOURCE_INSTANCE' ? 'Base type or model' : 'Type'}
+        title={body.kind.endsWith('_INSTANCE') ? 'Base type or model' : 'Type'}
         value={ref}
         kinds={
           body.kind === 'OBJECT_MODEL'
             ? ['OBJECT_TYPE']
-            : body.kind === 'RESOURCE_MODEL'
-              ? ['RESOURCE_TYPE']
-              : ['RESOURCE_TYPE', 'RESOURCE_MODEL']
+            : body.kind === 'OBJECT_INSTANCE'
+              ? ['OBJECT_TYPE', 'OBJECT_MODEL']
+              : body.kind === 'RESOURCE_MODEL'
+                ? ['RESOURCE_TYPE']
+                : ['RESOURCE_TYPE', 'RESOURCE_MODEL']
         }
         options={options}
         onChange={changeRef}
@@ -988,6 +995,7 @@ export function DefinitionFields({
     );
   if (
     body.kind === 'OBJECT_MODEL' ||
+    body.kind === 'OBJECT_INSTANCE' ||
     body.kind === 'RESOURCE_MODEL' ||
     body.kind === 'RESOURCE_INSTANCE'
   )

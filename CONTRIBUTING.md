@@ -72,3 +72,13 @@ Preserve source provenance, licenses, notices, history, and historical evidence.
 Dependency updates are manual, focused, signed PRs. Vulnerability alerts remain enabled; automatic security-fix proposals are disabled. An unverified dependency upgrade is not bundled into repository migration.
 
 The full required workflow runs original Platform and Solutions Rust, client, native, operator, and installed-skills checks on separate Linux runners. Do not run heavy migration builds on the preserved CP2 host. The origin audit anchors the original import to its immutable commit; current code is validated through current-source gates. A changed compiler, validator, or driver identity requires explicit impact review instead of reusing historical approval.
+
+The current M1 admission optimization has a bounded impact review in
+`provenance/verification/m1-admission-context-review.json`. The existing identity
+runner pins that review, its exact parent/change commits and the two old/new file
+hashes. It retains the frozen evaluator's original `UNKNOWN_CONTEXT_CHANGED`
+report, then separately checks that only the reviewed context differs and that
+all named values, binding/source proofs and SDK inventory remain unchanged.
+Actual public identity probes still compare against the original frozen baseline;
+all required product and runtime checks remain mandatory. This review is not
+maintainer acceptance or a general exemption for future Rust changes.
