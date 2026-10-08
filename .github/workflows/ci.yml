@@ -245,6 +245,44 @@ jobs:
           cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
           cargo test --workspace --all-features --locked
 
+      - name: Evaluate two workflow input guards with cargo-mutants (temporary)
+        timeout-minutes: 22
+        env:
+          CARGO_TARGET_DIR: ${{ runner.temp }}/rx-platform-target
+        run: |
+          mutant_root="$RUNNER_TEMP/workflow-input-mutants"
+          mkdir -p "$mutant_root/tool"
+          curl --fail --location --max-time 60 https://github.com/sourcefrog/cargo-mutants/releases/download/v27.1.0/cargo-mutants-x86_64-unknown-linux-gnu.tar.gz -o "$mutant_root/tool.tar.gz"
+          printf '%s  %s\n' dfe6dc37d0342c891d2829b5a695aa57c2d0edecef7e7d0399a30cc6e206411e "$mutant_root/tool.tar.gz" | sha256sum --check
+          python3 - "$mutant_root" <<'PY_MUTANT_TOOL'
+          import sys,tarfile
+          from pathlib import Path,PurePosixPath
+          root=Path(sys.argv[1])
+          with tarfile.open(root/'tool.tar.gz') as archive:
+              members=[m for m in archive.getmembers() if m.isfile() and PurePosixPath(m.name).name=='cargo-mutants']
+              assert len(members)==1 and members[0].size < 67108864
+              target=root/'tool/cargo-mutants'
+              target.write_bytes(archive.extractfile(members[0]).read())
+              target.chmod(0o755)
+          PY_MUTANT_TOOL
+          mutant_tool="$mutant_root/tool/cargo-mutants"
+          "$mutant_tool" mutants --version > "$mutant_root/version.txt"
+          mutant_scope=':(116|149):.*replace \|\| with && in current_snapshot'
+          "$mutant_tool" mutants --no-config --file crates/rx-application/src/engine/workflow_model.rs --re "$mutant_scope" --list --json > "$mutant_root/selected.json"
+          python3 - "$mutant_root/selected.json" <<'PY_MUTANT_SCOPE'
+          import json,sys
+          selected=json.load(open(sys.argv[1]))
+          assert len(selected)==2, 'Expected exactly the input and current-definition guard mutants'
+          PY_MUTANT_SCOPE
+          timeout 1200s "$mutant_tool" mutants --no-config --file crates/rx-application/src/engine/workflow_model.rs --re "$mutant_scope" --baseline run --all-features --cargo-arg=--locked --jobs 1 --build-timeout 600 --timeout 120 --output "$mutant_root" -- --test transactions workflow_model_tests
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: bounded-workflow-input-mutants
+          if-no-files-found: warn
+          retention-days: 14
+          path: ${{ runner.temp }}/workflow-input-mutants/
+
   solutions_rust:
     name: rx-solutions full Rust workspace
     runs-on: ubuntu-24.04

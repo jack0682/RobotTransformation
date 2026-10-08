@@ -248,7 +248,12 @@ impl<R: Repository, C: Clock, A: QualificationAuthority> Engine<R, C, A> {
                 }
                 _ => return reject(Reject::StaleRevision),
             };
-            definitions(tx, &input.catalog, input.spec.references())?;
+            definitions(
+                tx,
+                &input.catalog,
+                input.spec.references(),
+                &BTreeMap::new(),
+            )?;
             let digest = Version::digest(
                 &input.catalog,
                 &input.id,
