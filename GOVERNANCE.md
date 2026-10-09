@@ -119,7 +119,68 @@ product CI, SDK qualification, cutover and legacy archival remain later gates.
 
 ## M3 CI declaration and current source
 
-The declared stage is `CI_SCOPE_DECLARED_NOT_YET_RUN`; this source label is not a claim that hosted execution succeeded. The aggregate evaluates the exact sixteen required job results for each run. GitHub Actions run identity and artifacts establish what executed. CI success does not accept CP2 or authorize physical equipment.
+### CI action runtime and shared setup
+
+The active root workflow pins these upstream releases to full commit IDs. Each
+release's action metadata declares Node 24; `setup-node`'s `node-version` input
+separately selects the Node version used by the operator build.
+
+| Action | Release | Commit |
+|---|---|---|
+| actions/checkout | v7.0.1 | 3d3c42e5aac5ba805825da76410c181273ba90b1 |
+| actions/setup-node | v7.1.0 | 949feb2413d6458794dcd2491c4babbbce0c15c1 |
+| actions/cache | v6.1.0 | 55cc8345863c7cc4c66a329aec7e433d2d1c52a9 |
+| actions/upload-artifact | v7.0.2 | cf430e030ddbb5b0abf93d22962f4752f3646cd9 |
+| actions/download-artifact | v8.0.2 | 9000827ccba6bdab643e8b6fd33ac0654aef8333 |
+
+Upstream release notes and the pinned `action.yml` are the update inputs:
+[checkout](https://github.com/actions/checkout/releases/tag/v7.0.1),
+[setup-node](https://github.com/actions/setup-node/releases/tag/v7.1.0),
+[cache](https://github.com/actions/cache/releases/tag/v6.1.0),
+[upload](https://github.com/actions/upload-artifact/releases/tag/v7.0.2),
+[download](https://github.com/actions/download-artifact/releases/tag/v8.0.2).
+The current GitHub-hosted Ubuntu runners support Node 24. Any future self-hosted
+runner must meet the selected action releases' runner requirements before use.
+Preserved component workflows and frozen import proofs are not rewritten.
+
+The Ubuntu mirror adjustment lives in `tools/ci/use_ubuntu_archive.sh`. It replaces
+only the known Azure HTTP mirror URL with the official HTTPS archive and preserves
+suites and signing keys. Callers still own package installation.
+
+Operator checks and API browser authoring run once. One image build feeds the five
+required M1 scenarios in the same run; archive SHA-256 and loaded image ID must match.
+The image and public scenario evidence are retained for 14 days. An expired image
+requires rebuilding the producer, not accepting missing evidence or disabling ID
+checks. Failed-job reruns and full reruns retain their distinct run attempts.
+
+### Release eligibility
+
+New tags may point only to the **current remote main commit** whose latest
+`push` run of this repository's root CI workflow completed successfully. A green
+PR check, develop run, workflow_dispatch run, older green attempt, skipped check
+or source-tree equality is not sufficient. The release check re-reads the chosen
+run and remote main; unavailable or truncated API data refuses publication.
+
+Use `python3 tools/governance/check_commit_policy.py --release-candidate FULL_SHA`
+as a read-only preflight before tag creation and again immediately before publishing.
+The existing pre-push hook repeats the same gate for every new signed annotated tag,
+using its peeled commit rather than its tag object ID. Existing tags stay immutable.
+If main advances, re-evaluate the intended release rather than silently retargeting.
+
+Publication is a separate maintainer action: explicitly choose the version and
+scope, verify the annotated OpenPGP tag, push only that tag, verify the remote tag
+object, and publish using the already existing tag (`gh release create --verify-tag`).
+Record the commit, successful main CI URL, source/build identities, supported
+platforms, known limitations and checksums/signatures for any distributed assets.
+A prerelease must be labelled as such. Do not infer runtime/distribution or physical
+qualification from source CI, and do not publish credentials or private test state.
+
+These helpers and local hooks enforce the normal Git path; they cannot prevent an
+administrator from bypassing hooks or creating a tag/release through a separate API.
+Remote immutable-tag and protected-branch rules remain in force. This change creates
+no tag, release, signing key, remote bypass or automatic publishing workflow.
+
+The declared stage is `CI_SCOPE_DECLARED_NOT_YET_RUN`; this source label is not a claim that hosted execution succeeded. The aggregate evaluates the exact nineteen required job results for each run. GitHub Actions run identity and artifacts establish what executed. CI success does not accept CP2 or authorize physical equipment.
 
 The import-fidelity job now verifies immutable ancestor `0cecec7516879584c4bd6d2ba24cbe5b3c8e54a0`, its complete source objects and provenance, and the unchanged identity baseline/evaluator. It verifies protected bytes using its own standard-library Git reader before executing the verified historical checker. Current product source is checked separately; the import manifest is never regenerated from evolved source.
 

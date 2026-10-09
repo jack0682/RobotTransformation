@@ -2,10 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [main, develop, 'codex/**', 'feature/**', 'fix/**', 'docs/**', 'chore/**', 'release/**', 'hotfix/**']
+    branches: [main, develop]
   pull_request:
     branches: [main, develop]
-    types: [opened, synchronize, reopened, edited, ready_for_review]
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 permissions:
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -77,7 +77,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -106,7 +106,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -117,7 +117,7 @@ jobs:
           CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-static-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --reviewed-context provenance/verification/m1-admission-context-review.json --static-only
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: static-source-identities
@@ -135,7 +135,7 @@ jobs:
       run:
         working-directory: source/rx-platform
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -164,7 +164,7 @@ jobs:
       run:
         working-directory: source/rx-solutions
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -199,7 +199,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -220,7 +220,7 @@ jobs:
       run:
         working-directory: source/rx-platform
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -229,7 +229,7 @@ jobs:
         run: |
           toolchain=$(python3 -c 'import tomllib; print(tomllib.load(open("rust-toolchain.toml", "rb"))["toolchain"]["channel"])')
           rustup toolchain install "$toolchain" --profile minimal --component rustfmt --component clippy
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: |
             ~/.cargo/registry/index
@@ -253,7 +253,7 @@ jobs:
       run:
         working-directory: source/rx-solutions
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -262,7 +262,7 @@ jobs:
         run: |
           toolchain=$(python3 -c 'import tomllib; print(tomllib.load(open("rust-toolchain.toml", "rb"))["toolchain"]["channel"])')
           rustup toolchain install "$toolchain" --profile minimal --component rustfmt --component clippy
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: |
             ~/.cargo/registry/index
@@ -275,11 +275,7 @@ jobs:
           RX_EXTERNAL_TRACE_DIR: ${{ runner.temp }}/rx-external-process-trace
         run: |
           if ! command -v strace >/dev/null; then
-            for apt_source in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
-              if [ -f "$apt_source" ]; then
-                sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' "$apt_source"
-              fi
-            done
+            bash "$GITHUB_WORKSPACE/source/tools/ci/use_ubuntu_archive.sh"
             sudo apt-get update
             sudo apt-get install -y --no-install-recommends strace
           fi
@@ -334,7 +330,7 @@ jobs:
             'process_limit':resource.getrlimit(resource.RLIMIT_NPROC),'file_limit':resource.getrlimit(resource.RLIMIT_NOFILE)}
           Path(os.environ['RX_EXTERNAL_TRACE_DIR'],'environment.json').write_text(json.dumps(info,indent=2)+'\n')
           PY_INFO
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: external-process-syscall-diagnostic
@@ -350,7 +346,7 @@ jobs:
       run:
         working-directory: source/rx-platform
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -358,11 +354,7 @@ jobs:
       - name: Install pinned client build dependencies
         run: |
           # Keep Ubuntu suites and signing keys; use the reachable official archive.
-          for apt_source in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
-            if [ -f "$apt_source" ]; then
-              sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' "$apt_source"
-            fi
-          done
+          bash "$GITHUB_WORKSPACE/source/tools/ci/use_ubuntu_archive.sh"
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends cmake libprotobuf-dev protobuf-compiler libgrpc++-dev protobuf-compiler-grpc nlohmann-json3-dev python3-venv
           python3 -m venv "$RUNNER_TEMP/rx-client-env"
@@ -373,43 +365,53 @@ jobs:
           "$RUNNER_TEMP/rx-client-env/bin/python" -B tools/test_client_packages.py --work "$RUNNER_TEMP/rx-client-check"
 
   operator:
-    name: Operator application (${{ matrix.scenario }})
+    name: Operator application checks
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        scenario: [normal, changed-material, groove-missing, completion-loss, lost-start-response]
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: source/rx-solutions/apps/operator
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: '24'
           cache: npm
           cache-dependency-path: source/rx-solutions/apps/operator/package-lock.json
       - name: Run all original operator checks
-        id: operator_checks
         run: |
           npm ci
           npm run format:check
           npm test
           npm run test:bundle
           npm run build
+
+  operator_browser:
+    name: Operator browser authoring against the Platform API
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: source/rx-solutions/apps/operator
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: source/rx-solutions/apps/operator/package-lock.json
       - name: Prepare the isolated Linux browser environment
         run: |
           # Keep Ubuntu suites and signing keys; use the reachable official archive.
-          for apt_source in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
-            if [ -f "$apt_source" ]; then
-              sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' "$apt_source"
-            fi
-          done
+          bash "$GITHUB_WORKSPACE/source/tools/ci/use_ubuntu_archive.sh"
           mkdir -p "$RUNNER_TEMP/operator-browser"
           uname -a > "$RUNNER_TEMP/operator-browser/environment.txt"
           lscpu >> "$RUNNER_TEMP/operator-browser/environment.txt"
@@ -420,37 +422,89 @@ jobs:
           rustup toolchain install "$toolchain" --profile minimal --component rustfmt --component clippy
           python3 -m venv "$RUNNER_TEMP/operator-browser-env"
           "$RUNNER_TEMP/operator-browser-env/bin/pip" install -r tests/requirements-browser.txt
-          "$RUNNER_TEMP/operator-browser-env/bin/pip" install cryptography==50.0.2
           "$RUNNER_TEMP/operator-browser-env/bin/python" -m playwright install --with-deps chromium
-      - name: Build the device-free M1 integration candidate
-        id: m1_build
-        working-directory: source
-        run: |
-          docker build -f rx-platform/tools/draft_m1/Simulation.Dockerfile --build-context btcpp=https://github.com/BehaviorTree/BehaviorTree.CPP.git#6e469c6ba133aaa842dac9b096b41f2d33ee2b0e -t rx-draft-m1:current .
-      - name: Verify real M1 browser runtime and negative cases
-        working-directory: source
-        run: |
-          "$RUNNER_TEMP/operator-browser-env/bin/python" -B rx-platform/tools/draft_m1/run.py --platform-image rx-draft-m1:current --solutions-image rx-draft-m1:current --workspace "$RUNNER_TEMP/m1-private-${{ matrix.scenario }}" --evidence-dir "$RUNNER_TEMP/m1-evidence/${{ matrix.scenario }}" --case "${{ matrix.scenario }}"
+          npm ci
       - name: Verify browser authoring against the actual Platform API
         env:
           CARGO_TARGET_DIR: ${{ runner.temp }}/operator-platform-target
         run: |
           (cd ../../../rx-platform && cargo build -p rx-api --bin rx-platform-local --locked)
           "$RUNNER_TEMP/operator-browser-env/bin/python" tests/run_browser.py --platform-executable "$CARGO_TARGET_DIR/debug/rx-platform-local" --evidence-dir "$RUNNER_TEMP/operator-browser"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        if: always()
+        with:
+          name: operator-browser
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/operator-browser/**
+
+  sim_image:
+    name: Device-free M1 integration image
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - name: Build the device-free M1 integration candidate once
+        run: |
+          docker build -f rx-platform/tools/draft_m1/Simulation.Dockerfile --build-context btcpp=https://github.com/BehaviorTree/BehaviorTree.CPP.git#6e469c6ba133aaa842dac9b096b41f2d33ee2b0e -t rx-draft-m1:current .
+          mkdir -p "$RUNNER_TEMP/m1-image"
+          docker image inspect rx-draft-m1:current --format '{{.Id}}' > "$RUNNER_TEMP/m1-image/image-id.txt"
+          docker save rx-draft-m1:current | gzip -1 > "$RUNNER_TEMP/m1-image/rx-draft-m1.tar.gz"
+          (cd "$RUNNER_TEMP/m1-image" && sha256sum rx-draft-m1.tar.gz > rx-draft-m1.tar.gz.sha256)
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: m1-image
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+          path: ${{ runner.temp }}/m1-image/
+
+  sim_scenarios:
+    name: M1 browser runtime (${{ matrix.scenario }})
+    needs: [sim_image]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario: [normal, changed-material, groove-missing, completion-loss, lost-start-response]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: source
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: m1-image
+          path: ${{ runner.temp }}/m1-image
+      - name: Load the exact M1 image built for this candidate
+        run: |
+          (cd "$RUNNER_TEMP/m1-image" && sha256sum -c rx-draft-m1.tar.gz.sha256)
+          gunzip -c "$RUNNER_TEMP/m1-image/rx-draft-m1.tar.gz" | docker load
+          test "$(docker image inspect rx-draft-m1:current --format '{{.Id}}')" = "$(cat "$RUNNER_TEMP/m1-image/image-id.txt")"
+      - name: Prepare the isolated Linux browser environment
+        run: |
+          # Keep Ubuntu suites and signing keys; use the reachable official archive.
+          bash "$GITHUB_WORKSPACE/source/tools/ci/use_ubuntu_archive.sh"
+          python3 -m venv "$RUNNER_TEMP/m1-browser-env"
+          "$RUNNER_TEMP/m1-browser-env/bin/pip" install -r rx-solutions/apps/operator/tests/requirements-browser.txt
+          "$RUNNER_TEMP/m1-browser-env/bin/pip" install cryptography==50.0.2
+          "$RUNNER_TEMP/m1-browser-env/bin/python" -m playwright install --with-deps chromium
+      - name: Verify real M1 browser runtime and negative cases
+        run: |
+          "$RUNNER_TEMP/m1-browser-env/bin/python" -B rx-platform/tools/draft_m1/run.py --platform-image rx-draft-m1:current --solutions-image rx-draft-m1:current --workspace "$RUNNER_TEMP/m1-private-${{ matrix.scenario }}" --evidence-dir "$RUNNER_TEMP/m1-evidence/${{ matrix.scenario }}" --case "${{ matrix.scenario }}"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: draft-m1-public-evidence-${{ matrix.scenario }}
           if-no-files-found: warn
           retention-days: 14
           path: ${{ runner.temp }}/m1-evidence/**
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: always()
-        with:
-          name: operator-browser-${{ matrix.scenario }}
-          if-no-files-found: error
-          retention-days: 14
-          path: ${{ runner.temp }}/operator-browser/**
 
   dynamixel:
     name: Pinned DYNAMIXEL helper boundaries
@@ -460,7 +514,7 @@ jobs:
       run:
         working-directory: source/rx-solutions
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -468,11 +522,7 @@ jobs:
       - name: Build protocol-only helper and exercise direct-caller refusals
         run: |
           # Keep Ubuntu suites and signing keys; use the reachable official archive.
-          for apt_source in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
-            if [ -f "$apt_source" ]; then
-              sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' "$apt_source"
-            fi
-          done
+          bash "$GITHUB_WORKSPACE/source/tools/ci/use_ubuntu_archive.sh"
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends nlohmann-json3-dev
           cmake -S native/dynamixel -B "$RUNNER_TEMP/rx-dynamixel-build" -DCMAKE_BUILD_TYPE=Release
@@ -496,7 +546,7 @@ jobs:
       run:
         working-directory: source/rx-solutions
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -509,7 +559,7 @@ jobs:
           cp "$RUNNER_TEMP/skill-acceptance/result.json" "$RUNNER_TEMP/skill-bundle/acceptance-${{ matrix.arch }}.json"
           cp "$RUNNER_TEMP/skill-bundle/bundle/release.json" "$RUNNER_TEMP/skill-bundle/release-${{ matrix.arch }}.json"
           cp deployment/local-skills/install.sh "$RUNNER_TEMP/skill-bundle/install.sh"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: skills-${{ matrix.arch }}
           if-no-files-found: error
@@ -537,12 +587,12 @@ jobs:
       run:
         working-directory: source/rx-solutions
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
           persist-credentials: false
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: jack0682/rx-platform
           ref: e08fd1a45e2782d10f222d00ef1962a675463609
@@ -559,7 +609,7 @@ jobs:
           cp "$RUNNER_TEMP/skill-acceptance/result.json" "$RUNNER_TEMP/skill-bundle/acceptance-${{ matrix.arch }}.json"
           cp "$RUNNER_TEMP/skill-bundle/bundle/release.json" "$RUNNER_TEMP/skill-bundle/release-${{ matrix.arch }}.json"
           cp deployment/local-skills/install.sh "$RUNNER_TEMP/skill-bundle/install.sh"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: skills_compatibility-${{ matrix.arch }}
           if-no-files-found: error
@@ -575,7 +625,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source
@@ -590,7 +640,7 @@ jobs:
           CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           python3 -B tools/verification/run_compiled_identities.py --repo . --expected-head "$CANDIDATE_SHA" --work "$RUNNER_TEMP/m3-identities" --baseline provenance/import/M2-source-identities.json --evaluator tools/migration/source_identities.py --reviewed-context provenance/verification/m1-admission-context-review.json --execute
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: compiled-source-identities
@@ -603,11 +653,11 @@ jobs:
   ci:
     name: ${{ github.event_name == 'pull_request' && 'CI' || 'Branch CI' }}
     if: ${{ always() }}
-    needs: [repository, commit_policy, import_fidelity, sdk_parity, static_identity, platform_repository, solutions_repository, document_integrity, platform_rust, solutions_rust, clients, operator, dynamixel, skills, skills_compatibility, compiled_identity]
+    needs: [repository, commit_policy, import_fidelity, sdk_parity, static_identity, platform_repository, solutions_repository, document_integrity, platform_rust, solutions_rust, clients, operator, operator_browser, sim_image, sim_scenarios, dynamixel, skills, skills_compatibility, compiled_identity]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           path: source

@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 import sys
 
-from common import (PROTECTED, REPOSITORY, PRIVILEGED_PREFIXES, WORK_PREFIXES, api, git,
+from common import (PROTECTED, REPOSITORY, WORKFLOW, PRIVILEGED_PREFIXES, WORK_PREFIXES, api, git,
                     require_checkout, require_full_history, target_url, valid_oid)
 
 
@@ -83,6 +83,40 @@ def audit_head(head, github_repository=None):
     return revision, len(commits)
 
 
+def require_release_candidate(sha):
+    """Read-only release gate: never create a tag or infer readiness from PR CI."""
+    if not valid_oid(sha):
+        raise ValueError("Release candidate must be a full commit ID")
+    prefix = f"repos/{REPOSITORY}"
+
+    def main_head():
+        return api("GET", prefix + "/git/ref/heads/main").get("object", {}).get("sha")
+
+    if main_head() != sha:
+        raise ValueError("Release candidate must equal current remote main")
+    record = api("GET", prefix + f"/actions/workflows/ci.yml/runs?branch=main&event=push&head_sha={sha}&per_page=100")
+    runs = record.get("workflow_runs")
+    count = record.get("total_count")
+    if (not isinstance(runs, list) or type(count) is not int
+            or count != len(runs) or not 1 <= count <= 100):
+        raise ValueError("Main CI inventory is missing or truncated")
+    if any(type(run.get("id")) is not int for run in runs):
+        raise ValueError("Main CI run identity is invalid")
+    latest = max(runs, key=lambda run: run["id"])
+    # Re-read: a rerun can have invalidated an earlier successful attempt.
+    current = api("GET", prefix + f"/actions/runs/{latest['id']}")
+    if (current.get("id") != latest["id"] or current.get("head_sha") != sha
+            or current.get("head_branch") != "main" or current.get("event") != "push"
+            or current.get("path") != WORKFLOW
+            or current.get("repository", {}).get("full_name") != REPOSITORY
+            or current.get("status") != "completed" or current.get("conclusion") != "success"):
+        raise ValueError("Latest push CI on this exact main commit must complete successfully")
+    if main_head() != sha:
+        raise ValueError("Remote main changed during release verification")
+    print(f"Release candidate {sha}: main push CI {current['id']} passed; no tag or release created")
+    return current["id"]
+
+
 def pre_push(lines, remote_name, remote_url):
     if remote_name != "origin" or not target_url(remote_url):
         raise ValueError("Push destination must be the guarded origin repository")
@@ -118,6 +152,8 @@ def pre_push(lines, remote_name, remote_url):
             if "-----BEGIN PGP SIGNATURE-----" not in git("cat-file", "tag", new):
                 raise ValueError("OpenPGP tag signature required")
             git("-c", "gpg.format=openpgp", "verify-tag", new)
+            commit = git("rev-parse", "--verify", new + "^{commit}").strip()
+            require_release_candidate(commit)
         for sha in git("rev-list", new, "--not", "--remotes").splitlines():
             if sha not in checked:
                 check_commit(sha)
@@ -132,6 +168,7 @@ def main():
     modes.add_argument("--check-message")
     modes.add_argument("--check-config", action="store_true")
     modes.add_argument("--pre-push", action="store_true")
+    modes.add_argument("--release-candidate", help="Check exact remote main and its latest push CI; no writes")
     parser.add_argument("--github-repository", choices=[REPOSITORY])
     parser.add_argument("--remote-name")
     parser.add_argument("--remote-url")
@@ -145,6 +182,8 @@ def main():
         check_signing_config()
     elif args.pre_push:
         pre_push(sys.stdin, args.remote_name, args.remote_url)
+    elif args.release_candidate:
+        require_release_candidate(args.release_candidate)
     else:
         revision, count = audit_head(args.head, args.github_repository)
         print(f"OK: {revision}: {count} ancestors; author DCO and OpenPGP verified; exceptions=0")

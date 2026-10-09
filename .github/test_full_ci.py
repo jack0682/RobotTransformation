@@ -18,9 +18,9 @@ import check_repository
 
 
 class FullGateTests(unittest.TestCase):
-    def test_all_sixteen_results_required_and_every_non_success_refused(self):
+    def test_all_nineteen_results_required_and_every_non_success_refused(self):
         good = {name: {'result': 'success'} for name in check_ci.FULL_SCOPE['required_jobs']}
-        self.assertEqual(len(good), 16)
+        self.assertEqual(len(good), 19)
         check_ci.check(good, check_ci.FULL_SCOPE)
         for name in good:
             for state in ('failure', 'cancelled', 'skipped', None):
