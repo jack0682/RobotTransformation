@@ -36,6 +36,27 @@ python3 tools/governance/merge_pr.py PR_NUMBER
 
 Local hooks and the root helpers refuse direct protected-branch pushes and old-repository targets. Do not run administrative helpers copied into component subtrees.
 
+CI runs for PRs to `main` or `develop` and for pushes to those two branches. A work-branch push alone does not start CI; open a draft PR to get CI early. Editing a PR title or description does not rerun CI. After changing a PR's base branch, close and reopen the PR so CI runs against the new base; `merge_pr.py` refuses a CI run recorded for another base.
+
+The manual base-change procedure depends on using the root merge helper; do not
+replace it with a GitHub UI merge that omits its exact-base check. A ready-for-review
+transition and a post-merge main/develop push can still trigger separate runs.
+
+## Release preparation
+
+Promote through a checked PR, then wait for the **latest main push CI on the exact
+release commit**. Before creating a signed annotated tag, run:
+
+```sh
+python3 tools/governance/check_commit_policy.py --release-candidate FULL_MAIN_SHA
+```
+
+This command is read-only. The pre-push hook also refuses a new tag without that
+same current-main/CI evidence. A passing PR does not qualify the merged main commit.
+Recheck immediately before publishing, retain immutable tags and use an existing
+remote tag with `gh release create --verify-tag`. Follow [release eligibility](GOVERNANCE.md#release-eligibility)
+for scope, artifact evidence, known limitations and the hook/API boundary.
+
 ### External fork contributors
 
 The origin-guarded helper commands above are for a maintainer clone whose origin is `jack0682/RobotTransformation`. Administrative helpers never manage a fork or another repository. Fork contributors use their own local Git signing configuration, make explicit `git commit -s -S` commits, and inspect them with `git verify-commit HEAD`; they do not install this canonical-origin hook set in a fork clone. Run `.github/test_governance.py` and `tools/governance/check_repository.py --filesystem` for the current root content checks, then push the work branch to the fork and open a PR to develop. The target repository's CI audits the complete PR-head ancestry, including matching author DCO. The same contribution requirements apply.

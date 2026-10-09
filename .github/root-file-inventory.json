@@ -162,6 +162,7 @@
     "references/execution_v2_design_2026-10-02/legacy-freeze.json",
     "references/execution_v2_design_2026-10-02/sizing.json",
     "repository-settings.json",
+    "tools/ci/use_ubuntu_archive.sh",
     "tools/docs/check_canonical_layout.py",
     "tools/docs/check_documents.py",
     "tools/governance/check_ci.py",

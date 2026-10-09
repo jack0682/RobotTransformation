@@ -6,6 +6,7 @@ import copy
 import io
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import sys
@@ -242,10 +243,82 @@ class CommitPolicyTests(Files):
             if args[0] == "rev-list": return HEAD + "\n"
             return ""
         with patch.object(policy, "require_full_history"), patch.object(policy, "git", side_effect=git) as git, \
+                patch.object(policy, "require_release_candidate") as release, \
                 patch.object(policy, "check_commit") as check:
             policy.pre_push([f"ref {HEAD} refs/tags/v1 {'0'*40}"], "origin", f"git@github.com:{REPO}.git")
             check.assert_called_once_with(HEAD)
             self.assertTrue(any("verify-tag" in c.args for c in git.call_args_list))
+            release.assert_called_once()
+
+
+class ReleaseCandidateTests(unittest.TestCase):
+    def setUp(self):
+        self.good = {"id": 12, "head_sha": HEAD, "head_branch": "main", "event": "push",
+                     "path": common.WORKFLOW, "repository": {"full_name": REPO},
+                     "status": "completed", "conclusion": "success"}
+        self.main_reads = 0
+        self.main_after = HEAD
+        self.runs = [{"id": 11}, {"id": 12}]
+        self.reported_count = 2
+
+    def api(self, method, path, payload=None):
+        self.assertEqual(method, "GET")
+        if path.endswith("/git/ref/heads/main"):
+            self.main_reads += 1
+            return {"object": {"sha": HEAD if self.main_reads == 1 else self.main_after}}
+        if "/actions/workflows/ci.yml/runs?" in path:
+            self.assertIn("branch=main&event=push&head_sha=" + HEAD, path)
+            return {"total_count": self.reported_count, "workflow_runs": self.runs}
+        self.assertTrue(path.endswith("/actions/runs/12"), path)
+        return self.good
+
+    def check(self, sha=HEAD):
+        self.main_reads = 0
+        with patch.object(policy, "api", side_effect=self.api), redirect_stdout(io.StringIO()):
+            return policy.require_release_candidate(sha)
+
+    def test_exact_main_success_and_live_ref_recheck(self):
+        self.assertEqual(self.check(), 12)
+        self.assertEqual(self.main_reads, 2)
+        self.main_after = BASE
+        with self.assertRaisesRegex(ValueError, "changed"):
+            self.check()
+        with self.assertRaisesRegex(ValueError, "current remote main"):
+            self.check(BASE)
+
+    def test_newer_non_success_or_wrong_run_never_uses_older_green(self):
+        cases = [("conclusion", x) for x in ("failure", "cancelled", "skipped", None)]
+        cases += [("status", "in_progress"), ("event", "pull_request"),
+                  ("head_sha", BASE), ("head_branch", "develop"),
+                  ("path", ".github/workflows/other.yml"), ("id", 99),
+                  ("repository", {"full_name": "other/repo"})]
+        original = copy.deepcopy(self.good)
+        for field, value in cases:
+            with self.subTest(field=field, value=value):
+                self.good = {**original, field: value}
+                with self.assertRaises(ValueError):
+                    self.check()
+
+    def test_absent_truncated_inventory_and_api_error_refuse_release(self):
+        for runs, count in (([], 0), ([{"id": 12}], 101), ([{"id": 12}], 2)):
+            self.runs, self.reported_count = runs, count
+            with self.subTest(count=count), self.assertRaisesRegex(ValueError, "inventory"):
+                self.check()
+        with patch.object(policy, "api", side_effect=ValueError("API unavailable")):
+            with self.assertRaisesRegex(ValueError, "API unavailable"):
+                policy.require_release_candidate(HEAD)
+
+    def test_signed_tag_push_cannot_bypass_failed_main_ci(self):
+        def git(*args):
+            if args[:2] == ("cat-file", "-t"): return "tag"
+            if args[:2] == ("cat-file", "tag"): return PGP
+            if args[0] == "rev-parse": return HEAD
+            return ""
+        with patch.object(policy, "require_full_history"), patch.object(policy, "git", side_effect=git), \
+                patch.object(policy, "require_release_candidate", side_effect=ValueError("main CI failed")) as release:
+            with self.assertRaisesRegex(ValueError, "main CI failed"):
+                policy.pre_push([f"ref {BASE} refs/tags/v1.2.3 {'0'*40}"], "origin", f"https://github.com/{REPO}.git")
+            release.assert_called_once_with(HEAD)
 
 
 class MergeGateTests(unittest.TestCase):
@@ -504,7 +577,9 @@ class BootstrapContentTests(Files):
     def test_unpinned_action_and_privileged_trigger_fail(self):
         file = self.root / ".github/workflows/ci.yml"
         text = file.read_text()
-        file.write_text(text.replace("actions/checkout@11d5960a326750d5838078e36cf38b85af677262", "actions/checkout@main"))
+        changed, count = re.subn(r"actions/checkout@[0-9a-f]{40}", "actions/checkout@main", text)
+        self.assertGreater(count, 0)
+        file.write_text(changed)
         self.assertTrue(any("full SHA" in e for e in self.check()))
         file.write_text(text + "\npull_request_target:\n")
         self.assertTrue(any("Privileged" in e for e in self.check()))
